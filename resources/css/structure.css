@@ -1,0 +1,71 @@
+:root {
+    --main-bg-color: #444;
+    --main-bg-color-hover: #666;
+    --main-bg-color-hover-invert: #444;
+
+    --main-row-height: 45px;
+    --main-font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    --main-font-color: #EEE;
+    --main-font-invert-color: #444;
+    --main-width-division: 20px;
+
+    --main-button-min-width: 45px;
+    --main-button-height: 45px;
+    --main-button-font-style: normal;
+    --main-button-font-size: 15px;
+    --main-button-font-line-height: 15px;
+
+    --btn-file-select-font-style: normal;
+    --btn-file-select-font-size: 16px;
+    --btn-file-select-font-line-height: 16px;
+    --btn-file-select-padding-v: calc((var(--main-button-height) - var(--btn-file-select-font-size)) / 2);
+    --btn-file-select-position: center;
+
+    --editor-markup-buttons-position: center;
+
+    --editor-main-p-family: 'Fira Code', mono, sans-serif;
+    --editor-main-p-font-style: normal;
+    --editor-main-p-font-size: 16px;
+    --editor-main-p-font-line-height: 24px;
+
+    --editor-main-height-v: calc(100% - (var(--main-button-height) * 2) - 2px);
+}
+
+
+
+* {
+    padding:0; margin:0; border:none; outline: 0;
+}
+html, body {
+    background-color: var(--main-bg-color); font-size: 0; height:100%;
+    font-family: var(--main-font-family);
+    color: var(--main-font-color);
+}
+html, body, main, section, header, footer, form, fieldset {
+    width: 100%; height: 100%;
+}
+main {
+    background-color: #666;
+    height: auto;
+    min-height: var(--editor-main-height-v);
+}
+main > section {
+    width: calc(100% - calc(var(--main-width-division) * 2));
+    height: auto;
+    min-height: calc(var(--main-width-division) - var(--editor-main-height-v));
+    padding:var(--main-width-division) var(--main-width-division) 0 var(--main-width-division);
+
+    font-style: var(--editor-main-p-font-style);
+    font-family: var(--editor-main-p-family);
+    font-size: var(--editor-main-p-font-size);
+    line-height: var(--editor-main-p-font-line-height);
+}
+
+
+.row {
+    display: inline-block;
+    width: 100%;
+}
+.d-flex {
+    display: flex;
+}

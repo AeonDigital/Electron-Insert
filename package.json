@@ -1,0 +1,17 @@
+{
+  "name": "insert",
+  "version": "1.0.0",
+  "description": "Simples e despretencioso editor para arquivos de texto.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [
+    "editor"
+  ],
+  "author": "Rianna Cantarelli",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^11.1.1"
+  }
+}

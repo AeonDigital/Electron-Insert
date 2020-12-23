@@ -1,0 +1,26 @@
+{
+    "button": {
+        "new": "New File",
+        "open": "Open",
+        "save": "Save",
+        "saveAs": "Save as",
+        "close": "Close",
+        "menu": "Menu",
+
+        "header1": "Header 1",
+        "header2": "Header 2",
+        "header3": "Header 3",
+        "header4": "Header 4",
+        "header5": "Header 5",
+        "header6": "Header 6",
+
+        "bold": "Bold",
+        "italic": "Italic",
+        "underline": "underline",
+        "strike": "strike"
+    },
+    "legend": {
+        "newfile": "New file",
+        "dialogSelectFile": "Select a file"
+    }
+}

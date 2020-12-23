@@ -1,0 +1,126 @@
+#mainControls {
+    height: auto;
+}
+#mainControls ul {
+    list-style: none;
+}
+
+
+
+
+
+/*
+    Seletor de arquivos abertos no editor.
+*/
+.menuWindow {
+    flex: 1;
+    overflow: hidden;
+}
+    .menuFile {
+        display: flex;
+        text-align: var(--btn-file-select-position);
+        font-style: var(--btn-file-select-font-style);
+        font-size: var(--btn-file-select-font-size);
+        line-height: var(--btn-file-select-font-line-height);
+    }
+    .menuFile li {
+        display: flex;
+        cursor: pointer;
+        border-bottom:2px solid var(--main-bg-color);
+        margin-right:2px;
+    }
+    .menuFile li > span {
+        padding: var(--btn-file-select-padding-v)
+            var(--main-width-division)
+            var(--btn-file-select-padding-v)
+            var(--main-width-division);
+        white-space: nowrap;
+    }
+    .menuFile li:hover,
+    .menuFile li.active {
+        background-color:var(--main-bg-color-hover);
+        border-bottom:2px solid var(--main-font-color);
+    }
+
+
+
+.subMenu {
+    position: relative;
+}
+.subMenu > ul {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top:var(--main-row-height);
+    left: 0;
+    border: 1px solid var(--main-font-color);
+}
+.subMenu:hover > ul {
+    display:flex;
+}
+.subMenu > ul > li {
+    list-style: none;
+}
+.subMenu > ul > li > button {
+    width:100%;
+    min-width: 200px;
+    padding:0 calc(var(--main-width-division) * 2) 0 var(--main-width-division);
+    text-align: left;
+}
+.subMenu > ul > li > button:hover {
+    font-weight: normal;
+}
+
+
+
+
+
+
+/*
+    Botões padrão do editor
+*/
+button[data-btn-action] {
+    display: inline-block;
+    min-width: var(--main-button-min-width);
+    height: var(--main-button-height);
+
+    background-color: var(--main-bg-color);
+
+    font-style: var(--main-button-font-style);
+    font-size: var(--main-button-font-size);
+    line-height: var(--main-button-font-line-height);
+    color: var(--main-font-color);
+    white-space: nowrap;
+    cursor:pointer;
+}
+.menuFile li:hover button,
+.menuFile li.active button,
+button[data-btn-action]:hover {
+    background-color:var(--main-bg-color-hover);
+    font-weight: bold;
+}
+.menuFile li.active button:hover,
+.menuFile li:hover button:hover {
+    color: var(--main-font-invert-color);
+}
+
+
+
+
+
+/*
+    Painel de botões de edição
+*/
+#mainMarkupButtons {
+    margin-top:-1px;
+    text-align: var(--editor-markup-buttons-position);
+}
+#mainMarkupButtons > div {
+    display: inline-block;
+    border-top:1px solid var(--main-font-color);
+}
+#mainMarkupButtons > div > span {
+    display: inline-block;
+    width: calc(var(--main-row-height) / 3);
+    height: 1px;
+}

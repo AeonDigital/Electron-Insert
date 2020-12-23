@@ -1,0 +1,21 @@
+{
+    "// Default directory to save files.": "",
+    "defaultPath": "C:\\",
+
+    "// Alloewd file extensions": "",
+    "extensions": ["", "txt", "md"],
+
+    "// Selected locale.": "",
+    "locale": "pt-BR",
+
+    "// Enable or disable spellcheck.": "",
+    "spellcheck": false,
+
+    "// Last used files.": "",
+    "changedList": {
+        "// Max files in this list.": "",
+        "maxFiles": 10,
+        "// File list.": "",
+        "files": []
+    }
+}
