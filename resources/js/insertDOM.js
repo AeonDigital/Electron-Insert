@@ -54,10 +54,8 @@ let insertDOM = (() => {
         },
         /**
          * Prepara os botões fixos do editor.
-         *
-         * @param {object} buttonLabels
          */
-        setDefaultEventListeners: (buttonLabels) => {
+        setDefaultEventListeners: () => {
             if (initialized === false) {
                 initialized = true;
 
@@ -71,8 +69,8 @@ let insertDOM = (() => {
                         btn.addEventListener('click', insertMenuActions[actName]);
                     }
 
-                    if (buttonLabels[actName] !== undefined) {
-                        let lbl = buttonLabels[actName];
+                    if (appSettings.locale.button[actName] !== undefined) {
+                        let lbl = appSettings.locale.button[actName];
 
                         switch (lblType) {
                             case 'title':
@@ -87,28 +85,37 @@ let insertDOM = (() => {
 
             }
         },
+
+
+
         /**
          * Gera um botão que identifica um arquivo aberto no ›Insert Editor.
          * Retorna a coleção de nodes que o formam.
          *
          * @param {string} fileName
          * @param {bool} isNew
+         * @param {int} id
+         * @param {evt} evtFileSetFocus
+         * @param {evt} evtFileClose
          *
          * @return {node[]}
          */
-        createSelectFileButton: (fileName, isNew) => {
+        createSelectFileButton: (fileName, isNew, id, evtFileSetFocus, evtFileClose) => {
             if (isNew === true) {
                 fileName += ' *';
             }
 
             let li = document.createElement('li');
+            li.setAttribute('data-file-id', id);
 
             let span = document.createElement('span');
+            span.addEventListener('click', evtFileSetFocus);
             span.innerHTML = fileName;
 
             let btn = document.createElement('button');
             btn.setAttribute('type', 'button');
             btn.setAttribute('data-btn-action', 'closeFile');
+            btn.addEventListener('click', evtFileClose);
             btn.innerHTML = 'X';
 
 
@@ -125,43 +132,38 @@ let insertDOM = (() => {
          * Gera um node <section> que conterá o conteúdo do documento que se planeja
          * permitir editar.
          *
+         * @param {int} id
+         *
          * @return {node}
          */
-        createEditableNode: () => {
+        createEditableNode: (id) => {
             let section = document.createElement('section');
             section.setAttribute('data-panel', 'editor-document');
             section.setAttribute('contenteditable', 'true');
+            section.setAttribute('data-file-id', id);
 
             return section;
         },
         /**
-         * Insere no DOM os componentes referentes ao arquivo indicado.
-         *
-         * @param {insertFile} file
-         */
-        insertNewFileInDOM: (file) => {
-            let nodes = file.getNodes();
-            nodes.fileButton.setAttribute('data-file-id', file.id);
-            nodes.editNode.setAttribute('data-file-id', file.id);
-
-            document.getElementById('mainMenu').appendChild(nodes.fileButton);
-            document.getElementById('mainPanel').appendChild(nodes.editNode);
-        },
-        /**
          * A partir de um elemento que disparou um evento identifica qual o
-         * índice do arquivo correspondente ao mesmo.
+         * id do arquivo correspondente ao mesmo.
          *
-         * @param {node} node
+         * @param {node|int} node
          *
          * @return {int}
          */
-        getTargetFileIndex: (node) => {
-            let el = node;
-            while (el.attributes['data-file-index'] === undefined) {
-                el = el.parentNode;
+        getTargetFileId: (node) => {
+            if (isNaN(node) === false) {
+                return parseInt(node);
             }
+            else {
+                let el = node;
+                while (el.attributes['data-file-id'] === undefined) {
+                    el = el.parentNode;
+                }
 
-            return parseInt(el.attributes['data-file-index'].value);
+                return parseInt(el.attributes['data-file-id'].value);
+            }
         }
     };
 

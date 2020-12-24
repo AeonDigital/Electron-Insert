@@ -1,5 +1,9 @@
 /**
- * Módulo que comunica os eventos da view com o processo principal.
+ * Modulo IPCRenderer
+ *
+ * Responsável por:
+ * - carregar dados para inicialização da aplicação.
+ * - Registrar listeners para comunicação do processo principal com a view.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
@@ -11,11 +15,7 @@
 
 
 
-/**
- * Carrega os dados armazenados nos arquivos de configuração atual para que o
- * objeto principal do editor possa ser iniciado.
- */
-let ipcRendererStart = () => {
+let appSettings = (() => {
     let rootPath = ipcRenderer.sendSync('getRootPath');
     let localePath = rootPath + '/resources/locale';
 
@@ -79,7 +79,7 @@ let ipcRendererStart = () => {
         ini: ini,
         locale: locale
     };
-};
+})();
 
 
 

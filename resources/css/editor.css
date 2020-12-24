@@ -4,6 +4,12 @@
 #mainControls ul {
     list-style: none;
 }
+main > section {
+    display: none;
+}
+main > section.active {
+    display: block;
+}
 
 
 

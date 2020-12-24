@@ -5,8 +5,7 @@
 
 
 /**
- * Responsável por criar instâncias que representam um arquivo aberto
- * no editor.
+ * Classe que gera uma instância que representa um arquivo aberto no editor.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
@@ -44,12 +43,6 @@ let insertFile = function (fileData) {
      */
     let data = '';
     /**
-     * Conteúdo atual do arquivo conforme está sendo apresentado no editor.
-     *
-     * @type {string}
-     */
-    let ndata = '';
-    /**
      * Indica quando trata-se de um arquivo que ainda não foi salvo.
      *
      * @type {bool}
@@ -67,6 +60,8 @@ let insertFile = function (fileData) {
      * @type {bool}
      */
     let inFocus = false;
+
+
     /**
      * Node LI do seletor para o arquivo.
      *
@@ -97,26 +92,30 @@ let insertFile = function (fileData) {
 
 
     /**
-     * Inicia todos os documentos atualmente definidos no corpo do editor.
+     * Inicia uma nova representação de um arquivo para o editor.
      */
     let constructor = (fileData) => {
         id = (fileData['id'] ?? null);
         fullName = (fileData['fullName'] ?? '');
         shortName = (fileData['shortName'] ?? '');
         data = (fileData['data'] ?? '');
-        ndata = data;
         isNew = (fullName === '');
 
         if (id === null) {
             throw new Error("Invalid 'id' propertie defined in 'insertFile' constructor.");
         }
 
-        let r = insertDOM.createSelectFileButton(shortName, isNew);
+        let r = insertDOM.createSelectFileButton(
+            shortName, isNew, id, fileData.evtFileSetFocus, fileData.evtFileClose
+        );
         fileButton = r.fileButton;
         fileLabel = r.fileLabel;
         closeButton = r.closeButton;
 
-        editNode = insertDOM.createEditableNode();
+        editNode = insertDOM.createEditableNode(id);
+
+        document.getElementById('mainMenu').appendChild(fileButton);
+        document.getElementById('mainPanel').appendChild(editNode);
     };
 
 
@@ -129,9 +128,7 @@ let insertFile = function (fileData) {
          *
          * @return {int}
          */
-        getId: () => {
-            return id;
-        },
+        getId: () => { return id; },
         /**
          * Retorna o nome completo do arquivo aberto.
          *
@@ -177,6 +174,22 @@ let insertFile = function (fileData) {
                 closeButton: closeButton,
                 editNode: editNode
             }
+        },
+        /**
+         * Define ou remove o foco deste arquivo.
+         *
+         * @param {bool} active
+         */
+        redefineFocus: (active) => {
+            if (active === true) {
+                fileButton.setAttribute('class', 'active');
+                editNode.setAttribute('class', 'active');
+            }
+            else {
+                fileButton.removeAttribute('class');
+                editNode.removeAttribute('class');
+            }
+            inFocus = active;
         }
     };
 

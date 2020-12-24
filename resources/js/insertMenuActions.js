@@ -24,12 +24,6 @@ let insertMenuActions = (() => {
      * @type {insertFile[]}
      */
     let insertFiles = [];
-    /**
-     * Nome usado para identificar novos arquivos.
-     *
-     * @type {string}
-     */
-    let newFileName = null;
 
 
 
@@ -39,13 +33,18 @@ let insertMenuActions = (() => {
      * @param {object} fileData
      */
     let openNewFileNode = (fileData) => {
+
+        // Prepara os dados mínimos para a geração de uma representação de um
+        // arquivo dentro da aplicação.
         if (fileData === undefined) {
             fileData = {
                 fullName: '',
-                shortName: newFileName
+                shortName: appSettings.locale.legend.newfile
             };
         }
         fileData.id = insertFiles.length;
+        fileData.evtFileSetFocus = evtFileSetFocus;
+        fileData.evtFileClose = evtFileClose;
 
 
         //
@@ -60,10 +59,10 @@ let insertMenuActions = (() => {
             }
         }
 
+
         if (isNewFile === true) {
-            fileData = new insertFile(fileData);
-            insertFiles.push(fileData);
-            insertDOM.insertNewFileInDOM(fileData);
+            insertFiles.push(new insertFile(fileData));
+            evtFileSetFocus({ target: fileData.id });
         }
     };
 
@@ -71,19 +70,35 @@ let insertMenuActions = (() => {
 
 
 
-    let p = this.Control = {
-        /**
-         * Define o nome a ser usado para novos arquivos.
-         *
-         * @param {string} s
-         */
-        setNewFileName: (s) => {
-            if (newFileName === null) {
-                newFileName = s;
+    /**
+     * Define o arquivo que deve estar em foco.
+     *
+     * @param {evt} e
+     */
+    let evtFileSetFocus = (e) => {
+        let id = insertDOM.getTargetFileId(e.target);
+
+        for (let it in insertFiles) {
+            let file = insertFiles[it];
+            if (file.getId() === id) {
+                file.redefineFocus(true);
             }
-        },
+            else {
+                if (file.getInFocus() === true) {
+                    file.redefineFocus(false);
+                }
+            }
+        }
+    };
+    let evtFileClose = (e) => {
+
+    };
 
 
+
+
+
+    let p = this.Control = {
         /**
          * Abre um novo arquivo de texto.
          */
@@ -95,44 +110,23 @@ let insertMenuActions = (() => {
          * para ser aberto no ›Insert Editor.
          */
         open: () => {
-            /*ipcRenderer.send(
+            ipcRenderer.send(
                 'dialogOpenFile',
                 {
-                    title: settings.locale.legend.dialogSelectFile,
-                    defaultPath: settings.ini.defaultPath,
-                    extensions: settings.ini.extensions
+                    title: appSettings.locale.legend.dialogSelectFile,
+                    defaultPath: appSettings.ini.defaultPath,
+                    extensions: appSettings.ini.extensions
                 }
-            );*/
+            );
         },
         save: () => {
-            /*ipcRenderer.send(
-                'saveFile'
-            );*/
+
         },
         saveAs: () => {
 
         },
         closeFile: (e) => {
-            /*let useIndex = getFileIndex(e.target);
-            let targetFile = openFiles[useIndex];
-            targetFile.fileButton.parentNode.removeChild(targetFile.fileButton);
-            targetFile.editNode.parentNode.removeChild(targetFile.editNode);
-            openFiles.splice(useIndex, 1);
 
-
-            // Reindexa todos os objetos da view
-            if (openFiles.length > 0) {
-                for (var it in openFiles) {
-                    openFiles[it].fileButton.attributes['data-file-index'].value = it;
-                    openFiles[it].editNode.attributes['data-file-index'].value = it;
-                }
-            }
-
-            // Se há algum arquivo aberto e o arquivo encerrado era o que estava em foco
-            if (openFiles.length > 0 && useIndex === targetFile) {
-                if (useIndex > 0) { useIndex--; }
-                selectFile(useIndex);
-            }*/
         }
     };
 

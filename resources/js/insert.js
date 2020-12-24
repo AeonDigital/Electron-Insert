@@ -5,34 +5,21 @@
 
 
 /**
- * Modulo de controle do ›Insert Editor.
+ * Modulo principal.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
  * @license     MIT
  */
-let insert = function(sett) {
-
-
-
-    /**
-     * Coleção de nodes do DOM que podem ser afetados pelas
-     * opções de marcação oferecidas pela barra de controles.
-     */
-    let settings = null;
-
-
+let insert = function() {
 
 
 
     /**
      * Inicia o ›Insert Editor.
      */
-    let constructor = (sett) => {
-        settings = sett;
-
-        insertMenuActions.setNewFileName(settings.locale.legend.newfile);
-        insertDOM.setDefaultEventListeners(settings.locale.button);
+    let constructor = () => {
+        insertDOM.setDefaultEventListeners();
     };
 
 
@@ -69,6 +56,6 @@ let insert = function(sett) {
 
 
     // Inicia o objeto
-    constructor(sett);
+    constructor();
     return p;
 };
