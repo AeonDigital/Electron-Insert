@@ -108,7 +108,7 @@ let insertFile = function (fileData) {
         isNew = (fullName === '');
 
         if (id === null) {
-            throw new UserException("Invalid 'id' propertie defined in 'insertFile' constructor.");
+            throw new Error("Invalid 'id' propertie defined in 'insertFile' constructor.");
         }
 
         let r = insertDOM.createSelectFileButton(shortName, isNew);

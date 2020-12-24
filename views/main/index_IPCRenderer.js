@@ -44,7 +44,7 @@ let ipcRendererStart = () => {
                 "open": "Open",
                 "save": "Save",
                 "saveAs": "Save as",
-                "close": "Close",
+                "closeApp": "Close",
                 "menu": "Menu",
 
                 "header1": "Header 1",
