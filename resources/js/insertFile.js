@@ -17,6 +17,12 @@ let insertFile = function (fileData) {
 
 
     /**
+     * Identificador deste arquivo.
+     *
+     * @type {int}
+     */
+    let id = null;
+    /**
      * Caminho completo até onde o arquivo originalmente está salvo.
      * DEVE ser definido quando está abrindo um arquivo existente.
      *
@@ -57,6 +63,8 @@ let insertFile = function (fileData) {
     let hasChanges = false;
     /**
      * Indica quando este arquivo está ou não em foco.
+     *
+     * @type {bool}
      */
     let inFocus = false;
     /**
@@ -92,15 +100,18 @@ let insertFile = function (fileData) {
      * Inicia todos os documentos atualmente definidos no corpo do editor.
      */
     let constructor = (fileData) => {
-        if (fileData !== undefined) {
-            fullName = (fileInfo['fullName'] ?? '');
-            shortName = (fileInfo['shortName'] ?? '');
-            data = (fileInfo['data'] ?? '');
-            ndata = data;
-            isNew = (fullName === '');
+        id = (fileData['id'] ?? null);
+        fullName = (fileData['fullName'] ?? '');
+        shortName = (fileData['shortName'] ?? '');
+        data = (fileData['data'] ?? '');
+        ndata = data;
+        isNew = (fullName === '');
+
+        if (id === null) {
+            throw new UserException("Invalid 'id' propertie defined in 'insertFile' constructor.");
         }
 
-        let el = insertDOM.createSelectFileButton(shortName, isNew);
+        let r = insertDOM.createSelectFileButton(shortName, isNew);
         fileButton = r.fileButton;
         fileLabel = r.fileLabel;
         closeButton = r.closeButton;
@@ -112,7 +123,67 @@ let insertFile = function (fileData) {
 
 
 
+    let p = this.Control = {
+        /**
+         * Retorna o id do arquivo.
+         *
+         * @return {int}
+         */
+        getId: () => {
+            return id;
+        },
+        /**
+         * Retorna o nome completo do arquivo aberto.
+         *
+         * @return {string}
+         */
+        getFullName: () => { return fullName; },
+        /**
+         * Retorna o nome curto do arquivo aberto.
+         *
+         * @return {string}
+         */
+        getShortName: () => { return shortName; },
+        /**
+         * Retorna 'true' caso o arquivo aberto seja novo e ainda
+         * não tenha sido salvo.
+         *
+         * @return {bool}
+         */
+        getIsNew: () => { return isNew; },
+        /**
+         * Retorna 'true' caso existam modificações no arquivo que ainda não
+         * tenham sido salvas.
+         *
+         * @return {bool}
+         */
+        getHasChanges: () => { return hasChanges; },
+        /**
+         * Retorna 'true' caso este seja o arquivo que está em foco no momento.
+         *
+         * @return {bool}
+         */
+        getInFocus: () => { return inFocus; },
+        /**
+         * Retorna um objeto contendo todos os nodes de controle importantes para
+         * o respectivo arquivo.
+         *
+         * @return {bool}
+         */
+        getNodes: () => {
+            return {
+                fileButton: fileButton,
+                fileLabel: fileLabel,
+                closeButton: closeButton,
+                editNode: editNode
+            }
+        }
+    };
+
+
+
+
     // Inicia o objeto
     constructor(fileData);
-    //return p;
+    return p;
 };

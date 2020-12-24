@@ -13,23 +13,82 @@
  */
 let insertMenuActions = (() => {
 
+
+
+
+
+    /**
+     * Armazena a coleção de objetos 'insertFile' que correspondem a cada um dos
+     * documentos atualmente abertos no ›Insert Editor.
+     *
+     * @type {insertFile[]}
+     */
+    let insertFiles = [];
+    /**
+     * Nome usado para identificar novos arquivos.
+     *
+     * @type {string}
+     */
+    let newFileName = null;
+
+
+
+    /**
+     * Inicia um novo node de edição para um arquivo.
+     *
+     * @param {object} fileData
+     */
+    let openNewFileNode = (fileData) => {
+        if (fileData === undefined) {
+            fileData = {
+                fullName: '',
+                shortName: newFileName
+            };
+        }
+        fileData.id = insertFiles.length;
+
+
+        //
+        // Se trata-se de um arquivo existente...
+        // Não permite que o mesmo arquivo seja aberto 2x
+        let isNewFile = true;
+        if (fileData.fullName !== '' && insertFiles.length > 0) {
+            for (let it in insertFiles) {
+                if (insertFiles[it].getFullName() === fileData.fullName) {
+                    isNewFile = false;
+                }
+            }
+        }
+
+        if (isNewFile === true) {
+            fileData = new insertFile(fileData);
+            insertFiles.push(fileData);
+            insertDOM.insertNewFileInDOM(fileData);
+        }
+    };
+
+
+
+
+
     let p = this.Control = {
+        /**
+         * Define o nome a ser usado para novos arquivos.
+         *
+         * @param {string} s
+         */
+        setNewFileName: (s) => {
+            if (newFileName === null) {
+                newFileName = s;
+            }
+        },
+
+
         /**
          * Abre um novo arquivo de texto.
          */
         new: () => {
-            console.log('new');
-            /*openFiles.push({
-                fullName: '',
-                shortName: '',
-                data: '',
-                fileButton: null,
-                editNode: null
-            });
-            let useIndex = openFiles.length - 1;
-            createSelectFileButton(settings.locale.legend.newfile, useIndex, true);
-            createEditableNode(useIndex, '');
-            selectFile(useIndex);*/
+            openNewFileNode();
         },
         /**
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo

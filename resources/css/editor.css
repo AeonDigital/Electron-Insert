@@ -15,6 +15,7 @@
 .menuWindow {
     flex: 1;
     overflow: hidden;
+    height: calc(var(--main-button-height) + 2px);
 }
     .menuFile {
         display: flex;

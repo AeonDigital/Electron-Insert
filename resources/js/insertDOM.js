@@ -135,6 +135,19 @@ let insertDOM = (() => {
             return section;
         },
         /**
+         * Insere no DOM os componentes referentes ao arquivo indicado.
+         *
+         * @param {insertFile} file
+         */
+        insertNewFileInDOM: (file) => {
+            let nodes = file.getNodes();
+            nodes.fileButton.setAttribute('data-file-id', file.id);
+            nodes.editNode.setAttribute('data-file-id', file.id);
+
+            document.getElementById('mainMenu').appendChild(nodes.fileButton);
+            document.getElementById('mainPanel').appendChild(nodes.editNode);
+        },
+        /**
          * A partir de um elemento que disparou um evento identifica qual o
          * índice do arquivo correspondente ao mesmo.
          *

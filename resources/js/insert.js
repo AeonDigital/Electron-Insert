@@ -20,23 +20,18 @@ let insert = function(sett) {
      * opções de marcação oferecidas pela barra de controles.
      */
     let settings = null;
-    /**
-     * Armazena a coleção de objetos 'insertFile' que correspondem a cada um dos
-     * documentos atualmente abertos no ›Insert Editor.
-     *
-     * @type {insertFile[]}
-     */
-    let insertFiles = [];
 
 
 
 
 
     /**
-     * Inicia todos os documentos atualmente definidos no corpo do ›Insert Editor.
+     * Inicia o ›Insert Editor.
      */
     let constructor = (sett) => {
         settings = sett;
+
+        insertMenuActions.setNewFileName(settings.locale.legend.newfile);
         insertDOM.setDefaultEventListeners(settings.locale.button);
     };
 
