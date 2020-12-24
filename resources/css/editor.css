@@ -10,7 +10,7 @@
 
 
 /*
-    Seletor de arquivos abertos no editor.
+    Seletor de arquivos abertos no ›Insert Editor.
 */
 .menuWindow {
     flex: 1;
@@ -77,7 +77,7 @@
 
 
 /*
-    Botões padrão do editor
+    Botões padrão do ›Insert Editor
 */
 button[data-btn-action] {
     display: inline-block;
