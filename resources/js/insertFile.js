@@ -83,25 +83,13 @@ let insertFile = function (fileData) {
      * Inicia uma nova representação de um arquivo para o editor.
      */
     let constructor = (fileData) => {
-        id = (fileData['id'] ?? null);
-        fullName = (fileData['fullName'] ?? '');
-        shortName = (fileData['shortName'] ?? '');
-        data = (fileData['data'] ?? '');
-
-        if (id === null) {
-            throw new Error("Invalid 'id' propertie defined in 'insertFile' constructor.");
-        }
-
-        let r = insertDOM.createSelectFileButton(
-            shortName, id, fileData.evtFileSetFocus, fileData.evtFileClose
-        );
-        fileButton = r.fileButton;
-        fileLabel = r.fileLabel;
-
-        editNode = insertDOM.createEditableNode(id, data);
-
-        document.getElementById('mainMenu').appendChild(fileButton);
-        document.getElementById('mainPanel').appendChild(editNode);
+        id = fileData.id;
+        fullName = fileData.fullName;
+        shortName = fileData.shortName;
+        data = fileData.data;
+        fileButton = fileData.fileButton;
+        fileLabel = fileData.fileLabel;
+        editNode = fileData.editNode;
     };
 
 

@@ -5,14 +5,13 @@
 
 
 /**
- * Coleções de ações do menu principal do editor.
+ * Modulo principal.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
  * @license     MIT
  */
-let insertMenuActions = (() => {
-
+const appInsert = (() => {
 
 
 
@@ -30,6 +29,44 @@ let insertMenuActions = (() => {
      * @type {int}
      */
     let atualId = 0;
+
+
+
+
+
+    /**
+     * Prepara os botões fixos do editor.
+     */
+    let setDefaultEventListeners = () => {
+        // Inicia as ações e legenda de cada um dos botões
+        DOM.querySelectorAll('[data-btn-action]').forEach((btn) => {
+            let actName = btn.attributes['data-btn-action'].value;
+            let lblType = btn.attributes['data-btn-label'];
+            lblType = (lblType === undefined) ? 'title' : lblType.value;
+
+            if (CMD[actName] !== undefined) {
+                btn.addEventListener('click', CMD[actName]);
+            }
+
+            if (appSettings.locale.button[actName] !== undefined) {
+                let lbl = appSettings.locale.button[actName];
+
+                switch (lblType) {
+                    case 'title':
+                        btn.setAttribute('title', lbl);
+                        break;
+                    case 'inside':
+                        btn.innerHTML = lbl;
+                        break;
+                }
+            }
+        });
+    };
+
+
+
+
+
 
 
 
@@ -71,7 +108,23 @@ let insertMenuActions = (() => {
 
 
         if (isNewFile === true) {
+            let nodes = DOM.createSelectFileButton(
+                fileData.shortName,
+                fileData.id,
+                fileData.evtFileSetFocus,
+                fileData.evtFileClose
+            );
+
+            fileData.fileButton = nodes.fileButton;
+            fileData.fileLabel = nodes.fileLabel;
+            fileData.closeButton = nodes.closeButton;
+            fileData.editNode = DOM.createEditableNode(fileData.id, fileData.data);
+
+
             insertFiles.push(new insertFile(fileData));
+            document.getElementById('mainMenu').appendChild(fileData.fileButton);
+            document.getElementById('mainPanel').appendChild(fileData.editNode);
+
             evtFileSetFocus({ target: fileData.id });
         }
     };
@@ -161,7 +214,7 @@ let insertMenuActions = (() => {
      * @param {evt} e
      */
     let evtFileSetFocus = (e) => {
-        let id = insertDOM.getTargetFileId(e.target);
+        let id = DOM.getTargetFileId(e.target);
 
         for (let it in insertFiles) {
             let file = insertFiles[it];
@@ -181,7 +234,7 @@ let insertMenuActions = (() => {
      * @param {evt} e
      */
     let evtFileClose = (e) => {
-        let id = insertDOM.getTargetFileId(e.target);
+        let id = DOM.getTargetFileId(e.target);
         let file = selectFileObjectById(id);
 
         // Havendo alterações, oferece a opção para que o usuário possa
@@ -217,18 +270,153 @@ let insertMenuActions = (() => {
 
 
 
-    let p = this.Control = {
+
+
+
+
+
+    /**
+     * Inicia o ›Insert Editor.
+     */
+    let constructor = () => {
+        setDefaultEventListeners();
+    };
+
+
+
+
+
+    let DOM = {
+        /**
+         * Wrapper para o método "document.querySelectorAll" que já filtra os
+         * objetos retornados para que apenas sejam listados elementos do DOM.
+         *
+         * @param {string} seletor
+         *
+         * @returns {Node[]}
+         */
+        querySelectorAll: (seletor) => {
+            let nodeList = document.querySelectorAll(seletor);
+
+            if (nodeList.length === 0) {
+                nodeList = [];
+            }
+            else {
+                let nL = [];
+                for (let it in nodeList) {
+                    let n = nodeList[it];
+                    if (n.nodeType === Node.ELEMENT_NODE) {
+                        nL.push(n);
+                    }
+                }
+                nodeList = nL;
+            }
+            return nodeList;
+        },
+
+
+
+
+        /**
+         * Gera um botão que identifica um arquivo aberto no editor.
+         * Retorna a coleção de nodes que o formam.
+         *
+         * @param {string} fileName
+         * @param {int} id
+         * @param {evt} evtFileSetFocus
+         * @param {evt} evtFileClose
+         *
+         * @return {node[]}
+         */
+        createSelectFileButton: (fileName, id, evtFileSetFocus, evtFileClose) => {
+
+            let li = document.createElement('li');
+            li.setAttribute('data-file-id', id);
+
+            let span = document.createElement('span');
+            span.addEventListener('click', evtFileSetFocus);
+            span.innerHTML = fileName;
+
+            let btn = document.createElement('button');
+            btn.setAttribute('type', 'button');
+            btn.setAttribute('data-btn-action', 'closeFile');
+            btn.addEventListener('click', evtFileClose);
+            btn.innerHTML = 'X';
+
+
+            li.appendChild(span);
+            li.appendChild(btn);
+
+            return {
+                fileButton: li,
+                fileLabel: span,
+                closeButton: btn
+            };
+        },
+        /**
+         * Gera um node <section> que conterá o conteúdo do documento que se planeja
+         * permitir editar.
+         *
+         * @param {int} id
+         * @param {string} data
+         *
+         * @return {node}
+         */
+        createEditableNode: (id, data) => {
+            let section = document.createElement('section');
+            section.setAttribute('data-panel', 'editor-document');
+            section.setAttribute('contenteditable', 'true');
+            section.setAttribute('data-file-id', id);
+            section.setAttribute('spellcheck', appSettings.ini.spellcheck);
+
+            let dataLines = data.split('\n');
+            for (let it in dataLines) {
+                let p = document.createElement('p');
+                p.innerText = dataLines[it];
+
+                section.appendChild(p);
+            }
+
+            return section;
+        },
+        /**
+         * A partir de um elemento que disparou um evento identifica qual o
+         * id do arquivo correspondente ao mesmo.
+         *
+         * @param {node|int} node
+         *
+         * @return {int}
+         */
+        getTargetFileId: (node) => {
+            if (isNaN(node) === false) {
+                return parseInt(node);
+            }
+            else {
+                let el = node;
+                while (el.attributes['data-file-id'] === undefined) {
+                    el = el.parentNode;
+                }
+
+                return parseInt(el.attributes['data-file-id'].value);
+            }
+        }
+    };
+
+
+
+
+    let CMD = {
         /**
          * Abre um novo arquivo de texto.
          */
-        new: () => {
+        cmdNew: () => {
             openNewFileNode();
         },
         /**
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo
          * para ser aberto no editor.
          */
-        open: (e) => {
+        cmdOpen: (e) => {
             if (e.target === undefined) {
                 openNewFileNode(e);
             }
@@ -246,7 +434,7 @@ let insertMenuActions = (() => {
         /**
          * Salva o arquivo atualmente em foco se houverem alterações realizadas.
          */
-        save: () => {
+        cmdSave: () => {
             let file = selectFileObjectInFocus();
             if (file !== null && file.getHasChanges() === true) {
                 ipcRenderer.send('save', file);
@@ -255,17 +443,35 @@ let insertMenuActions = (() => {
         /**
          * Salva o arquivo atualmente em foco com um novo nome.
          */
-        saveAs: () => {
+        cmdSaveAs: () => {
             let file = selectFileObjectInFocus();
-            if (file !== null && file.getHasChanges() === true) {
+            if (file !== null) {
                 ipcRenderer.send('saveAs', file);
             }
         },
-        closeApp: () => {
+        cmdCloseApp: () => {
             console.log('closeApp');
         }
     };
 
 
-    return p;
+
+
+
+    let _public = this.Control = {
+        cmdOpen: (fileData) => {
+            CMD.cmdOpen(fileData);
+        }
+    };
+
+
+
+
+
+    // Inicia o objeto
+    window.onload = () => {
+        constructor();
+    };
+
+    return _public;
 })();

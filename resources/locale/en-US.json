@@ -1,23 +1,23 @@
 {
     "button": {
-        "new": "New File",
-        "open": "Open",
-        "save": "Save",
-        "saveAs": "Save as",
-        "closeApp": "Close",
-        "menu": "Menu",
+        "cmdNew": "New File",
+        "cmdOpen": "Open",
+        "cmdSave": "Save",
+        "cmdSaveAs": "Save as",
+        "cmdCloseApp": "Close",
+        "cmdMenu": "Menu",
 
-        "header1": "Header 1",
-        "header2": "Header 2",
-        "header3": "Header 3",
-        "header4": "Header 4",
-        "header5": "Header 5",
-        "header6": "Header 6",
+        "cmdHeader1": "Header 1",
+        "cmdHeader2": "Header 2",
+        "cmdHeader3": "Header 3",
+        "cmdHeader4": "Header 4",
+        "cmdHeader5": "Header 5",
+        "cmdHeader6": "Header 6",
 
-        "bold": "Bold",
-        "italic": "Italic",
-        "underline": "underline",
-        "strike": "strike"
+        "cmdBold": "Bold",
+        "cmdItalic": "Italic",
+        "cmdUnderline": "underline",
+        "cmdStrike": "strike"
     },
     "legend": {
         "newfile": "New file",

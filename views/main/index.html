@@ -17,18 +17,9 @@
         </script>
 
 
-        <script src="../../resources/js/insertDOM.js"></script>
-        <script src="../../resources/js/insertMenuActions.js"></script>
         <script src="../../resources/js/insertFile.js"></script>
-        <script src="../../resources/js/insert.js"></script>
+        <script src="../../resources/js/appInsert.js"></script>
         <script src="index_IPCRenderer.js"></script>
-        <script>
-            let appInsert = null;
-
-            window.onload = () => {
-                appInsert = new insert();
-            };
-        </script>
     </head>
     <body>
         <section id="mainControls">
@@ -37,24 +28,24 @@
                     <button type="button" id="loadnewwindow" data-btn-action="menu">...</button>
                     <ul>
                         <li>
-                            <button type="button" data-btn-action="new" data-btn-label="inside"></button>
+                            <button type="button" data-btn-action="cmdNew" data-btn-label="inside"></button>
                         </li>
                         <li>
-                            <button type="button" data-btn-action="open" data-btn-label="inside"></button>
+                            <button type="button" data-btn-action="cmdOpen" data-btn-label="inside"></button>
                         </li>
                         <li>
-                            <button type="button" data-btn-action="save" data-btn-label="inside"></button>
+                            <button type="button" data-btn-action="cmdSave" data-btn-label="inside"></button>
                         </li>
                         <li>
-                            <button type="button" data-btn-action="saveAs" data-btn-label="inside"></button>
+                            <button type="button" data-btn-action="cmdSaveAs" data-btn-label="inside"></button>
                         </li>
                         <li>
-                            <button type="button" data-btn-action="closeApp" data-btn-label="inside"></button>
+                            <button type="button" data-btn-action="cmdCloseApp" data-btn-label="inside"></button>
                         </li>
                     </ul>
                 </div>
                 <div class="d-flex">
-                    <button type="button" data-btn-action="new">+</button>
+                    <button type="button" data-btn-action="cmdNew">+</button>
                     <button type="button" data-btn-action="selectPrev"><span>‹</span></button>
                 </div>
                 <div class="menuWindow">
@@ -67,17 +58,17 @@
             </div>
             <div id="mainMarkupButtons" class="row">
                 <div>
-                    <button type="button" data-btn-action="header1">H1</button>
-                    <button type="button" data-btn-action="header2">H2</button>
-                    <button type="button" data-btn-action="header3">H3</button>
-                    <button type="button" data-btn-action="header4">H4</button>
-                    <button type="button" data-btn-action="header5">H5</button>
-                    <button type="button" data-btn-action="header6">H6</button>
+                    <button type="button" data-btn-action="cmdHeader1">H1</button>
+                    <button type="button" data-btn-action="cmdHeader2">H2</button>
+                    <button type="button" data-btn-action="cmdHeader3">H3</button>
+                    <button type="button" data-btn-action="cmdHeader4">H4</button>
+                    <button type="button" data-btn-action="cmdHeader5">H5</button>
+                    <button type="button" data-btn-action="cmdHeader6">H6</button>
                     <span></span>
-                    <button type="button" data-btn-action="bold">B</button>
-                    <button type="button" data-btn-action="italic"><i>I</i></button>
-                    <button type="button" data-btn-action="underline"><u>U</u></button>
-                    <button type="button" data-btn-action="strike"><s>ab</s></button>
+                    <button type="button" data-btn-action="cmdBold">B</button>
+                    <button type="button" data-btn-action="cmdItalic"><i>I</i></button>
+                    <button type="button" data-btn-action="cmdUnderline"><u>U</u></button>
+                    <button type="button" data-btn-action="cmdStrike"><s>ab</s></button>
                 </div>
             </div>
         </section>

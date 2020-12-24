@@ -47,7 +47,7 @@ if (typeof (require) === 'undefined') {
                         case 'dialogOpenFile':
                             let c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
                             if (c === true) {
-                                insertMenuActions.open({
+                                appInsert.cmdOpen({
                                     fullName: 'full/path/to/virtual/file/selectedFile.txt',
                                     shortName: 'selectedFile.txt',
                                     data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals'
