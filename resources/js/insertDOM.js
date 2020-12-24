@@ -16,7 +16,7 @@ let insertDOM = (() => {
 
 
     /**
-     * Indica quando o ›Insert Editor já houver sido iniciado impedindo assim
+     * Indica quando o editor já houver sido iniciado impedindo assim
      * que algumas ações sejam realizadas mais de 1 vez.
      *
      * @param {bool}
@@ -89,7 +89,7 @@ let insertDOM = (() => {
 
 
         /**
-         * Gera um botão que identifica um arquivo aberto no ›Insert Editor.
+         * Gera um botão que identifica um arquivo aberto no editor.
          * Retorna a coleção de nodes que o formam.
          *
          * @param {string} fileName

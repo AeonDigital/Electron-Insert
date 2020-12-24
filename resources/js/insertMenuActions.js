@@ -5,7 +5,7 @@
 
 
 /**
- * Coleções de ações do menu principal do ›Insert Editor.
+ * Coleções de ações do menu principal do editor.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
@@ -19,7 +19,7 @@ let insertMenuActions = (() => {
 
     /**
      * Armazena a coleção de objetos 'insertFile' que correspondem a cada um dos
-     * documentos atualmente abertos no ›Insert Editor.
+     * documentos atualmente abertos no editor.
      *
      * @type {insertFile[]}
      */
@@ -71,7 +71,7 @@ let insertMenuActions = (() => {
 
 
     /**
-     * Define o arquivo que deve estar em foco.
+     * Define o foco para o arquivo selecionado.
      *
      * @param {evt} e
      */
@@ -90,8 +90,42 @@ let insertMenuActions = (() => {
             }
         }
     };
+    /**
+     * Fecha o arquivo selecionado.
+     *
+     * @param {evt} e
+     */
     let evtFileClose = (e) => {
+        let id = insertDOM.getTargetFileId(e.target);
 
+        let removedIndex = 0;
+        let removedFileFocus = false;
+        let newCollection = [];
+        for (let it in insertFiles) {
+            let file = insertFiles[it];
+
+            if (file.getId() === id) {
+                removedIndex = parseInt(it);
+                removedFileFocus = file.getInFocus();
+
+                file.remove();
+            }
+            else {
+                newCollection.push(file);
+            }
+        }
+        insertFiles = newCollection;
+
+
+        // Se o item removido é o que estava em foco...
+        if (removedFileFocus === true && insertFiles.length > 0) {
+            // Se possível,
+            // Promove o item na mesma posição do anterior para o foco.
+            if (removedIndex >- insertFiles.length) {
+                removedIndex = (insertFiles.length - 1);
+            }
+            evtFileSetFocus({ target: insertFiles[removedIndex].getId() });
+        }
     };
 
 
@@ -107,7 +141,7 @@ let insertMenuActions = (() => {
         },
         /**
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo
-         * para ser aberto no ›Insert Editor.
+         * para ser aberto no editor.
          */
         open: () => {
             ipcRenderer.send(
@@ -118,6 +152,31 @@ let insertMenuActions = (() => {
                     extensions: appSettings.ini.extensions
                 }
             );
+        },
+        openFile: (fileData) => {
+            openNewFileNode(fileData);
+            /*// verifica se o arquivo já não está aberto.
+            let match = false;
+            for (var it in openFiles) {
+                if (openFiles[it].fullName === fileData.fullName) {
+                    match = true;
+                    selectFile(it);
+                }
+            }
+
+            // Sendo mesmo para abrir o arquivo.
+            if (match === false) {
+                // identifica se o único arquivo aberto é um arquivo novo e vazio.
+                if (openFiles.length === 1 && openFiles[0].data === '') {
+                    actions.closeFile({ target: openFiles[0].closeButton });
+                }
+                openFiles.push(fileData);
+
+                let useIndex = openFiles.length - 1;
+                createSelectFileButton(fileData.shortName, useIndex, false);
+                createEditableNode(useIndex, fileData.data);
+                selectFile(useIndex);
+            }*/
         },
         save: () => {
 

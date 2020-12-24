@@ -139,21 +139,21 @@ let insertFile = function (fileData) {
          * Retorna o nome curto do arquivo aberto.
          *
          * @return {string}
-         */
+         *
         getShortName: () => { return shortName; },
         /**
          * Retorna 'true' caso o arquivo aberto seja novo e ainda
          * não tenha sido salvo.
          *
          * @return {bool}
-         */
+         *
         getIsNew: () => { return isNew; },
         /**
          * Retorna 'true' caso existam modificações no arquivo que ainda não
          * tenham sido salvas.
          *
          * @return {bool}
-         */
+         *
         getHasChanges: () => { return hasChanges; },
         /**
          * Retorna 'true' caso este seja o arquivo que está em foco no momento.
@@ -166,7 +166,7 @@ let insertFile = function (fileData) {
          * o respectivo arquivo.
          *
          * @return {bool}
-         */
+         *
         getNodes: () => {
             return {
                 fileButton: fileButton,
@@ -190,6 +190,13 @@ let insertFile = function (fileData) {
                 editNode.removeAttribute('class');
             }
             inFocus = active;
+        },
+        /**
+         * Remove do DOM os nodes representantes deste arquivo.
+         */
+        remove: () => {
+            fileButton.parentNode.removeChild(fileButton);
+            editNode.parentNode.removeChild(editNode);
         }
     };
 
