@@ -44,7 +44,7 @@ let insertDOM = (() => {
                 let nL = [];
                 for (let it in nodeList) {
                     let n = nodeList[it];
-                    if (typeof (n) === 'object' && n.tagName !== undefined) {
+                    if (n.nodeType === Node.ELEMENT_NODE) {
                         nL.push(n);
                     }
                 }
@@ -93,17 +93,13 @@ let insertDOM = (() => {
          * Retorna a coleção de nodes que o formam.
          *
          * @param {string} fileName
-         * @param {bool} isNew
          * @param {int} id
          * @param {evt} evtFileSetFocus
          * @param {evt} evtFileClose
          *
          * @return {node[]}
          */
-        createSelectFileButton: (fileName, isNew, id, evtFileSetFocus, evtFileClose) => {
-            if (isNew === true) {
-                fileName += ' *';
-            }
+        createSelectFileButton: (fileName, id, evtFileSetFocus, evtFileClose) => {
 
             let li = document.createElement('li');
             li.setAttribute('data-file-id', id);

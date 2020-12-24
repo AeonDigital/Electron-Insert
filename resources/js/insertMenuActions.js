@@ -73,6 +73,61 @@ let insertMenuActions = (() => {
             evtFileSetFocus({ target: fileData.id });
         }
     };
+    /**
+     * Retorna o objeto 'insertFile' correspondente ao id indicado.
+     *
+     * @param {int} id
+     *
+     * @return {insertFile}
+     */
+    let selectFileObjectById = (id) => {
+        let r = null;
+
+        for (let it in insertFiles) {
+            let file = insertFiles[it];
+
+            if (file.getId() === id) {
+                r = file;
+            }
+        }
+
+        return r;
+    };
+    /**
+     * Remove o objeto 'insertFile' da coleção de itens abertos e também
+     * remove seus respectivos nodes do DOM.
+     *
+     * @param {int} id
+     */
+    let removeFileObjectById = (id) => {
+
+        let removeFile = null;
+        let removeFileIndex = 0;
+
+        for (let it in insertFiles) {
+            let file = insertFiles[it];
+
+            if (file.getId() === id) {
+                removeFile = file;
+                removeFileIndex = parseInt(it);
+            }
+        }
+
+        removeFile.remove();
+        insertFiles.splice(removeFileIndex, 1);
+
+
+        // Se o item removido é o que estava em foco e ainda há
+        // algum arquivo aberto no editor
+        if (removeFile.getInFocus() === true && insertFiles.length > 0) {
+            // Se possível,
+            // Promove o item na mesma posição do anterior para o foco.
+            if (removeFileIndex >= insertFiles.length) {
+                removeFileIndex = (insertFiles.length - 1);
+            }
+            evtFileSetFocus({ target: insertFiles[removeFileIndex].getId() });
+        }
+    };
 
 
 
@@ -105,35 +160,32 @@ let insertMenuActions = (() => {
      */
     let evtFileClose = (e) => {
         let id = insertDOM.getTargetFileId(e.target);
+        let file = selectFileObjectById(id);
 
-        let removedIndex = 0;
-        let removedFileFocus = false;
-        let newCollection = [];
-        for (let it in insertFiles) {
-            let file = insertFiles[it];
-
-            if (file.getId() === id) {
-                removedIndex = parseInt(it);
-                removedFileFocus = file.getInFocus();
-
-                file.remove();
-            }
-            else {
-                newCollection.push(file);
-            }
+        // Havendo alterações, oferece a opção para que o usuário possa
+        // salvar o arquivo.
+        let canClose = true;
+        if (file.getHasChanges() === true) {
+            canClose = confirmCloseWithoutSave(file.getShortName());
         }
-        insertFiles = newCollection;
 
-
-        // Se o item removido é o que estava em foco...
-        if (removedFileFocus === true && insertFiles.length > 0) {
-            // Se possível,
-            // Promove o item na mesma posição do anterior para o foco.
-            if (removedIndex >- insertFiles.length) {
-                removedIndex = (insertFiles.length - 1);
-            }
-            evtFileSetFocus({ target: insertFiles[removedIndex].getId() });
+        if (canClose === true) {
+            removeFileObjectById(id);
         }
+    };
+
+
+    /**
+     * Questiona o usuário sobre sair sem salvar o arquivo atualmente aberto que contem
+     * alterações.
+     *
+     * @param {string} fileShortName
+     */
+    let confirmCloseWithoutSave = (fileShortName) => {
+        let msg = appSettings.locale.legend.dialogConfirmCloseWithoutSave.replace(
+            '[[shortName]]', fileShortName
+        );
+        return confirm(msg);
     };
 
 
@@ -165,7 +217,8 @@ let insertMenuActions = (() => {
             openNewFileNode(fileData);
         },
         save: () => {
-
+            alert('save');
+            console.log('save');
         },
         saveAs: () => {
 

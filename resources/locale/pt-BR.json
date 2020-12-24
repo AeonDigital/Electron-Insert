@@ -21,6 +21,7 @@
     },
     "legend": {
         "newfile": "Novo arquivo",
-        "dialogSelectFile": "Selecione um arquivo"
+        "dialogSelectFile": "Selecione um arquivo",
+        "dialogConfirmCloseWithoutSave": "Deseja salvar as alterações do documento \"[[shortName]]\" antes de fechar?"
     }
 }

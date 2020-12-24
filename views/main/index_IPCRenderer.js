@@ -61,7 +61,8 @@ let appSettings = (() => {
             },
             "legend": {
                 "newfile": "New file",
-                "dialogSelectFile": "Select a file"
+                "dialogSelectFile": "Select a file",
+                "dialogConfirmCloseWithoutSave": "Do you want to save changes to the document \"[[shortName]]\" before closing?"
             }
         };
     }

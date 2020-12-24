@@ -106,7 +106,7 @@ let insertFile = function (fileData) {
         }
 
         let r = insertDOM.createSelectFileButton(
-            shortName, isNew, id, fileData.evtFileSetFocus, fileData.evtFileClose
+            shortName, id, fileData.evtFileSetFocus, fileData.evtFileClose
         );
         fileButton = r.fileButton;
         fileLabel = r.fileLabel;
@@ -116,6 +116,76 @@ let insertFile = function (fileData) {
 
         document.getElementById('mainMenu').appendChild(fileButton);
         document.getElementById('mainPanel').appendChild(editNode);
+    };
+
+
+
+
+
+    /**
+     * Verifica se há alterações entre o arquivo originalmente aberto e a versão
+     * atualmente apresentada na tela.
+     */
+    let checkIfHasChanges = () => {
+        let ndata = [];
+        for (var it in editNode.childNodes) {
+            let pElem = editNode.childNodes[it];
+
+            // Apenas se trata-se mesmo de um elemento P
+            if (pElem.nodeType === Node.ELEMENT_NODE && pElem.tagName === 'P') {
+                let line = [];
+
+                // Se o paragrafo está vazio...
+                if (pElem.innerText === '') {
+                    line.push('');
+                }
+                else {
+                    // Para cada node filho do elemento P
+                    for (var ii in pElem.childNodes) {
+                        let pChild = pElem.childNodes[ii];
+
+                        // Se o tipo do node for de texto, adiciona o mesmo
+                        // no coletor de dados do parágrafo atual.
+                        if (pChild.nodeType === Node.TEXT_NODE) {
+                            line.push(pChild.textContent);
+                        }
+                        // Senão, tratando-se de um outro tipo de elemento...
+                        else if (pChild.nodeType === Node.ELEMENT_NODE) {
+                            switch (pChild.tagName) {
+                                case 'BR':
+                                    if (pChild !== pElem.lastChild) {
+                                        line.push('\n');
+                                    }
+                                    break;
+                                default:
+                                    line.push(pChild.textContent);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                ndata.push(line.join(''));
+            }
+        }
+
+        ndata = ndata.join('\n');
+        hasChanges = (data !== ndata);
+
+        let lbl = fileLabel.innerText.replace(' *', '').trim();
+        if (hasChanges === true) {
+            lbl += ' *';
+        }
+        fileLabel.innerText = lbl;
+
+        return hasChanges;
+    };
+
+
+    let timeout_checkIfHasChanges = null;
+    let setTimeout_checkIfHasChanges = () => {
+        clearTimeout(timeout_checkIfHasChanges);
+        timeout_checkIfHasChanges = setTimeout(checkIfHasChanges, 500);
     };
 
 
@@ -144,7 +214,7 @@ let insertFile = function (fileData) {
          * Retorna o nome curto do arquivo aberto.
          *
          * @return {string}
-         *
+         */
         getShortName: () => { return shortName; },
         /**
          * Retorna 'true' caso o arquivo aberto seja novo e ainda
@@ -158,8 +228,12 @@ let insertFile = function (fileData) {
          * tenham sido salvas.
          *
          * @return {bool}
-         *
-        getHasChanges: () => { return hasChanges; },
+         */
+        getHasChanges: () => {
+            clearTimeout(timeout_checkIfHasChanges);
+            checkIfHasChanges();
+            return hasChanges;
+        },
         /**
          * Retorna 'true' caso este seja o arquivo que está em foco no momento.
          *
@@ -189,10 +263,12 @@ let insertFile = function (fileData) {
             if (active === true) {
                 fileButton.setAttribute('class', 'active');
                 editNode.setAttribute('class', 'active');
+                editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
             }
             else {
                 fileButton.removeAttribute('class');
                 editNode.removeAttribute('class');
+                editNode.removeEventListener('keyup', setTimeout_checkIfHasChanges);
             }
             inFocus = active;
         },
