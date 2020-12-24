@@ -60,6 +60,9 @@ main > section {
     font-size: var(--editor-main-p-font-size);
     line-height: var(--editor-main-p-font-line-height);
 }
+main > section p:empty {
+    height: var(--editor-main-p-font-line-height);
+}
 
 
 .row {

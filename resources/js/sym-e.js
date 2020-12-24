@@ -50,7 +50,7 @@ if (typeof (require) === 'undefined') {
                                 insertMenuActions.openFile({
                                     fullName: 'full/path/to/virtual/file/selectedFile.txt',
                                     shortName: 'selectedFile.txt',
-                                    data: 'Informação fake\npara simular a abertura de um arquivo.'
+                                    data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals'
                                 });
                             }
                             break;

@@ -133,14 +133,23 @@ let insertDOM = (() => {
          * permitir editar.
          *
          * @param {int} id
+         * @param {string} data
          *
          * @return {node}
          */
-        createEditableNode: (id) => {
+        createEditableNode: (id, data) => {
             let section = document.createElement('section');
             section.setAttribute('data-panel', 'editor-document');
             section.setAttribute('contenteditable', 'true');
             section.setAttribute('data-file-id', id);
+
+            let dataLines = data.split('\n');
+            for (let it in dataLines) {
+                let p = document.createElement('p');
+                p.innerText = dataLines[it];
+
+                section.appendChild(p);
+            }
 
             return section;
         },

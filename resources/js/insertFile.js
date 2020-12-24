@@ -112,11 +112,16 @@ let insertFile = function (fileData) {
         fileLabel = r.fileLabel;
         closeButton = r.closeButton;
 
-        editNode = insertDOM.createEditableNode(id);
+        editNode = insertDOM.createEditableNode(id, data);
 
         document.getElementById('mainMenu').appendChild(fileButton);
         document.getElementById('mainPanel').appendChild(editNode);
     };
+
+
+
+
+
 
 
 
