@@ -33,6 +33,8 @@ let insertMenuActions = (() => {
 
 
 
+
+
     /**
      * Inicia um novo node de edição para um arquivo.
      *
@@ -98,6 +100,8 @@ let insertMenuActions = (() => {
      * remove seus respectivos nodes do DOM.
      *
      * @param {int} id
+     *
+     * @return {insertFile}
      */
     let removeFileObjectById = (id) => {
 
@@ -127,6 +131,24 @@ let insertMenuActions = (() => {
             }
             evtFileSetFocus({ target: insertFiles[removeFileIndex].getId() });
         }
+    };
+    /**
+     * Retorna o objeto 'insertFile' que está em foco no momento.
+     *
+     * @return {?insertFile}
+     */
+    let selectFileObjectInFocus = () => {
+        let r = null;
+
+        for (let it in insertFiles) {
+            let file = insertFiles[it];
+
+            if (file.getInFocus() === true) {
+                r = file;
+            }
+        }
+
+        return r;
     };
 
 
@@ -175,6 +197,9 @@ let insertMenuActions = (() => {
     };
 
 
+
+
+
     /**
      * Questiona o usuário sobre sair sem salvar o arquivo atualmente aberto que contem
      * alterações.
@@ -203,28 +228,41 @@ let insertMenuActions = (() => {
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo
          * para ser aberto no editor.
          */
-        open: () => {
-            ipcRenderer.send(
-                'dialogOpenFile',
-                {
-                    title: appSettings.locale.legend.dialogSelectFile,
-                    defaultPath: appSettings.ini.defaultPath,
-                    extensions: appSettings.ini.extensions
-                }
-            );
+        open: (e) => {
+            if (e.target === undefined) {
+                openNewFileNode(e);
+            }
+            else {
+                ipcRenderer.send(
+                    'dialogOpenFile',
+                    {
+                        title: appSettings.locale.legend.dialogSelectFile,
+                        defaultPath: appSettings.ini.defaultPath,
+                        extensions: appSettings.ini.extensions
+                    }
+                );
+            }
         },
-        openFile: (fileData) => {
-            openNewFileNode(fileData);
-        },
+        /**
+         * Salva o arquivo atualmente em foco se houverem alterações realizadas.
+         */
         save: () => {
-            alert('save');
-            console.log('save');
+            let file = selectFileObjectInFocus();
+            if (file !== null && file.getHasChanges() === true) {
+                ipcRenderer.send('save', file);
+            }
         },
+        /**
+         * Salva o arquivo atualmente em foco com um novo nome.
+         */
         saveAs: () => {
-
+            let file = selectFileObjectInFocus();
+            if (file !== null && file.getHasChanges() === true) {
+                ipcRenderer.send('saveAs', file);
+            }
         },
-        closeFile: (e) => {
-
+        closeApp: () => {
+            console.log('closeApp');
         }
     };
 
