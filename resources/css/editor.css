@@ -70,12 +70,18 @@ main > section.active {
 }
 .subMenu > ul > li > button {
     width:100%;
-    min-width: 200px;
-    padding:0 calc(var(--main-width-division) * 2) 0 var(--main-width-division);
+    min-width: 260px;
+    padding:0 0 0 var(--main-button-shortcut-font-size);
     text-align: left;
 }
 .subMenu > ul > li > button:hover {
     font-weight: normal;
+}
+.subMenu > ul > li > button span {
+    float: right;
+    white-space: nowrap;
+    font-size: var(--main-button-shortcut-font-size);
+    padding-right: var(--main-button-shortcut-font-size);
 }
 
 

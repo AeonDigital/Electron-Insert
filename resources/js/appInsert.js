@@ -57,6 +57,12 @@ const appInsert = (() => {
                         break;
                     case 'inside':
                         btn.innerHTML = lbl;
+
+                        if (btn.attributes['data-btn-shortcut'] !== undefined) {
+                            let sc = document.createElement('span');
+                            sc.innerHTML = btn.attributes['data-btn-shortcut'].value;
+                            btn.appendChild(sc);
+                        }
                         break;
                 }
             }

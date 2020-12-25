@@ -1,71 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8" />
-        <title>Insert</title>
+        <meta charset="UTF-8">
+        <title>›Insert Editor</title>
 
-        <link rel="stylesheet" href="../../resources/css/structure.css" />
-        <link rel="stylesheet" href="../../resources/css/editor.css" />
+        <link rel="stylesheet" href="../../resources/css/structure.css">
+        <link rel="stylesheet" href="../../resources/css/editor.css">
 
-        <link rel="stylesheet" href="../../resources/fonts/fira_code/fira_code.css" />
-        <link rel="stylesheet" href="../../resources/fonts/inter/inter.css" />
+        <link rel="stylesheet" href="../../resources/fonts/fira_code/fira_code.css">
+        <link rel="stylesheet" href="../../resources/fonts/inter/inter.css">
 
-        <script src="index_IPCRenderer.js"></script>
-        <script src="../../resources/js/insert.js"></script>
+
+        <script src="../../resources/js/sym-e.js"></script>
         <script>
-            window.onload = function () {
-                ipcRendererStart();
-                const ins = new insert();
-            };
+            const { ipcRenderer } = require('electron');
         </script>
+
+
+        <script src="../../resources/js/insertFile.js"></script>
+        <script src="../../resources/js/appInsert.js"></script>
+        <script src="index_IPCRenderer.js"></script>
     </head>
     <body>
         <section id="mainControls">
             <div class="row d-flex">
-                <div class="sub-menu">
+                <div class="subMenu">
                     <button type="button" id="loadnewwindow" data-btn-action="menu">...</button>
                     <ul>
-                        <li><button type="button" data-btn-action="new">Novo</button></li>
-                        <li><button type="button" data-btn-action="open">Abrir</button></li>
-                        <li><button type="button" data-btn-action="save">Salvar</button></li>
-                        <li><button type="button" data-btn-action="saveas">Salvar Como</button></li>
-                        <li><button type="button" data-btn-action="close">Fechar</button></li>
+                        <li>
+                            <button type="button"
+                                    data-btn-action="cmdNew"
+                                    data-btn-label="inside"
+                                    data-btn-shortcut="Ctrl + N">
+                                New File<span>Ctrl + N</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    data-btn-action="cmdOpen"
+                                    data-btn-label="inside"
+                                    data-btn-shortcut="Ctrl + O">
+                                Open<span>Ctrl + O</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    data-btn-action="cmdSave"
+                                    data-btn-label="inside"
+                                    data-btn-shortcut="Ctrl + S">
+                                Save<span>Ctrl + S</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    data-btn-action="cmdSaveAs"
+                                    data-btn-label="inside"
+                                    data-btn-shortcut="Ctrl + Shift + S">
+                                Save as<span>Ctrl + Shift + S</span>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button"
+                                    data-btn-action="cmdCloseApp"
+                                    data-btn-label="inside">
+                                Close
+                            </button>
+                        </li>
                     </ul>
                 </div>
                 <div class="d-flex">
-                    <button type="button" data-btn-action="new">+</button>
+                    <button type="button" data-btn-action="cmdNew" title="New File">+</button>
                     <button type="button" data-btn-action="selectPrev"><span>‹</span></button>
                 </div>
                 <div class="menuWindow">
-                    <ul class="menuFile">
-                        <li class="active">
-                            <span>Arquivo 01</span>
-                            <button type="button" data-btn-action="">X</button>
+                    <ul id="mainMenu" class="menuFile">
+                        <li data-file-id="1">
+                            <span>New file *</span>
+                            <button type="button" data-btn-action="closeFile">X</button>
                         </li>
-                        <!--li>
-                            <span>Arquivo 02</span>
-                            <button type="button" data-btn-action="">X</button>
+                        <li data-file-id="2" class="active">
+                            <span>selectedFile.txt</span>
+                            <button type="button" data-btn-action="closeFile">X</button>
                         </li>
-                        <li>
-                            <span>Arquivo 03</span>
-                            <button type="button" data-btn-action="">X</button>
-                        </li>
-                        <li>
-                            <span>Arquivo 04</span>
-                            <button type="button" data-btn-action="">X</button>
-                        </li>
-                        <li>
-                            <span>Arquivo 05</span>
-                            <button type="button" data-btn-action="">X</button>
-                        </li>
-                        <li>
-                            <span>Arquivo 06</span>
-                            <button type="button" data-btn-action="">X</button>
-                        </li>
-                        <li>
-                            <span>Arquivo 07</span>
-                            <button type="button" data-btn-action="">X</button>
-                        </li-->
                     </ul>
                 </div>
                 <div class="d-flex">
@@ -74,35 +90,37 @@
             </div>
             <div id="mainMarkupButtons" class="row">
                 <div>
-                    <button type="button" data-btn-action="header1">H1</button>
-                    <button type="button" data-btn-action="header2">H2</button>
-                    <button type="button" data-btn-action="header3">H3</button>
-                    <button type="button" data-btn-action="header4">H4</button>
-                    <button type="button" data-btn-action="header5">H5</button>
-                    <button type="button" data-btn-action="header6">H6</button>
+                    <button type="button" data-btn-action="cmdHeader1" title="Header 1">H1</button>
+                    <button type="button" data-btn-action="cmdHeader2" title="Header 2">H2</button>
+                    <button type="button" data-btn-action="cmdHeader3" title="Header 3">H3</button>
+                    <button type="button" data-btn-action="cmdHeader4" title="Header 4">H4</button>
+                    <button type="button" data-btn-action="cmdHeader5" title="Header 5">H5</button>
+                    <button type="button" data-btn-action="cmdHeader6" title="Header 6">H6</button>
                     <span></span>
-                    <button type="button" data-btn-action="bold">B</button>
-                    <button type="button" data-btn-action="italic"><i>I</i></button>
-                    <button type="button" data-btn-action="underline"><u>U</u></button>
-                    <button type="button" data-btn-action="strike"><s>ab</s></button>
+                    <button type="button" data-btn-action="cmdBold" title="Bold">B</button>
+                    <button type="button" data-btn-action="cmdItalic" title="Italic"><i>I</i></button>
+                    <button type="button" data-btn-action="cmdUnderline" title="underline"><u>U</u></button>
+                    <button type="button" data-btn-action="cmdStrike" title="strike"><s>ab</s></button>
                 </div>
             </div>
         </section>
-        <main>
-            <!--section data-panel="editor-document">
-                <p>
-                    Editable content.
-                    <br />
-                    Seccond.
-                </p>
+        <main id="mainPanel">
+            <section data-panel="editor-document"
+                    data-file-id="1"
+                    spellcheck="false"
+                    contenteditable="true">
+                <p>Isto é um teste</p>
             </section>
-            <section data-panel="editor-document">
-                <p>
-                    Editable content. 01
-                    <br />
-                    Seccond.
-                </p>
-            </section-->
+            <section data-panel="editor-document"
+                    data-file-id="2"
+                    spellcheck="false"
+                    class="active"
+                    contenteditable="true">
+                <p>Informação fake</p>
+                <p>para simular &lt;b&gt;a&lt;/b&gt; abertura de um arquivo.</p>
+                <p></p>
+                <p>E aqui uma nova linha e tals</p>
+            </section>
         </main>
     </body>
 </html>
