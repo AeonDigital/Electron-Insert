@@ -112,6 +112,10 @@ button[data-btn-action]:hover {
     background-color:var(--main-bg-color-hover);
     font-weight: bold;
 }
+button[data-btn-action] img {
+    max-width: calc(var(--main-button-min-width) / 2);
+    filter: var(--main-font-filter-color);
+}
 .menuFile li.active button:hover,
 .menuFile li:hover button:hover {
     color: var(--main-font-invert-color);
