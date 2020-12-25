@@ -42,27 +42,6 @@ if (typeof (require) === 'undefined') {
                 send: (channel, args) => {
                     let r = null;
                     console.log('ipcRenderer.send()', channel, args);
-
-                    switch (channel) {
-                        case 'dialogOpenFile':
-                            let c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
-                            if (c === true) {
-                                appInsert.cmdOpen({
-                                    fullName: 'full/path/to/virtual/file/selectedFile.txt',
-                                    shortName: 'selectedFile.txt',
-                                    data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals'
-                                });
-                            }
-                            break;
-
-                        case 'save':
-                            args.save();
-                            break;
-
-                        case 'saveAs':
-                            args.saveAs('c:\\novo\local\\novoNome.txt', 'novoNome.txt');
-                            break;
-                    }
                     return r;
                 },
                 sendSync: (channel, args) => {
@@ -70,10 +49,32 @@ if (typeof (require) === 'undefined') {
                     console.log('ipcRenderer.sendSync()', channel, args);
 
                     switch (channel) {
-                        case 'getRootPath':
+                        case 'getRootPathSync':
                             let r = window.location.href.split('/');
                             r.pop();
                             r = r.join('/');
+                            break;
+
+                        case 'dialogOpenFileSync':
+                            let c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
+                            if (c === true) {
+                                r = {
+                                    fullName: 'full/path/to/virtual/file/selectedFile.txt',
+                                    shortName: 'selectedFile.txt',
+                                    data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals'
+                                };
+                            }
+                            break;
+
+                        case 'saveSync':
+                            r = true;
+                            break;
+
+                        case 'saveAsSync':
+                            r = {
+                                fullName: 'full/path/to/virtual/file/selectedFileAs.txt',
+                                shortName: 'selectedFileAs.txt',
+                            }
                             break;
                     }
 

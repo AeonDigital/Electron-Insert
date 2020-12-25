@@ -16,11 +16,11 @@
 
 
 let appSettings = (() => {
-    let rootPath = ipcRenderer.sendSync('getRootPath');
+    let rootPath = ipcRenderer.sendSync('getRootPathSync');
     let localePath = rootPath + '/resources/locale';
 
 
-    let ini = ipcRenderer.sendSync('loadJsonFile', rootPath + '/ini.json');
+    let ini = ipcRenderer.sendSync('loadJsonFileSync', rootPath + '/ini.json');
     if (ini === null) {
         // Configuração padrão da aplicação.
         ini = {
@@ -36,7 +36,7 @@ let appSettings = (() => {
     }
 
 
-    let locale = ipcRenderer.sendSync('loadJsonFile', localePath + '/' + ini.locale + '.json');
+    let locale = ipcRenderer.sendSync('loadJsonFileSync', localePath + '/' + ini.locale + '.json');
     if (locale === null) {
         locale = {
             "button": {
@@ -68,32 +68,8 @@ let appSettings = (() => {
     }
 
 
-
-    // Registra o evento que recebe os dados de um arquivo que deve
-    // ser carregado no editor.
-    ipcRenderer.on('dialogOpenFile-finished', (event, file) => {
-        ins.openFile(file);
-    });
-
-
     return {
         ini: ini,
         locale: locale
     };
 })();
-
-
-
-
-
-//const btnclick = document.getElementById('loadnewwindow');
-//btnclick.addEventListener('click', function () {
-    //var arg = "secondparam";
-
-    //send the info to main process . we can pass any arguments as second param.
-    //ipcRenderer.send("btnclick", args); // ipcRender.send will pass the information to main process
-//});
-
-//ipcRenderer.on('btnclick-task-finished', function (event, param) {
-    //alert("loaded a popup");
-//});

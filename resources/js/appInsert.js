@@ -423,36 +423,49 @@ const appInsert = (() => {
          * para ser aberto no editor.
          */
         cmdOpen: (e) => {
-            if (e.target === undefined) {
-                openNewFileNode(e);
-            }
-            else {
-                ipcRenderer.send(
-                    'dialogOpenFile',
-                    {
-                        title: appSettings.locale.legend.dialogSelectFile,
-                        defaultPath: appSettings.ini.defaultPath,
-                        extensions: appSettings.ini.extensions
-                    }
-                );
-            }
+            let fileData = ipcRenderer.sendSync(
+                'dialogOpenFileSync',
+                {
+                    title: appSettings.locale.legend.dialogSelectFile,
+                    defaultPath: appSettings.ini.defaultPath,
+                    extensions: appSettings.ini.extensions
+                }
+            );
+            openNewFileNode(fileData);
         },
         /**
          * Salva o arquivo atualmente em foco se houverem alterações realizadas.
          */
         cmdSave: () => {
-            let file = selectFileObjectInFocus();
-            if (file !== null && file.getHasChanges() === true) {
-                ipcRenderer.send('save', file);
+            let fileData = selectFileObjectInFocus();
+            if (fileData !== null && fileData.getHasChanges() === true) {
+
+                let saveData = { fullName: fileData.getFullName(), data: fileData.getData() };
+                let saveResult = ipcRenderer.sendSync('saveSync', saveData);
+
+                if (saveResult === true) {
+                    fileData.save();
+                }
+                else {
+                    alert(saveResult);
+                }
             }
         },
         /**
          * Salva o arquivo atualmente em foco com um novo nome.
          */
         cmdSaveAs: () => {
-            let file = selectFileObjectInFocus();
-            if (file !== null) {
-                ipcRenderer.send('saveAs', file);
+            let fileData = selectFileObjectInFocus();
+            if (fileData !== null) {
+                let saveData = { data: fileData.getData() };
+                let saveResult = ipcRenderer.sendSync('saveAsSync', saveData);
+
+                if (saveResult.success === true) {
+                    fileData.saveAs(saveResult.fullName, saveResult.shortName);
+                }
+                else {
+                    alert(saveResult.message);
+                }
             }
         },
         cmdCloseApp: () => {
