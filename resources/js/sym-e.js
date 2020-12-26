@@ -50,7 +50,7 @@ if (typeof (require) === 'undefined') {
 
                     switch (channel) {
                         case 'getRootPathSync':
-                            let r = window.location.href.split('/');
+                            r = window.location.href.split('/');
                             r.pop();
                             r = r.join('/');
                             break;
@@ -61,7 +61,7 @@ if (typeof (require) === 'undefined') {
                                 r = {
                                     fullName: 'full/path/to/virtual/file/selectedFile.txt',
                                     shortName: 'selectedFile.txt',
-                                    data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals'
+                                    data: 'Informação fake\npara simular <b>a</b> abertura de um arquivo.\n\nE aqui uma nova linha e tals\n\n\n\n\nTeste!'
                                 };
                             }
                             break;
