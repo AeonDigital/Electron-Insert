@@ -91,8 +91,9 @@ const appInsert = (() => {
         if (fileData === undefined) {
             fileData = {
                 fullName: '',
-                shortName: appSettings.locale.legend.newfile,
-                data: ''
+                shortName: appSettings.locale.button.newfile,
+                data: '',
+                isNew: true
             };
         }
         fileData.id = atualId;
@@ -266,7 +267,7 @@ const appInsert = (() => {
      * @param {string} fileShortName
      */
     let confirmCloseWithoutSave = (fileShortName) => {
-        let msg = appSettings.locale.legend.dialogConfirmCloseWithoutSave.replace(
+        let msg = appSettings.locale.CMD.cmdFileClose.confirmCloseWithoutSave.replace(
             '[[shortName]]', fileShortName
         );
         return confirm(msg);
@@ -424,30 +425,38 @@ const appInsert = (() => {
          */
         cmdOpen: (e) => {
             let fileData = ipcRenderer.sendSync(
-                'dialogOpenFileSync',
-                {
-                    title: appSettings.locale.legend.dialogSelectFile,
-                    defaultPath: appSettings.ini.defaultPath,
-                    extensions: appSettings.ini.extensions
-                }
+                'cmdOpenSync', { appSettings: appSettings }
             );
-            openNewFileNode(fileData);
+            if (fileData !== undefined) {
+                openNewFileNode(fileData);
+            }
         },
         /**
          * Salva o arquivo atualmente em foco se houverem alterações realizadas.
          */
         cmdSave: () => {
             let fileData = selectFileObjectInFocus();
-            if (fileData !== null && fileData.getHasChanges() === true) {
+            if (fileData !== null) {
 
-                let saveData = { fullName: fileData.getFullName(), data: fileData.getData() };
-                let saveResult = ipcRenderer.sendSync('saveSync', saveData);
-
-                if (saveResult === true) {
-                    fileData.save();
+                if (fileData.getIsNew() === true) {
+                    CMD.cmdSaveAs();
                 }
-                else {
-                    alert(saveResult);
+                else if (fileData.getHasChanges() === true) {
+
+                    let saveResult = ipcRenderer.sendSync(
+                        'cmdSaveSync',
+                        {
+                            fullName: fileData.getFullName(),
+                            data: fileData.getData()
+                        }
+                    );
+
+                    if (saveResult === true) { fileData.save(); }
+                    else {
+                        alert(appSettings.locale.CMD.cmdSave.onFail.replace(
+                            '[[shortName]]', fileData.getShortName()
+                        ));
+                    }
                 }
             }
         },
@@ -457,14 +466,24 @@ const appInsert = (() => {
         cmdSaveAs: () => {
             let fileData = selectFileObjectInFocus();
             if (fileData !== null) {
-                let saveData = { data: fileData.getData() };
-                let saveResult = ipcRenderer.sendSync('saveAsSync', saveData);
-
-                if (saveResult.success === true) {
-                    fileData.saveAs(saveResult.fullName, saveResult.shortName);
-                }
-                else {
-                    alert(saveResult.message);
+                let saveResult = ipcRenderer.sendSync(
+                    'cmdSaveAsSync',
+                    {
+                        appSettings: appSettings,
+                        data: fileData.getData()
+                    }
+                );
+                console.log(saveResult);
+                if (saveResult !== undefined) {
+                    if (saveResult.success === true) {
+                        console.log(saveResult);
+                        fileData.saveAs(saveResult.fullName, saveResult.shortName);
+                    }
+                    else {
+                        alert(appSettings.locale.CMD.cmdSaveAs.onFail.replace(
+                            '[[fullName]]', saveResult.fullName
+                        ));
+                    }
                 }
             }
         },

@@ -57,12 +57,31 @@ let appSettings = (() => {
                 "cmdBold": "Bold",
                 "cmdItalic": "Italic",
                 "cmdUnderline": "underline",
-                "cmdStrike": "strike"
+                "cmdStrike": "strike",
+
+                "newfile": "New file"
             },
-            "legend": {
-                "newfile": "New file",
-                "dialogSelectFile": "Select a file",
-                "dialogConfirmCloseWithoutSave": "Do you want to save changes to the document \"[[shortName]]\" before closing?"
+            "CMD": {
+                "cmdFileClose": {
+                    "confirmCloseWithoutSave": "Do you want to save changes to the document \"[[shortName]]\" before closing?"
+                },
+                "cmdOpen": {
+                    "dialogConfig": {
+                        "title": "Select a file",
+                        "filterAllFiles": "All files",
+                        "filterFileType": "Text file"
+                    }
+                },
+                "cmdSave": {
+                    "onFail": "An error occurred while saving the file \"[[shortName]]\"."
+                },
+                "cmdSaveAs": {
+                    "dialogConfig": {
+                        "title": "Salvar as",
+                        "filterFileType": "Arquivo de texto"
+                    },
+                    "onFail": "An error occurred while saving the file as \"[[fullName]]\"."
+                }
             }
         };
     }

@@ -43,6 +43,12 @@ let insertFile = function (fileData) {
      */
     let data = '';
     /**
+     * Indica quando o arquivo é um novo documento.
+     *
+     * @type {bool}
+     */
+    let isNew = false;
+    /**
      * Indica quando há ou não alteração realizada no documento e que ainda não foi salva
      *
      * @type {bool}
@@ -87,6 +93,7 @@ let insertFile = function (fileData) {
         fullName = fileData.fullName;
         shortName = fileData.shortName;
         data = fileData.data;
+        isNew = fileData.isNew;
         fileButton = fileData.fileButton;
         fileLabel = fileData.fileLabel;
         editNode = fileData.editNode;
@@ -211,6 +218,12 @@ let insertFile = function (fileData) {
          */
         getData: () => { return sanitizeViewData(); },
         /**
+         * Retorna o estado atual do arquivo indicando se ele é novo (aberto novo arquivo e ainda não salvo).
+         *
+         * @return {bool}
+         */
+        getIsNew: () => { return isNew; },
+        /**
          * Retorna 'true' caso existam modificações no arquivo que ainda não
          * tenham sido salvas.
          *
@@ -259,6 +272,7 @@ let insertFile = function (fileData) {
         save: () => {
             clearTimeout(timeout_checkIfHasChanges);
             checkIfHasChanges(true);
+            isNew = false;
         },
         /**
          * Perssiste os dados que estão atualmente na view com os dados que estão
@@ -273,6 +287,7 @@ let insertFile = function (fileData) {
 
             clearTimeout(timeout_checkIfHasChanges);
             checkIfHasChanges(true);
+            isNew = false;
         }
     };
 

@@ -17,11 +17,30 @@
         "cmdBold": "Negrito",
         "cmdItalic": "Itálico",
         "cmdUnderline": "Sublinhado",
-        "cmdStrike": "Tachado"
+        "cmdStrike": "Tachado",
+
+        "newfile": "Novo arquivo"
     },
-    "legend": {
-        "newfile": "Novo arquivo",
-        "dialogSelectFile": "Selecione um arquivo",
-        "dialogConfirmCloseWithoutSave": "Deseja salvar as alterações do documento \"[[shortName]]\" antes de fechar?"
+    "CMD": {
+        "cmdFileClose": {
+            "confirmCloseWithoutSave": "Deseja salvar as alterações do documento \"[[shortName]]\" antes de fechar?"
+        },
+        "cmdOpen": {
+            "dialogConfig": {
+                "title": "Selecione um arquivo",
+                "filterAllFiles": "Todos os arquivos",
+                "filterFileType": "Arquivo de texto"
+            }
+        },
+        "cmdSave": {
+            "onFail": "Houve um erro ao salvar o arquivo \"[[shortName]]\"."
+        },
+        "cmdSaveAs": {
+            "dialogConfig": {
+                "title": "Salvar como",
+                "filterFileType": "Arquivo de texto"
+            },
+            "onFail": "Houve um erro ao salvar o arquivo como \"[[fullName]]\"."
+        }
     }
 }

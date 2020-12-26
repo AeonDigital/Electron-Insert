@@ -56,82 +56,156 @@ app.on('window-all-closed', () => {
 // Define os eventos que podem ser acionados de qualquer ponto da aplicação
 // e por qualquer módulo do tipo "view".
 
+/**
+ * Retorna o conteúdo de um arquivo em um objeto json.
+ *
+ * @param {string} fullPathToFile
+ *
+ * @return {json}
+ */
+let loadJsonFileSync = (fullPathToFile) => {
+    let r = undefined;
+
+    if (fs.existsSync(fullPathToFile) === true) {
+        try { r = JSON.parse(fs.readFileSync(fullPathToFile)); }
+        catch (err) { console.log(err); }
+    }
+
+    return r;
+};
+/**
+ * Abre uma caixa de dialogo do tipo "fileSystem" permitindo ao usuário efetuar uma seleção
+ * de arquivos ou indicar caminhos a serem usados (tudo conforme as configurações passadas).
+ *
+ * @param {string} dialogTitle
+ * @param {string} dialogDefaultPath
+ * @param {array} dialogFileFilters
+ * @param {array} dialogProperties
+ *
+ * @return {string}
+ */
+let dialogOpenFileSystemSync = (dialogTitle, dialogDefaultPath, dialogFileFilters, dialogProperties) => {
+    let r = null;
+
+    let options = {
+        title: dialogTitle,
+        defaultPath: ((dialogDefaultPath === 'desktop') ? app.getPath('desktop') : dialogDefaultPath),
+        filters: dialogFileFilters,
+        properties: dialogProperties
+    };
+
+
+    r = dialog.showOpenDialogSync(mainWindow, options);
+    if (r !== undefined) {
+        if (Array.isArray(r) === true) {
+            r = r[0];
+        }
+        r = r.replace(new RegExp('\\\\', 'g'), '/');
+    }
+
+    return r;
+};
+/**
+ * Abre uma caixa de diálogo do tipo "fileSystem" permitindo ao usuário selecionar o local e o
+ * nome com o qual um arquivo será salvo.
+ *
+ * @param {string} dialogTitle
+ * @param {string} dialogDefaultPath
+ * @param {array} dialogFileFilters
+ *
+ * @return {string}
+ */
+let dialogSaveFileSystemSync = (dialogTitle, dialogDefaultPath, dialogFileFilters) => {
+    let r = null;
+
+    let options = {
+        title: dialogTitle,
+        defaultPath: ((dialogDefaultPath === 'desktop') ? app.getPath('desktop') : dialogDefaultPath),
+        filters: dialogFileFilters
+    };
+
+
+    r = dialog.showSaveDialogSync(mainWindow, options);
+    if (r !== undefined) {
+        r = r.replace(new RegExp('\\\\', 'g'), '/');
+    }
+
+    return r;
+};
+/**
+ * Salva o o conteúdo passado no local indicado.
+ *
+ * @param {string} fullPathToFile
+ * @param {string} fileData
+ *
+ * @return {bool}
+ */
+let saveFileSync = (fullPathToFile, fileData) => {
+    let r = false;
+
+    try {
+        fs.writeFileSync(fullPathToFile, fileData);
+        r = true;
+    }
+    catch (err) { console.log(err); }
+
+    return r;
+};
+
+
+
+
 
 /**
  * Retorna o caminho completo até a raiz da aplicação.
  */
-ipcMain.on('getRootPathSync', (event, args) => {
+ipcMain.on('getRootPathSync', (event) => {
     event.returnValue = rootPath;
 });
 /**
  * Efetua o carregamento de um arquivo JSON e retorna seu respectivo objeto.
  */
-ipcMain.on('loadJsonFileSync', (event, fullPathToFile) => {
-    let data = null;
-
-    if (fs.existsSync(fullPathToFile) === true) {
-        try {
-            data = JSON.parse(fs.readFileSync(fullPathToFile));
-        }
-        catch (e) {
-            data = null;
-        }
-    }
-
-    event.returnValue = data;
+ipcMain.on('loadJsonFileSync', (event, args) => {
+    event.returnValue = loadJsonFileSync(args);
 });
-/**
- * Abre uma janela de seleção de arquivos conforme as configurações passadas.
- * Retorna um objeto contendo o nome completo do arquivo selecionado e seu
- * respectivo conteúdo.
- */
-ipcMain.on('dialogOpenFileSync', (event, args) => {
-    let fileData = null;
 
-    let options = {
-        title: 'Select file',
-        defaultPath: app.getPath("desktop"),
-        filters: [
-            { name: 'Text', extensions: ['', 'txt', 'md'] }
+
+
+/**
+ * Abre uma janela de seleção de arquivos permitindo ao usuário efetuar a
+ * seleção de qual deve ser aberto no editor.
+ * Retorna um objeto 'insertFile' com os dados mínimos necessários para abrir
+ * o novo arquivo.
+ */
+ipcMain.on('cmdOpenSync', (event, args) => {
+    let r = undefined;
+    let appSettings = args.appSettings;
+
+    let targetFile = dialogOpenFileSystemSync(
+        appSettings.locale.CMD.cmdOpen.dialogConfig.title,
+        appSettings.ini.defaultPath,
+        [
+            {
+                name: appSettings.locale.CMD.cmdOpen.dialogConfig.filterAllFiles,
+                extensions: ['*']
+            },
+            {
+                name: appSettings.locale.CMD.cmdOpen.dialogConfig.filterFileType,
+                extensions: appSettings.ini.extensions
+            }
         ],
-        properties: ['showHiddenFiles']
-    };
-    if (typeof (args) === 'object') {
-        options.title = args.title;
-        options.defaultPath = args.defaultPath;
-        options.filters[0].extensions = args.extensions;
-    }
+        ['showHiddenFiles']
+    );
 
-    let filePaths = dialog.showOpenDialogSync(mainWindow, options);
-    if (filePaths !== undefined && filePaths.length > 0) {
-        let filePath = filePaths[0].replace(new RegExp('\\\\', 'g'), '/');
-        let name = filePath.split('/').pop();
+    if (targetFile !== undefined) {
+        let name = targetFile.split('/').pop();
 
-        fileData = {
-            fullName: filePath,
+        r = {
+            fullName: targetFile,
             shortName: name,
-            data: fs.readFileSync(filePath).toString()
+            data: fs.readFileSync(targetFile).toString(),
+            isNew: false
         };
-
-    }
-
-    event.returnValue = fileData;
-});
-/**
- * Salva o estado atual do documento indicado.
- */
-ipcMain.on('saveSync', (event, fileData) => {
-    let r = false;
-
-    try {
-        fs.writeFileSync(
-            fileData.fullName,
-            fileData.data
-        );
-        r = true;
-    }
-    catch (err) {
-        r = 'Erro ao salvar: ${err.message}';
     }
 
     event.returnValue = r;
@@ -139,43 +213,38 @@ ipcMain.on('saveSync', (event, fileData) => {
 /**
  * Salva o estado atual do documento indicado.
  */
-ipcMain.on('saveAsSync', (event, fileData) => {
-    let r = null;
+ipcMain.on('cmdSaveSync', (event, args) => {
+    event.returnValue = saveFileSync(args.fullName, args.data);
+});
+/**
+ * Salva o estado atual do documento em um novo arquivo.
+ */
+ipcMain.on('cmdSaveAsSync', (event, args) => {
+    let r = undefined;
+    let appSettings = args.appSettings;
 
-    let options = {
-        title: 'Select file',
-        defaultPath: app.getPath("desktop"),
-        filters: [
-            { name: 'Text', extensions: ['', 'txt', 'md'] }
+    let targetFile = dialogSaveFileSystemSync(
+        appSettings.locale.CMD.cmdSaveAs.dialogConfig.title,
+        appSettings.ini.defaultPath,
+        [
+            {
+                name: appSettings.locale.CMD.cmdOpen.dialogConfig.filterAllFiles,
+                extensions: ['*']
+            },
+            {
+                name: appSettings.locale.CMD.cmdSaveAs.dialogConfig.filterFileType,
+                extensions: appSettings.ini.extensions
+            }
         ]
-    };
+    );
 
 
-    let filePath = dialog.showSaveDialogSync(mainWindow, options);
-    if (filePath !== undefined) {
-        filePath = filePath.replace(new RegExp('\\\\', 'g'), '/');
-        let name = filePath.split('/').pop();
-
+    if (targetFile !== undefined) {
         r = {
-            success: false,
-            message: '',
-            fullName: filePath,
-            shortName: name,
-            data: fileData.data
+            success: saveFileSync(targetFile, args.data),
+            fullName: targetFile,
+            shortName: targetFile.split('/').pop()
         };
-
-
-        try {
-            fs.writeFileSync(
-                r.fullName,
-                r.data
-            );
-            r.success = true;
-        }
-        catch (err) {
-            console.log(err);
-            r.message = 'Erro ao salvar: ${err.message}';
-        }
     }
 
     event.returnValue = r;

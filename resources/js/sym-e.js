@@ -55,7 +55,7 @@ if (typeof (require) === 'undefined') {
                             r = r.join('/');
                             break;
 
-                        case 'dialogOpenFileSync':
+                        case 'cmdOpenSync':
                             let c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
                             if (c === true) {
                                 r = {
@@ -66,11 +66,11 @@ if (typeof (require) === 'undefined') {
                             }
                             break;
 
-                        case 'saveSync':
+                        case 'cmdSaveSync':
                             r = true;
                             break;
 
-                        case 'saveAsSync':
+                        case 'cmdSaveAsSync':
                             r = {
                                 fullName: 'full/path/to/virtual/file/selectedFileAs.txt',
                                 shortName: 'selectedFileAs.txt',

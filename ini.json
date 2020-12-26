@@ -1,6 +1,6 @@
 {
     "// Default directory to save files.": "",
-    "defaultPath": "C:\\",
+    "defaultPath": "desktop",
 
     "// Alloewd file extensions": "",
     "extensions": ["", "txt", "md"],
