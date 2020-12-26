@@ -255,6 +255,20 @@ const appInsert = (() => {
             removeFileObjectById(id);
         }
     };
+    let evtOnPaste = (e) => {
+        e.preventDefault();
+
+        let lines = e.clipboardData.getData('text/plain').split('\r').join('').split('\n');
+        let html = [];
+        for (var it in lines) {
+            let p = document.createElement('p');
+            p.innerHTML = lines[it].split(' ').join('&nbsp;');
+            html.push(p.outerHTML);
+        }
+
+        document.execCommand('insertHTML', false, html.join(''));
+    };
+
 
 
 
@@ -375,6 +389,7 @@ const appInsert = (() => {
             section.setAttribute('contenteditable', 'true');
             section.setAttribute('data-file-id', id);
             section.setAttribute('spellcheck', appSettings.ini.spellcheck);
+            section.addEventListener('paste', evtOnPaste);
 
             let dataLines = data.split('\n');
             for (let it in dataLines) {
@@ -473,10 +488,9 @@ const appInsert = (() => {
                         data: fileData.getData()
                     }
                 );
-                console.log(saveResult);
+
                 if (saveResult !== undefined) {
                     if (saveResult.success === true) {
-                        console.log(saveResult);
                         fileData.saveAs(saveResult.fullName, saveResult.shortName);
                     }
                     else {
