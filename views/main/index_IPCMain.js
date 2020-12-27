@@ -1,6 +1,8 @@
 /**
- * Efetua o "bind" de eventos que o processo principal irá poder receber
- * a partir do que ocorre na view.
+ * Modulo ipcMain
+ *
+ * Responsável por:
+ * - definir no escopo do renderer eventos que podem ser acionados a partir do processo principal.
  *
  * @author      Rianna Cantarelli <rianna@aeondigital.com.br>
  * @copyright   2020, Rianna Cantarelli
@@ -10,11 +12,3 @@
 
 
 const { ipcMain } = require('electron');
-
-
-
-
-
-//ipcMain.on('btnclick', function (event, args) {
-    //event.sender.send('btnclick-task-finished', 'yes');
-//});

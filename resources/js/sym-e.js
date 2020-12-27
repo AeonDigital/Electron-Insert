@@ -72,6 +72,7 @@ if (typeof (require) === 'undefined') {
 
                         case 'cmdSaveAsSync':
                             r = {
+                                success: true,
                                 fullName: 'full/path/to/virtual/file/selectedFileAs.txt',
                                 shortName: 'selectedFileAs.txt',
                             }

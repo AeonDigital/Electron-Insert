@@ -67,11 +67,42 @@ const appInsert = (() => {
                 }
             }
         });
+
+        window.addEventListener('keydown', onKeyDownCMD);
     };
+    /**
+     * Evento que identifica quando um comando é dado via teclado.
+     *
+     * @param {event} e
+     */
+    let onKeyDownCMD = (e) => {
+        let cmd = null;
 
+        if (e.ctrlKey || e.metaKey) {
+            switch (String.fromCharCode(e.which).toLocaleLowerCase()) {
+                case 'n':
+                    cmd = 'cmdNew';
+                    break;
 
+                case 'o':
+                    cmd = 'cmdOpen';
+                    break;
 
+                case 's':
+                    cmd = 'cmdSave';
+                    if (e.shiftKey) {
+                        cmd = 'cmdSaveAs';
+                    }
+                    break;
+            }
+        }
 
+        if (cmd !== null) {
+            e.preventDefault();
+            CMD[cmd]();
+            return false;
+        }
+    };
 
 
 
@@ -438,7 +469,7 @@ const appInsert = (() => {
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo
          * para ser aberto no editor.
          */
-        cmdOpen: (e) => {
+        cmdOpen: () => {
             let fileData = ipcRenderer.sendSync(
                 'cmdOpenSync', { appSettings: appSettings }
             );
