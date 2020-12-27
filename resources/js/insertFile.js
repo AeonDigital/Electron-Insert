@@ -250,6 +250,7 @@ let insertFile = function (fileData) {
                 fileButton.setAttribute('class', 'active');
                 editNode.setAttribute('class', 'active');
                 editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
+                editNode.focus();
             }
             else {
                 fileButton.removeAttribute('class');
