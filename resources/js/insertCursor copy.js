@@ -128,9 +128,17 @@ let insertCursor = (() => {
         let selectionEndNode = nodeCursor.selectionEndNode;
         let selectionEndNodeOffset = nodeCursor.selectionEndNodeOffset;
 
+        let inverted = (
+            (selectionStartNode === selectionEndNode && selectionStartNodeOffset > selectionEndNodeOffset) ||
+            (selectionStartNode.compareDocumentPosition(selectionEndNode) === 4)
+        );
+
+        //
         // Se trata-se de uma seleção reversa...
         // ajusta a posição dos valores para permitir que a mesma não se perca.
-        if (selectionStartNode === selectionEndNode && selectionStartNodeOffset > selectionEndNodeOffset) {
+        console.log(inverted);
+        if (inverted === true) {
+            console.log(inverted);
             selectionStartNode = nodeCursor.selectionEndNode;
             selectionStartNodeOffset = nodeCursor.selectionEndNodeOffset;
             selectionEndNode = nodeCursor.selectionStartNode;

@@ -29,6 +29,13 @@ const appInsert = (() => {
      * @type {int}
      */
     let atualId = 0;
+    /**
+     * Coleção de objetos que armazenam as informações necessárias para recuperar a
+     * posição do cursor quando um documento ganhar o foco novamente.
+     *
+     * @type {object}
+     */
+    let cursorPositions = {};
 
 
 
@@ -265,6 +272,85 @@ const appInsert = (() => {
                 }
             }
         }
+
+        evtOnFileSetFocusRestoreCursorPosition(id);
+    };
+    /**
+     * Quando um documento perder o foco por qualquer motivo, a posição atual do cursor
+     * será armazenada para futura recuperação.
+     *
+     * @param {evt} e
+     */
+    let onKeyUpSaveCursorPosition = (e) => {
+        let id = DOM.getTargetFileId(e.target);
+        console.log('save in', id);
+
+        // Apenas se ainda não há um objeto deste tipo salvo.
+        // impede desta forma que seja sobresctida a informação sobre um
+        // mesmo documento.
+        if (cursorPositions[id] === undefined || cursorPositions[id].locked === false) {
+            let cP = document.getSelection();
+
+            // Mantém a formação da seleção sempre do primeiro node para o último.
+            let startNode = cP.anchorNode;
+            let startOffset = cP.anchorOffset;
+            let endNode = cP.focusNode;
+            let endOffset = cP.focusOffset;
+
+            // Se trata-se de uma seleção reversa...
+            if (startNode === endNode && startOffset > endOffset) {
+                console.log('reverse');
+                startNode = cP.focusNode;
+                startOffset = cP.focusOffset;
+                endNode = cP.anchorNode;
+                endOffset = cP.anchorOffset;
+            }
+
+            cursorPositions[id] = {
+                node: e.target,
+                locked: false,
+                anchorNode: startNode,
+                anchorOffset: startOffset,
+                focusNode: endNode,
+                focusOffset: endOffset
+            };
+            console.log('save', id);
+            console.log(cursorPositions[id]);
+        }
+    };
+    let onBlurLockCursorPosition = (e) => {
+        let id = DOM.getTargetFileId(e.target);
+        if (cursorPositions[id] !== undefined) {
+            cursorPositions[id].locked = true;
+        }
+    };
+    /**
+     * Permite que a posição do cursor de um documento seja recuperada quando o mesmo
+     * retomar o foco da aplicação.
+     *
+     * @param {int} id
+     */
+    let evtOnFileSetFocusRestoreCursorPosition = (id) => {
+        let cP = cursorPositions[id];
+        let resetRange = new Range();
+
+        console.log('restore', id);
+        if (cP === undefined) {
+            let p = DOM.querySelectorAll('main > section.active p')[0];
+            resetRange.setStart(p, 0);
+            resetRange.setEnd(p, 0);
+            console.log('zero', id);
+        }
+        else {
+            resetRange.setStart(cP.anchorNode, cP.anchorOffset);
+            resetRange.setEnd(cP.focusNode, cP.focusOffset);
+            console.log(cP);
+            cursorPositions[id].locked = false;
+        }
+
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(resetRange);
+        console.log('exec', id);
     };
     /**
      * Fecha o arquivo selecionado.
@@ -286,7 +372,32 @@ const appInsert = (() => {
             removeFileObjectById(id);
         }
     };
+    /**
+     * Efetua a limpeza de quaisquer marcações HTML que estejam sendo inseridas via
+     * comando "colar"
+     *
+     * @param {evt} e
+     */
+    let evtOnPaste = (e) => {
+        e.preventDefault();
+        let id = DOM.getTargetFileId(e.target);
 
+        let lines = e.clipboardData.getData('text/plain').split('\r').join('').split('\n');
+        if (lines.length > 0) {
+            let html = [];
+            let lastP = null;
+            for (var it in lines) {
+                let p = document.createElement('p');
+                p.innerHTML = lines[it].split(' ').join('&nbsp;');
+                html.push(p.outerHTML);
+                lastP = p;
+            }
+
+            document.execCommand('insertHTML', false, html.join(''));
+            cursorPositions[id].locked = false;
+            //onKeyUpSaveCursorPosition({ target: lastP});
+        }
+    };
 
 
 
@@ -408,7 +519,10 @@ const appInsert = (() => {
             section.setAttribute('contenteditable', 'true');
             section.setAttribute('data-file-id', id);
             section.setAttribute('spellcheck', appSettings.ini.spellcheck);
-
+            section.addEventListener('paste', evtOnPaste);
+            section.addEventListener('keyup', onKeyUpSaveCursorPosition);
+            section.addEventListener('mouseup', onKeyUpSaveCursorPosition);
+            section.addEventListener('blur', onBlurLockCursorPosition);
 
             let dataLines = data.split('\n');
             for (let it in dataLines) {

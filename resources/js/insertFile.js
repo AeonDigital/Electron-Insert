@@ -97,6 +97,8 @@ let insertFile = function (fileData) {
         fileButton = fileData.fileButton;
         fileLabel = fileData.fileLabel;
         editNode = fileData.editNode;
+
+        insertCursor.addListenerNode(id, editNode);
     };
 
 
@@ -251,6 +253,7 @@ let insertFile = function (fileData) {
                 editNode.setAttribute('class', 'active');
                 editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
                 editNode.focus();
+                insertCursor.restoreCursorPosition(id);
             }
             else {
                 fileButton.removeAttribute('class');
