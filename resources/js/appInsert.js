@@ -297,7 +297,7 @@ const appInsert = (() => {
 
 
     /**
-     * Inicia o ›Insert Editor.
+     * Inicia o Editor.
      */
     let constructor = () => {
         setDefaultEventListeners();

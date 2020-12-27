@@ -20,7 +20,7 @@ main > section.active {
 
 
 /*
-    Seletor de arquivos abertos no ›Insert Editor.
+    Seletor de arquivos abertos no Editor.
 */
 .menuWindow {
     flex: 1;
@@ -94,7 +94,7 @@ main > section.active {
 
 
 /*
-    Botões padrão do ›Insert Editor
+    Botões padrão do Editor
 */
 button[data-btn-action] {
     display: inline-block;

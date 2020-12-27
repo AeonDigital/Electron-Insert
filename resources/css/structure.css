@@ -67,7 +67,7 @@ main {
     height: auto;
     min-height: var(--editor-main-height-v);
     max-height: var(--editor-main-height-v);
-    overflow-y: scroll;
+    overflow-y: auto;
     margin-top: var(--editor-main-margin-top);
 }
 main > section {
