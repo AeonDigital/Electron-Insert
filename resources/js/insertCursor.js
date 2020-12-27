@@ -128,9 +128,14 @@ let insertCursor = (() => {
         let selectionEndNode = nodeCursor.selectionEndNode;
         let selectionEndNodeOffset = nodeCursor.selectionEndNodeOffset;
 
+        let inverted = (
+            (selectionStartNode === selectionEndNode && selectionStartNodeOffset > selectionEndNodeOffset) ||
+            (selectionStartNode !== selectionEndNode && selectionStartNode.compareDocumentPosition(selectionEndNode) === 2)
+        );
+
         // Se trata-se de uma seleção reversa...
         // ajusta a posição dos valores para permitir que a mesma não se perca.
-        if (selectionStartNode === selectionEndNode && selectionStartNodeOffset > selectionEndNodeOffset) {
+        if (inverted === true) {
             selectionStartNode = nodeCursor.selectionEndNode;
             selectionStartNodeOffset = nodeCursor.selectionEndNodeOffset;
             selectionEndNode = nodeCursor.selectionStartNode;
@@ -255,9 +260,11 @@ let insertCursor = (() => {
         restoreCursorPosition: (id) => {
             let nodeCursor = getNodeCursorById(id);
 
-            if (nodeCursor !== null && nodeCursor.selectionStartNode !== null) {
-                setCursorPosition(nodeCursor);
-                nodeCursor.selectionLocked = false;
+            if (nodeCursor !== null) {
+                if (nodeCursor.selectionStartNode !== null) {
+                    setCursorPosition(nodeCursor);
+                    nodeCursor.selectionLocked = false;
+                }
             }
         },
         /**
@@ -270,6 +277,7 @@ let insertCursor = (() => {
 
             if (nodeCursor !== null) {
                 let tgtNode = nodeCursor.editNode.firstElementChild;
+                console.log(tgtNode);
                 if (tgtNode !== null) {
                     setCursorPosition({
                         selectionStartNode: tgtNode,

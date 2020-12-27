@@ -164,6 +164,7 @@ const appInsert = (() => {
             document.getElementById('mainPanel').appendChild(fileData.editNode);
 
             evtFileSetFocus({ target: fileData.id });
+            insertCursor.setCursorPositionOnStart(fileData.id);
         }
     };
     /**
