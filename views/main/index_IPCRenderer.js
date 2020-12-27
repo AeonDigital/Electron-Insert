@@ -44,7 +44,7 @@ let appSettings = (() => {
                 "cmdOpen": "Open",
                 "cmdSave": "Save",
                 "cmdSaveAs": "Save as",
-                "cmdCloseApp": "Close",
+                "cmdCanClose": "Close",
                 "cmdMenu": "Menu",
 
                 "cmdHeader1": "Header 1",

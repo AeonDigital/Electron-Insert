@@ -537,6 +537,13 @@ const appInsert = (() => {
                     }
                 }
             }
+        },
+        /**
+         * Identifica se é possível encerrar a aplicação.
+         * Em caso afirmativo, encerra-a
+         */
+        cmdCanClose: () => {
+            _public.cmdCanClose();
         }
     };
 
