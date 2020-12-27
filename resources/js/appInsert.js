@@ -73,7 +73,7 @@ const appInsert = (() => {
     /**
      * Evento que identifica quando um comando é dado via teclado.
      *
-     * @param {event} e
+     * @param {evt} e
      */
     let onKeyDownCMD = (e) => {
         let cmd = null;
@@ -286,6 +286,12 @@ const appInsert = (() => {
             removeFileObjectById(id);
         }
     };
+    /**
+     * Efetua a limpeza de quaisquer marcações HTML que estejam sendo inseridas via
+     * comando "colar"
+     *
+     * @param {evt} e
+     */
     let evtOnPaste = (e) => {
         e.preventDefault();
 
