@@ -41,6 +41,9 @@
                 "filterFileType": "Arquivo de texto"
             },
             "onFail": "Houve um erro ao salvar o arquivo como \"[[fullName]]\"."
+        },
+        "cmdCanClose": {
+            "dialogConfirmClose": "Há arquivos abertos que não foram salvos.\nSe prosseguir todo os os dados não salvos serão perdidos.\nTem certeza que deseja fechar?"
         }
     }
 }

@@ -41,6 +41,9 @@
                 "filterFileType": "Arquivo de texto"
             },
             "onFail": "An error occurred while saving the file as \"[[fullName]]\"."
+        },
+        "cmdCanClose": {
+            "dialogConfirmClose": "There are open files that have not been saved.\nIf you continue all unsaved data will be lost.\nAre you sure you want to close?"
         }
     }
 }

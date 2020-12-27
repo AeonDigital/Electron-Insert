@@ -81,10 +81,20 @@ let appSettings = (() => {
                         "filterFileType": "Arquivo de texto"
                     },
                     "onFail": "An error occurred while saving the file as \"[[fullName]]\"."
+                },
+                "cmdCanClose": {
+                    "dialogConfirmClose": "There are open files that have not been saved.\nIf you continue all unsaved data will be lost.\nAre you sure you want to close?"
                 }
             }
         };
     }
+
+
+    // Registra o evento que confere se é seguro fechar a aplicação evitando perder
+    // dados de arquivo que esteja aberto e não esteja salvo.
+    ipcRenderer.on('cmdCanClose', (event) => {
+        appInsert.cmdCanClose();
+    });
 
 
     return {

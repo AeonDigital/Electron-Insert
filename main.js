@@ -27,9 +27,29 @@ function createWindow() {
     require(rootPath + '/views/main/index_IPCMain.js');
     mainWindow.loadFile(rootPath + '/views/main/index.html');
 
-    mainWindow.on('closed', () => {
-        mainWindow = null
+
+    // Impede o encerramento abrupto da aplicação efetuando antes
+    // uma conferência sobre se todos os itens atualmente abertos estão
+    // salvos.
+    mainWindow.on('close', (e) => {
+        if (mainWindow) {
+            e.preventDefault();
+            mainWindow.webContents.send('cmdCanClose');
+        }
     });
+};
+
+
+
+
+/**
+ * Encerra completamente a aplicação.
+ */
+let closeAppWindow = () => {
+    mainWindow = null;
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 };
 
 
@@ -43,9 +63,7 @@ app.on('activate', () => {
     }
 });
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.quit();
-    }
+    closeAppWindow();
 });
 
 
@@ -167,6 +185,15 @@ ipcMain.on('getRootPathSync', (event) => {
  */
 ipcMain.on('loadJsonFileSync', (event, args) => {
     event.returnValue = loadJsonFileSync(args);
+});
+
+
+
+/**
+ * Encerra completamente a aplicação.
+ */
+ipcMain.on('cmdCanCloseOk', () => {
+    closeAppWindow();
 });
 
 

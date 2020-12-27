@@ -500,9 +500,6 @@ const appInsert = (() => {
                     }
                 }
             }
-        },
-        cmdCloseApp: () => {
-            console.log('closeApp');
         }
     };
 
@@ -511,8 +508,26 @@ const appInsert = (() => {
 
 
     let _public = this.Control = {
-        cmdOpen: (fileData) => {
-            CMD.cmdOpen(fileData);
+        /**
+         * Verifica se é possível fechar a aplicação sem salvar os arquivos abertos.
+         *
+         * @return {bool}
+         */
+        cmdCanClose: () => {
+            let r = true;
+            for (let it in insertFiles) {
+                if (insertFiles[it].getHasChanges() === true) {
+                    r = false;
+                }
+            }
+
+            if (r === false) {
+                r = confirm(appSettings.locale.CMD.cmdCanClose.dialogConfirmClose);
+            }
+
+            if (r === true) {
+                ipcRenderer.sendSync('cmdCanCloseOk');
+            }
         }
     };
 
