@@ -1,21 +1,40 @@
 {
     "// Default directory to save files.": "",
+    "// use um dos seguintes valores:": "",
+    "// - home": "Aponta para a Raiz do diretório do usuário de sistema logado.",
+    "// - desktop": "Aponta para o diretório de Desktop do usuário de sistema logado.",
+    "// - documents": "Aponta para o diretório de Documentos do usuário de sistema logado.",
+    "// - downloads": "Aponta para o diretório de Download do usuário de sistema logado.",
+    "// - music": "Aponta para o diretório de Músicas do usuário de sistema logado.",
+    "// - pictures": "Aponta para o diretório de Imagens do usuário de sistema logado.",
+    "// - videos": "Aponta para o diretório de Vídeos do usuário de sistema logado.",
     "defaultPath": "desktop",
 
-    "// Alloewd file extensions": "",
+    "// Allowed file extensions": "",
     "extensions": ["", "txt", "md"],
 
     "// Selected locale.": "",
-    "locale": "pt-BR",
+    "locale": "en-US",
 
     "// Enable or disable spellcheck.": "",
     "spellcheck": false,
 
     "// Last used files.": "",
-    "changedList": {
+    "commomFiles": {
         "// Max files in this list.": "",
         "maxFiles": 10,
         "// File list.": "",
         "files": []
+    },
+
+    "// Default editor style configuration": "",
+    "editorStyle": {
+        "background-color": "#666666",
+        "font-family": "Fira Code",
+        "font-style": "",
+        "font-weight": "",
+        "color": "#EEEEEE",
+        "font-size": "16px",
+        "line-height": "24px"
     }
 }

@@ -15,6 +15,8 @@ let mainWindow = null;
 
 
 
+
+
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
@@ -92,6 +94,36 @@ let loadJsonFileSync = (fullPathToFile) => {
     return r;
 };
 /**
+ * Identifica quando o local passado para abrir uma caixa de dialogo de seleção
+ * de arquivo está apontando para uma posição válida.
+ * Caso o caminho passado seja inválido, será retornado o valor 'desktop'
+ *
+ * @param {string} path
+ */
+let retrieveDialogPath = (path) => {
+    let usePath = null;
+
+    if (path === 'rootPath') {
+        usePath = rootPath;
+    }
+    else {
+        let allowedShortcuts = ['home', 'desktop', 'documents', 'downloads', 'music', 'pictures', 'videos', 'userData'];
+        if (allowedShortcuts.includes(path) === true) {
+            usePath = app.getPath(path);
+        }
+        else {
+            if (fs.existsSync(path) === false) {
+                usePath = app.getPath('desktop');
+            }
+            else {
+                usePath = path;
+            }
+        }
+    }
+
+    return usePath.replace(new RegExp('\\\\', 'g'), '/');
+};
+/**
  * Abre uma caixa de dialogo do tipo "fileSystem" permitindo ao usuário efetuar uma seleção
  * de arquivos ou indicar caminhos a serem usados (tudo conforme as configurações passadas).
  *
@@ -107,7 +139,7 @@ let dialogOpenFileSystemSync = (dialogTitle, dialogDefaultPath, dialogFileFilter
 
     let options = {
         title: dialogTitle,
-        defaultPath: ((dialogDefaultPath === 'desktop') ? app.getPath('desktop') : dialogDefaultPath),
+        defaultPath: retrieveDialogPath(dialogDefaultPath),
         filters: dialogFileFilters,
         properties: dialogProperties
     };
@@ -138,7 +170,7 @@ let dialogSaveFileSystemSync = (dialogTitle, dialogDefaultPath, dialogFileFilter
 
     let options = {
         title: dialogTitle,
-        defaultPath: ((dialogDefaultPath === 'desktop') ? app.getPath('desktop') : dialogDefaultPath),
+        defaultPath: retrieveDialogPath(dialogDefaultPath),
         filters: dialogFileFilters
     };
 
@@ -175,10 +207,10 @@ let saveFileSync = (fullPathToFile, fileData) => {
 
 
 /**
- * Retorna o caminho completo até a raiz da aplicação.
+ * Expõe para a view o método 'app.getPath'
  */
-ipcMain.on('getRootPathSync', (event) => {
-    event.returnValue = rootPath;
+ipcMain.on('getPathSync', (event, args) => {
+    event.returnValue = retrieveDialogPath(args);
 });
 /**
  * Efetua o carregamento de um arquivo JSON e retorna seu respectivo objeto.
@@ -186,6 +218,13 @@ ipcMain.on('getRootPathSync', (event) => {
 ipcMain.on('loadJsonFileSync', (event, args) => {
     event.returnValue = loadJsonFileSync(args);
 });
+/**
+ * Gera um novo arquivo de configurações para o perfil do usuário atualmente
+ * logado no sistema.
+ */
+ipcMain.on('generateUserIniSync', (event, args) => {
+    event.returnValue = saveFileSync(args.path, args.data);
+})
 
 
 

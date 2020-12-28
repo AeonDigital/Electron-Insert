@@ -15,29 +15,65 @@
 
 
 
+
+
 let appSettings = (() => {
-    let rootPath = ipcRenderer.sendSync('getRootPathSync');
+    let rootPath = ipcRenderer.sendSync('getPathSync', 'rootPath');
+    let userData = ipcRenderer.sendSync('getPathSync', 'userData');
     let localePath = rootPath + '/resources/locale';
 
 
+    // Primeiramente carrega o Ini padrão da aplicação
     let ini = ipcRenderer.sendSync('loadJsonFileSync', rootPath + '/ini.json');
-    if (ini === null) {
+    if (ini === undefined) {
         // Configuração padrão da aplicação.
         ini = {
             "defaultPath": "C:\\",
             "extensions": ["", "txt", "md"],
-            "locale": "pt-BR",
+            "locale": "us-EN",
             "spellcheck": false,
-            "changedList": {
+            "commomFiles": {
                 "maxFiles": 10,
                 "files": []
+            },
+            "editorStyle": {
+                "background-color": "#666666",
+                "font-family": "Fira Code",
+                "font-style": "",
+                "font-weight": "",
+                "color": "#EEEEEE",
+                "font-size": "16px",
+                "line-height": "24px"
             }
         };
     }
 
 
+
+    // Verifica se há um Ini para o usuário atual, havendo, carrega-o.
+    // não havendo, gera um igual ao padrão para a aplicação
+    let profileIni = ipcRenderer.sendSync('loadJsonFileSync', userData + '/user.json');
+    if (profileIni === undefined) {
+        ipcRenderer.sendSync('generateUserIniSync', {
+            path: userData + '/user.json',
+            data: JSON.stringify(ini, null, 4)
+        });
+    }
+    // Encontrando o arquivo de perfil do usuário, efetua o merge entre ele e
+    // o ini da aplicação.
+    else {
+        let useIni = {};
+        Object.keys(ini).forEach((key) => { useIni[key] = ini[key]; });
+        Object.keys(profileIni).forEach((key) => { useIni[key] = profileIni[key]; });
+        ini = useIni;
+    }
+
+
+
+
+
     let locale = ipcRenderer.sendSync('loadJsonFileSync', localePath + '/' + ini.locale + '.json');
-    if (locale === null) {
+    if (locale === undefined) {
         locale = {
             "button": {
                 "cmdNew": "New File",

@@ -724,6 +724,7 @@ const appInsert = (() => {
     // Inicia o objeto
     window.onload = () => {
         constructor();
+        configInsert.init();
     };
     return _public;
 })();

@@ -22,6 +22,7 @@
         <script src="../../resources/js/insertFile.js"></script>
         <script src="../../resources/js/insertCursor.js"></script>
         <script src="../../resources/js/appInsert.js"></script>
+        <script src="../../resources/js/configInsert.js"></script>
         <script src="index_IPCRenderer.js"></script>
     </head>
     <body class="simpleEditor">
@@ -96,7 +97,7 @@
         </main>
         <aside id="mainAside">
             <div>
-                <!--nav>
+                <nav>
                     <ul>
                         <li data-front-action="active-tab"
                             data-front-arg="tab1" class="active">
@@ -107,11 +108,81 @@
                             Sobre
                         </li>
                     </ul>
-                </nav-->
+                </nav>
 
-                <!--div id="tab1">
-                    Configurações
-                </div-->
+                <div id="tab1" class="active">
+                    <form>
+                        <fieldset>
+                            <legend>Geral</legend>
+                            <div class="inline">
+                                <label for="configEditorLocale">Linguagem</label>
+                                <select id="configEditorLocale">
+                                    <option value="en-US">English</option>
+                                    <option value="pt-BR">Português [Brasil]</option>
+                                </select>
+                            </div>
+                        </fieldset>
+
+                        <hr />
+
+                        <fieldset>
+                            <legend>Editor de texto</legend>
+
+                            <div>
+                                <label for="configEditorBackgroundColor">Cor de fundo</label>
+                                <input type="color" id="configEditorBackgroundColor" />
+                            </div>
+
+                            <div class="inline">
+                                <label for="configEditorFontFace">Fonte</label>
+                                <select id="configEditorFontFace">
+                                    <option value="Fira Code">Fira Code [Padrão]</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Cambria">Cambria</option>
+                                    <option value="Geneva">Geneva</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Impact">Impact</option>
+                                    <option value="Tahoma">Tahoma</option>
+                                    <option value="Times">Times</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="monospace">monospace</option>
+                                    <option value="sans-serif">sans-serif</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontStyle">Estilo</label>
+                                <select id="configEditorFontStyle">
+                                    <option value="">normal</option>
+                                    <option value="bold">bold</option>
+                                    <option value="italic">italic</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontColor">Cor</label>
+                                <input type="color" id="configEditorFontColor" />
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontSize">Tamanho da fonte</label>
+                                <input type="range" id="configEditorFontSize" min="10" max="40" step="1" />
+                                <input type="number" id="configEditorFontSizeKey" min="10" max="40" step="1" />
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorLineHeight">Tamanho da linha</label>
+                                <input type="range" id="configEditorLineHeight" min="10" max="50" step="1" />
+                                <input type="number" id="configEditorLineHeightKey" min="10" max="50" step="1" />
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="txt-right">
+                                <button type="button">
+                                    Salvar configurações
+                                </button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
                 <div id="tab2">
                     <h1>Insert Editor</h1>
 

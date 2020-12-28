@@ -188,7 +188,7 @@ aside > div > nav {
 aside > div > nav > ul {
     list-style: none;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 aside > div > nav > ul > li {
     display: inline-block;
@@ -205,6 +205,95 @@ aside > div > nav > ul > li.active {
     background-color: var(--main-bg-color-hover);
     border-bottom: 2px solid var(--main-font-color);
 }
+
+aside > div > div {
+    display: none;
+}
+aside > div > div.active {
+    display: block;
+}
+
+aside > div > div > form > hr {
+    height: 2px;
+    margin: 10px 0 20px 0;
+    background-color: #333;;
+}
+
+aside > div > div > form > fieldset > legend {
+    font-size: 20px;
+    line-height: 26px;
+    margin-bottom: 16px;
+}
+aside > div > div > form > fieldset > div {
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 20px;
+}
+aside > div > div > form > fieldset > div.inline {
+    vertical-align: top;
+    width: auto;
+    margin-right: 20px;
+}
+
+aside > div > div > form label {
+    display: inline-block;
+    width: 100%;
+    padding-bottom: 5px;
+    font-size: 14px;
+}
+
+aside > div > div > form select,
+aside > div > div > form input,
+aside > div > div > form button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: bold;
+    color:var(--main-font-color);
+    background-color: transparent;
+}
+aside > div > div > form button {
+    padding:10px 20px 12px 20px;
+    border:1px solid var(--main-font-color);
+    cursor: pointer;
+}
+aside > div > div > form button:hover {
+    background-color: var(--main-font-color);
+    color: var(--main-bg-color-hover-invert);
+}
+
+
+
+aside > div > div > form input[type="text"],
+aside > div > div > form input[type="number"] {
+    padding:5px 10px;
+    border:1px solid var(--main-font-color);
+}
+aside > div > div > form input[type="range"] {
+    margin-top:5px;
+    vertical-align: top;
+}
+aside > div > div > form input[type="range"] + input[type="number"] {
+    width: 50px;
+    margin-left: 20px;
+}
+aside > div > div > form input[type="color"] {
+    height: 33px;
+    border:1px solid var(--main-font-color);
+}
+
+aside > div > div > form select {
+    padding:5px 10px;
+    border:1px solid var(--main-font-color);
+    width: 98%;
+}
+aside > div > div > form select > option {
+    color:#333;
+}
+
+
+
+
 aside > div > div > h1 {
     text-align: center;
     font-size: 30px;

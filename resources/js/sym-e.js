@@ -49,10 +49,17 @@ if (typeof (require) === 'undefined') {
                     console.log('ipcRenderer.sendSync()', channel, args);
 
                     switch (channel) {
-                        case 'getRootPathSync':
-                            r = window.location.href.split('/');
-                            r.pop();
-                            r = r.join('/');
+                        case 'getPathSync':
+                            if (args === 'rootPath') {
+                                r = window.location.href.split('/');
+                                r.pop();
+                                r = r.join('/');
+                            }
+                            else if (args === 'userData') {
+                                r = window.location.href.split('/');
+                                r.pop();
+                                r = r.join('/');
+                            }
                             break;
 
                         case 'cmdOpenSync':
@@ -76,6 +83,10 @@ if (typeof (require) === 'undefined') {
                                 fullName: 'full/path/to/virtual/file/selectedFileAs.txt',
                                 shortName: 'selectedFileAs.txt',
                             }
+                            break;
+
+                        case 'loadJsonFileSync':
+                            r = undefined;
                             break;
                     }
 
