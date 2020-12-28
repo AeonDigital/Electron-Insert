@@ -22,13 +22,50 @@ const appInsert = (() => {
      *
      * @type {insertFile[]}
      */
-    let insertFiles = [];
+    let collectionOfInsertFiles = [];
     /**
      * Controle para o próximo id a ser usado para a abertura de um novo arquivo.
      *
      * @type {int}
      */
     let atualId = 0;
+    /**
+     * Mantém registro dos dados que permitem mover botões de seleção
+     * de arquivos.
+     *
+     * @type {object}
+     */
+    let fileSelector = {
+        /**
+         * Area total visivel onde os botões seletores estão.
+         *
+         * @type {int}
+         */
+        stageWidth: 0,
+        /**
+         * Area total referente a todos os botões atualmente presentes.
+         *
+         * @type {int}
+         */
+        activeAreaWidth: 0,
+        /**
+         * Total de área disponível sem um botão ocupando este espaço.
+         *
+         * @type {int}
+         */
+        emptyAreaWidth: 0,
+        /**
+         * Posição atual do controlador.
+         *
+         * @type {int}
+         */
+        position: 0
+    };
+
+
+
+
+
 
 
 
@@ -109,12 +146,16 @@ const appInsert = (() => {
 
 
 
+
+
+
+
     /**
      * Inicia um novo node de edição para um arquivo.
      *
      * @param {object} fileData
      */
-    let openNewFileNode = (fileData) => {
+    let addInsertFile = (fileData) => {
         atualId++;
 
         // Prepara os dados mínimos para a geração de uma representação de um
@@ -128,17 +169,17 @@ const appInsert = (() => {
             };
         }
         fileData.id = atualId;
-        fileData.evtFileSetFocus = evtFileSetFocus;
-        fileData.evtFileClose = evtFileClose;
+        fileData.evtSetFocus = evtInsertFileSetFocus;
+        fileData.evtClose = evtInsertFileClose;
 
 
         //
         // Se trata-se de um arquivo existente...
         // Não permite que o mesmo arquivo seja aberto 2x
         let isNewFile = true;
-        if (fileData.fullName !== '' && insertFiles.length > 0) {
-            for (let it in insertFiles) {
-                if (insertFiles[it].getFullName() === fileData.fullName) {
+        if (fileData.fullName !== '' && collectionOfInsertFiles.length > 0) {
+            for (let it in collectionOfInsertFiles) {
+                if (collectionOfInsertFiles[it].getFullName() === fileData.fullName) {
                     isNewFile = false;
                 }
             }
@@ -149,8 +190,8 @@ const appInsert = (() => {
             let nodes = DOM.createSelectFileButton(
                 fileData.shortName,
                 fileData.id,
-                fileData.evtFileSetFocus,
-                fileData.evtFileClose
+                fileData.evtSetFocus,
+                fileData.evtClose
             );
 
             fileData.fileButton = nodes.fileButton;
@@ -159,11 +200,12 @@ const appInsert = (() => {
             fileData.editNode = DOM.createEditableNode(fileData.id, fileData.data);
 
 
-            insertFiles.push(new insertFile(fileData));
+            collectionOfInsertFiles.push(new insertFile(fileData));
             document.getElementById('mainMenu').appendChild(fileData.fileButton);
             document.getElementById('mainPanel').appendChild(fileData.editNode);
+            redefineFileSelectorProperties();
 
-            evtFileSetFocus({ target: fileData.id });
+            evtInsertFileSetFocus({ target: fileData.id });
             insertCursor.setCursorPositionOnStart(fileData.id);
         }
     };
@@ -174,13 +216,31 @@ const appInsert = (() => {
      *
      * @return {insertFile}
      */
-    let selectFileObjectById = (id) => {
+    let getInsertFileById = (id) => {
         let r = null;
 
-        for (let it in insertFiles) {
-            let file = insertFiles[it];
+        for (let it in collectionOfInsertFiles) {
+            let file = collectionOfInsertFiles[it];
 
             if (file.getId() === id) {
+                r = file;
+            }
+        }
+
+        return r;
+    };
+    /**
+     * Retorna o objeto 'insertFile' que está em foco no momento.
+     *
+     * @return {insertFile}
+     */
+    let getInsertFileInFocus = () => {
+        let r = null;
+
+        for (let it in collectionOfInsertFiles) {
+            let file = collectionOfInsertFiles[it];
+
+            if (file.getInFocus() === true) {
                 r = file;
             }
         }
@@ -195,13 +255,13 @@ const appInsert = (() => {
      *
      * @return {insertFile}
      */
-    let removeFileObjectById = (id) => {
+    let removeInsertFileById = (id) => {
 
         let removeFile = null;
         let removeFileIndex = 0;
 
-        for (let it in insertFiles) {
-            let file = insertFiles[it];
+        for (let it in collectionOfInsertFiles) {
+            let file = collectionOfInsertFiles[it];
 
             if (file.getId() === id) {
                 removeFile = file;
@@ -210,71 +270,38 @@ const appInsert = (() => {
         }
 
         removeFile.remove();
-        insertFiles.splice(removeFileIndex, 1);
+        collectionOfInsertFiles.splice(removeFileIndex, 1);
 
 
         // Se o item removido é o que estava em foco e ainda há
         // algum arquivo aberto no editor
-        if (removeFile.getInFocus() === true && insertFiles.length > 0) {
+        if (removeFile.getInFocus() === true && collectionOfInsertFiles.length > 0) {
             // Se possível,
             // Promove o item na mesma posição do anterior para o foco.
-            if (removeFileIndex >= insertFiles.length) {
-                removeFileIndex = (insertFiles.length - 1);
+            if (removeFileIndex >= collectionOfInsertFiles.length) {
+                removeFileIndex = (collectionOfInsertFiles.length - 1);
             }
-            evtFileSetFocus({ target: insertFiles[removeFileIndex].getId() });
+            evtInsertFileSetFocus({ target: collectionOfInsertFiles[removeFileIndex].getId() });
         }
     };
-    /**
-     * Retorna o objeto 'insertFile' que está em foco no momento.
-     *
-     * @return {?insertFile}
-     */
-    let selectFileObjectInFocus = () => {
-        let r = null;
-
-        for (let it in insertFiles) {
-            let file = insertFiles[it];
-
-            if (file.getInFocus() === true) {
-                r = file;
-            }
-        }
-
-        return r;
-    };
 
 
 
 
 
-    /**
-     * Define o foco para o arquivo selecionado.
-     *
-     * @param {evt} e
-     */
-    let evtFileSetFocus = (e) => {
-        let id = DOM.getTargetFileId(e.target);
 
-        for (let it in insertFiles) {
-            let file = insertFiles[it];
-            if (file.getId() === id) {
-                file.redefineFocus(true);
-            }
-            else {
-                if (file.getInFocus() === true) {
-                    file.redefineFocus(false);
-                }
-            }
-        }
-    };
+
+
+
+
     /**
      * Fecha o arquivo selecionado.
      *
      * @param {evt} e
      */
-    let evtFileClose = (e) => {
+    let evtInsertFileClose = (e) => {
         let id = DOM.getTargetFileId(e.target);
-        let file = selectFileObjectById(id);
+        let file = getInsertFileById(id);
 
         // Havendo alterações, oferece a opção para que o usuário possa
         // salvar o arquivo.
@@ -284,16 +311,9 @@ const appInsert = (() => {
         }
 
         if (canClose === true) {
-            removeFileObjectById(id);
+            removeInsertFileById(id);
         }
     };
-
-
-
-
-
-
-
     /**
      * Questiona o usuário sobre sair sem salvar o arquivo atualmente aberto que contem
      * alterações.
@@ -317,10 +337,135 @@ const appInsert = (() => {
 
 
     /**
+     * Redefine as propriedades que permitem controlar o movimento dos botões
+     * seletores de arquivos.
+     */
+    let redefineFileSelectorProperties = () => {
+        let mainMenu = document.getElementById('mainMenu');
+        let buttons = DOM.querySelectorAll('#mainMenu > li');
+        let activeAreaWidth = 0;
+
+        buttons.forEach((btn) => {
+            activeAreaWidth += btn.offsetWidth;
+        });
+        let emptyAreaWidth = (mainMenu.offsetWidth - activeAreaWidth);
+        let position = (
+            (mainMenu.style['marginLeft'] === '') ? 0 : parseInt(mainMenu.style['marginLeft'].replace('px', ''))
+        );
+
+
+        fileSelector.stageWidth = mainMenu.offsetWidth;
+        fileSelector.activeAreaWidth = activeAreaWidth;
+        fileSelector.emptyAreaWidth = ((emptyAreaWidth > 0) ? emptyAreaWidth : 0);
+        fileSelector.position = position;
+    };
+    /**
+     * Ajusta os botões das tabs referentes aos arquivos abertos para que
+     * aquela que está selecionada apareça por completo.
+     */
+    let adjustFileSelectorButtonPosition = () => {
+        if (fileSelector.emptyAreaWidth === 0) {
+            let buttons = DOM.querySelectorAll('#mainMenu > li');
+
+            if (buttons.length > 0) {
+                let mainMenu = document.getElementById('mainMenu');
+                let matchSelected = false;
+                let offsetWidth = 0;
+                let marginLeft = 0;
+
+
+                buttons.forEach((btn) => {
+                    if (matchSelected === false) {
+                        if (btn.classList.contains('active') === true) {
+                            matchSelected = true;
+                        }
+
+                        offsetWidth += btn.offsetWidth;
+                        if (offsetWidth > fileSelector.stageWidth) {
+                            marginLeft = offsetWidth - fileSelector.stageWidth;
+                        }
+                    }
+                });
+
+                marginLeft = (marginLeft * -1);
+                mainMenu.style['marginLeft'] = marginLeft + 'px';
+            }
+        }
+    };
+
+
+
+
+
+    /**
+     * Define o foco para o arquivo selecionado.
+     *
+     * @param {evt} e
+     */
+    let evtInsertFileSetFocus = (e) => {
+        let id = DOM.getTargetFileId(e.target);
+
+        for (let it in collectionOfInsertFiles) {
+            let file = collectionOfInsertFiles[it];
+            if (file.getId() === id) {
+                file.redefineFocus(true);
+            }
+            else {
+                if (file.getInFocus() === true) {
+                    file.redefineFocus(false);
+                }
+            }
+        }
+
+        adjustFileSelectorButtonPosition();
+    };
+    /**
+     * Muda o foco do arquivo selecionado para o próximo na direção indicada.
+     *
+     * @param {string} dir
+     */
+    let evtMoveInsertFileSelectorFocus = (dir) => {
+        let buttons = DOM.querySelectorAll('#mainMenu > li');
+        let tgtIndex = null;
+        let activeIndex = null;
+
+        for (let it in buttons) {
+            if (buttons[it].classList.contains('active') === true) {
+                tgtIndex = parseInt(it);
+                activeIndex = parseInt(it);
+
+                if (dir === 'prev') {
+                    tgtIndex--;
+                    if (tgtIndex < 0) { tgtIndex = 0; }
+                }
+                else if (dir === 'next') {
+                    tgtIndex++;
+                    if (tgtIndex >= buttons.length) { tgtIndex = buttons.length - 1; }
+                }
+            }
+        }
+
+        if (tgtIndex !== activeIndex) {
+            evtInsertFileSetFocus({ target: buttons[tgtIndex] });
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+    /**
      * Inicia o Editor.
      */
     let constructor = () => {
         setDefaultEventListeners();
+        redefineFileSelectorProperties();
+        onResizeEnd.addEventListener(redefineFileSelectorProperties);
     };
 
 
@@ -364,24 +509,24 @@ const appInsert = (() => {
          *
          * @param {string} fileName
          * @param {int} id
-         * @param {evt} evtFileSetFocus
-         * @param {evt} evtFileClose
+         * @param {evt} evtSetFocus
+         * @param {evt} evtClose
          *
          * @return {node[]}
          */
-        createSelectFileButton: (fileName, id, evtFileSetFocus, evtFileClose) => {
+        createSelectFileButton: (fileName, id, evtSetFocus, evtClose) => {
 
             let li = document.createElement('li');
             li.setAttribute('data-file-id', id);
 
             let span = document.createElement('span');
-            span.addEventListener('click', evtFileSetFocus);
+            span.addEventListener('click', evtSetFocus);
             span.innerHTML = fileName;
 
             let btn = document.createElement('button');
             btn.setAttribute('type', 'button');
             btn.setAttribute('data-btn-action', 'closeFile');
-            btn.addEventListener('click', evtFileClose);
+            btn.addEventListener('click', evtClose);
             btn.innerHTML = 'X';
 
 
@@ -438,18 +583,11 @@ const appInsert = (() => {
                 while (el !== null && el.attributes['data-file-id'] === undefined) {
                     el = el.parentNode;
                 }
-                if (el === null) {
-                    console.log('falhou em', node);
-                }
+
                 return parseInt(el.attributes['data-file-id'].value);
             }
         }
     };
-
-
-
-
-
 
 
 
@@ -460,7 +598,7 @@ const appInsert = (() => {
          * Abre um novo arquivo de texto.
          */
         cmdNew: () => {
-            openNewFileNode();
+            addInsertFile();
         },
         /**
          * Abre a janela de dialogo permitindo ao usuário selecionar um novo arquivo
@@ -471,14 +609,14 @@ const appInsert = (() => {
                 'cmdOpenSync', { appSettings: appSettings }
             );
             if (fileData !== undefined) {
-                openNewFileNode(fileData);
+                addInsertFile(fileData);
             }
         },
         /**
          * Salva o arquivo atualmente em foco se houverem alterações realizadas.
          */
         cmdSave: () => {
-            let fileData = selectFileObjectInFocus();
+            let fileData = getInsertFileInFocus();
             if (fileData !== null) {
 
                 if (fileData.getIsNew() === true) {
@@ -507,7 +645,7 @@ const appInsert = (() => {
          * Salva o arquivo atualmente em foco com um novo nome.
          */
         cmdSaveAs: () => {
-            let fileData = selectFileObjectInFocus();
+            let fileData = getInsertFileInFocus();
             if (fileData !== null) {
                 let saveResult = ipcRenderer.sendSync(
                     'cmdSaveAsSync',
@@ -520,6 +658,7 @@ const appInsert = (() => {
                 if (saveResult !== undefined) {
                     if (saveResult.success === true) {
                         fileData.saveAs(saveResult.fullName, saveResult.shortName);
+                        adjustFileSelectorButtonPosition();
                     }
                     else {
                         alert(appSettings.locale.CMD.cmdSaveAs.onFail.replace(
@@ -535,6 +674,18 @@ const appInsert = (() => {
          */
         cmdCanClose: () => {
             _public.cmdCanClose();
+        },
+        /**
+         * Movimenta os botões seletores de documentos 1 posição para traz.
+         */
+        cmdSelectPrev: () => {
+            evtMoveInsertFileSelectorFocus('prev');
+        },
+        /**
+         * Movimenta os botões seletores de documentos 1 posição para frente.
+         */
+        cmdSelectNext: () => {
+            evtMoveInsertFileSelectorFocus('next');
         }
     };
 
@@ -550,8 +701,8 @@ const appInsert = (() => {
          */
         cmdCanClose: () => {
             let r = true;
-            for (let it in insertFiles) {
-                if (insertFiles[it].getHasChanges() === true) {
+            for (let it in collectionOfInsertFiles) {
+                if (collectionOfInsertFiles[it].getHasChanges() === true) {
                     r = false;
                 }
             }
@@ -574,6 +725,5 @@ const appInsert = (() => {
     window.onload = () => {
         constructor();
     };
-
     return _public;
 })();

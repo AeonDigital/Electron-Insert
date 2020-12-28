@@ -277,7 +277,6 @@ let insertCursor = (() => {
 
             if (nodeCursor !== null) {
                 let tgtNode = nodeCursor.editNode.firstElementChild;
-                console.log(tgtNode);
                 if (tgtNode !== null) {
                     setCursorPosition({
                         selectionStartNode: tgtNode,
