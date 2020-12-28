@@ -53,13 +53,7 @@ const appInsert = (() => {
          *
          * @type {int}
          */
-        emptyAreaWidth: 0,
-        /**
-         * Posição atual do controlador.
-         *
-         * @type {int}
-         */
-        position: 0
+        emptyAreaWidth: 0
     };
 
 
@@ -341,23 +335,20 @@ const appInsert = (() => {
      * seletores de arquivos.
      */
     let redefineFileSelectorProperties = () => {
-        let mainMenu = document.getElementById('mainMenu');
+        let menuWindow = document.getElementById('menuWindow');
         let buttons = DOM.querySelectorAll('#mainMenu > li');
         let activeAreaWidth = 0;
 
         buttons.forEach((btn) => {
             activeAreaWidth += btn.offsetWidth;
         });
-        let emptyAreaWidth = (mainMenu.offsetWidth - activeAreaWidth);
-        let position = (
-            (mainMenu.style['marginLeft'] === '') ? 0 : parseInt(mainMenu.style['marginLeft'].replace('px', ''))
-        );
+        let emptyAreaWidth = (menuWindow.offsetWidth - activeAreaWidth);
 
 
-        fileSelector.stageWidth = mainMenu.offsetWidth;
+        fileSelector.stageWidth = menuWindow.offsetWidth;
         fileSelector.activeAreaWidth = activeAreaWidth;
         fileSelector.emptyAreaWidth = ((emptyAreaWidth > 0) ? emptyAreaWidth : 0);
-        fileSelector.position = position;
+        console.log(fileSelector);
     };
     /**
      * Ajusta os botões das tabs referentes aos arquivos abertos para que
@@ -380,9 +371,13 @@ const appInsert = (() => {
                             matchSelected = true;
                         }
 
-                        offsetWidth += btn.offsetWidth;
+                        let offW = Math.ceil(parseFloat(window.getComputedStyle(btn).width.replace('px', ''))) + 1;
+                        offsetWidth += offW;
                         if (offsetWidth > fileSelector.stageWidth) {
-                            marginLeft = offsetWidth - fileSelector.stageWidth;
+                            if (marginLeft === 0) {
+                                marginLeft = offsetWidth - fileSelector.stageWidth;
+                            }
+                            else { marginLeft += offW; }
                         }
                     }
                 });
