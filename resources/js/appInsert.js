@@ -105,14 +105,14 @@ const appInsert = (() => {
             }
         });
 
-        window.addEventListener('keydown', onKeyDownCMD);
+        window.addEventListener('keydown', evtMainOnKeyDownListener);
     };
     /**
      * Evento que identifica quando um comando é dado via teclado.
      *
      * @param {evt} e
      */
-    let onKeyDownCMD = (e) => {
+    let evtMainOnKeyDownListener = (e) => {
         let cmd = null;
 
         if (e.ctrlKey || e.metaKey) {

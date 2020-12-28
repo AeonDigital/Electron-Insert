@@ -98,6 +98,7 @@ let insertFile = function (fileData) {
         fileLabel = fileData.fileLabel;
         editNode = fileData.editNode;
 
+        editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
         insertCursor.addListenerNode(id, editNode);
     };
 
@@ -176,7 +177,6 @@ let insertFile = function (fileData) {
             lbl += ' *';
         }
         fileLabel.innerText = lbl;
-
         return hasChanges;
     };
     let timeout_checkIfHasChanges = null;
@@ -251,14 +251,11 @@ let insertFile = function (fileData) {
             if (active === true) {
                 fileButton.setAttribute('class', 'active');
                 editNode.setAttribute('class', 'active');
-                editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
-                editNode.focus();
-                insertCursor.restoreCursorPosition(id);
+                insertCursor.restoreCursorPosition(id, true);
             }
             else {
                 fileButton.removeAttribute('class');
                 editNode.removeAttribute('class');
-                editNode.removeEventListener('keyup', setTimeout_checkIfHasChanges);
             }
             inFocus = active;
         },

@@ -94,26 +94,13 @@ let insertCursor = (() => {
 
         // Encontrando o objeto alvo e ele estando apto para receber atualizações
         // de seu cursor e seleção...
-        if (nodeCursor !== null && nodeCursor.selectionLocked === false) {
+        if (nodeCursor !== null) {
             let cP = document.getSelection();
 
             nodeCursor.selectionStartNode = cP.anchorNode;
             nodeCursor.selectionStartNodeOffset = cP.anchorOffset;
             nodeCursor.selectionEndNode = cP.focusNode;
             nodeCursor.selectionEndNodeOffset = cP.focusOffset;
-        }
-    };
-    /**
-     * Quando um node monitorado perde o foco fica definido que a posição
-     * do cursor e seleção não podem mais ser atualizados.
-     *
-     * @param {evt} e
-     */
-    let onBlurLockCursorPosition = (e) => {
-        let nodeCursor = getNodeCursorByChildNode(e.target);
-
-        if (nodeCursor !== null) {
-            nodeCursor.selectionLocked = true;
         }
     };
     /**
@@ -172,7 +159,6 @@ let insertCursor = (() => {
                 }
 
                 document.execCommand('insertHTML', false, html.join(''));
-                nodeCursor.selectionLocked = false;
             }
         }
     };
@@ -204,13 +190,6 @@ let insertCursor = (() => {
                 collectionOfNodeCursor.push({
                     id: id.toString(),
                     editNode: editNode,
-                    /**
-                     * Indica quando a instância está apta a seguir atualizando as
-                     * propriedades de localização do range.
-                     *
-                     * @type {bool}
-                     */
-                    selectionLocked: false,
                     /**
                      * Node onde a seleção deve iniciar.
                      *
@@ -245,7 +224,6 @@ let insertCursor = (() => {
 
                 editNode.addEventListener('keyup', onKeyUpSaveCursorPosition);
                 editNode.addEventListener('mouseup', onKeyUpSaveCursorPosition);
-                editNode.addEventListener('blur', onBlurLockCursorPosition);
                 editNode.addEventListener('paste', evtOnPaste);
             }
 
@@ -256,14 +234,17 @@ let insertCursor = (() => {
          * id indicado.
          *
          * @param {string} id
+         * @param {bool} forceFocus
          */
-        restoreCursorPosition: (id) => {
+        restoreCursorPosition: (id, forceFocus) => {
             let nodeCursor = getNodeCursorById(id);
 
             if (nodeCursor !== null) {
                 if (nodeCursor.selectionStartNode !== null) {
                     setCursorPosition(nodeCursor);
-                    nodeCursor.selectionLocked = false;
+                }
+                else if (forceFocus === true) {
+                    p.setCursorPositionOnStart(id);
                 }
             }
         },
