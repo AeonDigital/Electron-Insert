@@ -69,37 +69,16 @@ const appInsert = (() => {
      * Prepara os botões fixos do editor.
      */
     let setDefaultEventListeners = () => {
-        // Inicia as ações e legenda de cada um dos botões
         DOM.querySelectorAll('[data-btn-action]').forEach((btn) => {
             let actName = btn.attributes['data-btn-action'].value;
-            let lblType = btn.attributes['data-btn-label'];
-            lblType = (lblType === undefined) ? 'title' : lblType.value;
 
             if (CMD[actName] !== undefined) {
                 btn.addEventListener('click', CMD[actName]);
             }
-
-            if (appSettings.locale.button[actName] !== undefined) {
-                let lbl = appSettings.locale.button[actName];
-
-                switch (lblType) {
-                    case 'title':
-                        btn.setAttribute('title', lbl);
-                        break;
-                    case 'inside':
-                        btn.innerHTML = lbl;
-
-                        if (btn.attributes['data-btn-shortcut'] !== undefined) {
-                            let sc = document.createElement('span');
-                            sc.innerHTML = btn.attributes['data-btn-shortcut'].value;
-                            btn.appendChild(sc);
-                        }
-                        break;
-                }
-            }
         });
 
         window.addEventListener('keydown', evtMainOnKeyDownListener);
+        onResizeEnd.addEventListener(redefineFileSelectorProperties);
     };
     /**
      * Evento que identifica quando um comando é dado via teclado.
@@ -459,7 +438,8 @@ const appInsert = (() => {
     let constructor = () => {
         setDefaultEventListeners();
         redefineFileSelectorProperties();
-        onResizeEnd.addEventListener(redefineFileSelectorProperties);
+
+        configInsert.init();
     };
 
 
@@ -724,7 +704,6 @@ const appInsert = (() => {
     // Inicia o objeto
     window.onload = () => {
         constructor();
-        configInsert.init();
     };
     return _public;
 })();

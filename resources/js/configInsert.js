@@ -100,6 +100,54 @@ const configInsert = (() => {
         configFields.configEditorLineHeight.value = editorStyle['line-height'].replace('px', '');
         configFields.configEditorLineHeightKey.value = editorStyle['line-height'].replace('px', '');
     };
+    /**
+     * Aplica as legendas dos botões e controles da aplicação conforme o
+     * locale que está configurado.
+     *
+     * @param {object} locale
+     * @param {string} attr
+     */
+    let applyLocale = (locale, attr) => {
+        if (locale === undefined) { locale = appSettings.locale; }
+        if (attr === undefined) { attr = 'data-label-locale'; }
+
+
+        for (let it in locale) {
+            if (typeof (locale[it]) === 'object') {
+                applyLocale(locale[it], attr + '-' + it);
+            }
+            else {
+                let tgtAttr = '[' + attr + '="' + it + '"]';
+
+                document.querySelectorAll(tgtAttr).forEach((tgt) => {
+                    if (tgt.nodeType === Node.ELEMENT_NODE) {
+                        let lbl = locale[it];
+
+                        if (lbl !== '') {
+                            let lblType = (
+                                (tgt.attributes['data-label-type'] === undefined) ?
+                                    'innerHTML' :
+                                    tgt.attributes['data-label-type'].value
+                            );
+
+                            if (lblType === 'innerHTML') {
+                                tgt.innerHTML = lbl;
+                            }
+                            else if (lblType === 'title') {
+                                tgt.setAttribute('title', lbl);
+                            }
+
+                            if (tgt.attributes['data-btn-shortcut'] !== undefined) {
+                                let sc = document.createElement('span');
+                                sc.innerHTML = tgt.attributes['data-btn-shortcut'].value;
+                                tgt.appendChild(sc);
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    };
 
 
 
@@ -111,7 +159,8 @@ const configInsert = (() => {
      * @param {evt} e
      */
     let configEditorLocale = (e) => {
-
+        iniApp['locale'] = e.target.value;
+        applyLocale();
     };
     /**
      * Controla a cor de fundo do editor.
@@ -234,6 +283,8 @@ const configInsert = (() => {
                     iniApp[key] = appSettings.ini[key];
                 }
             });
+            applyLocale();
+
 
             Object.keys(appSettings.ini.editorStyle).forEach((key) => {
                 if (editorCss[key] !== undefined) {

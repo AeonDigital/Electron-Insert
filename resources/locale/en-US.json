@@ -19,7 +19,28 @@
         "cmdUnderline": "underline",
         "cmdStrike": "strike",
 
-        "newfile": "New file"
+        "newfile": "New file",
+        "cmdOpenSettings": "Settings"
+    },
+    "settings": {
+        "nav": {
+            "tabConfig": "Settings",
+            "tabAbout": "About"
+        },
+        "panel": {
+            "configuration": {
+                "ttlGeneral": "General",
+                "fldLblLanguage": "Language",
+                "ttlTextEditor": "Text editor",
+                "fldLblEditorBackgroundColor": "Background color",
+                "fldLblEditorFontFace": "Font",
+                "fldLblEditorFontStyle": "Style",
+                "fldLblEditorFontColor": "Color",
+                "fldLblEditorFontSize": "Font size",
+                "fldLblEditorLineHeight": "Line height",
+                "btnSaveConfiguration": "Save configurations"
+            }
+        }
     },
     "CMD": {
         "cmdFileClose": {
@@ -28,7 +49,7 @@
         "cmdOpen": {
             "dialogConfig": {
                 "title": "Select a file",
-                "filterAllFiles": "All Files",
+                "filterAllFiles": "All files",
                 "filterFileType": "Text file"
             }
         },
@@ -44,12 +65,6 @@
         },
         "cmdCanClose": {
             "dialogConfirmClose": "There are open files that have not been saved.\nIf you continue all unsaved data will be lost.\nAre you sure you want to close?"
-        }
-    },
-    "settings": {
-        "tabs": {
-            "settings": "Settings",
-            "about": "About"
         }
     }
 }

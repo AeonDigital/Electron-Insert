@@ -29,50 +29,68 @@
         <section id="mainControls">
             <div class="row d-flex">
                 <div class="subMenu">
-                    <button type="button" id="loadnewwindow" data-btn-action="menu">...</button>
+                    <button type="button" data-btn-action="cmdMenu"
+                            data-label-locale-button="menu"
+                            data-label-type="title">...</button>
                     <ul>
                         <li>
                             <button type="button"
                                     data-btn-action="cmdNew"
-                                    data-btn-label="inside"
-                                    data-btn-shortcut="Ctrl + N"></button>
+                                    data-btn-shortcut="Ctrl + N"
+                                    data-label-locale-button="cmdNew"></button>
                         </li>
                         <li>
                             <button type="button"
                                     data-btn-action="cmdOpen"
-                                    data-btn-label="inside"
-                                    data-btn-shortcut="Ctrl + O"></button>
+                                    data-btn-shortcut="Ctrl + O"
+                                    data-label-locale-button="cmdOpen"></button>
                         </li>
                         <li>
                             <button type="button"
                                     data-btn-action="cmdSave"
-                                    data-btn-label="inside"
-                                    data-btn-shortcut="Ctrl + S"></button>
+                                    data-btn-shortcut="Ctrl + S"
+                                    data-label-locale-button="cmdSave"></button>
                         </li>
                         <li>
                             <button type="button"
                                     data-btn-action="cmdSaveAs"
-                                    data-btn-label="inside"
-                                    data-btn-shortcut="Ctrl + Shift + S"></button>
+                                    data-btn-shortcut="Ctrl + Shift + S"
+                                    data-label-locale-button="cmdSaveAs"></button>
                         </li>
                         <li>
                             <button type="button"
                                     data-btn-action="cmdCanClose"
-                                    data-btn-label="inside"></button>
+                                    data-label-locale-button="cmdCanClose"></button>
                         </li>
                     </ul>
                 </div>
                 <div class="d-flex">
-                    <button type="button" data-btn-action="cmdNew">+</button>
-                    <button type="button" data-btn-action="cmdSelectPrev"><span>‹</span></button>
+                    <button type="button"
+                            data-btn-action="cmdNew"
+                            data-label-locale-button="cmdNew"
+                            data-label-type="title">+</button>
+                    <button type="button"
+                            data-btn-action="cmdSelectPrev"
+                            data-label-locale-button="cmdSelectPrev"
+                            data-label-type="title">
+                            <span>‹</span>
+                    </button>
                 </div>
                 <div id="menuWindow" class="menuWindow">
                     <ul id="mainMenu" class="menuFile">
                     </ul>
                 </div>
                 <div class="d-flex">
-                    <button type="button" data-btn-action="cmdSelectNext"><span>›</span></button>
-                    <button type="button" data-btn-action="cmdOpenSettings">
+                    <button type="button"
+                            data-btn-action="cmdSelectNext"
+                            data-label-locale-button="cmdSelectNext"
+                            data-label-type="title">
+                            <span>›</span>
+                    </button>
+                    <button type="button"
+                            data-btn-action="cmdOpenSettings"
+                            data-label-locale-button="cmdOpenSettings"
+                            data-label-type="title">
                         <img src="../../resources/icons/gear.png" alt="" />
                     </button>
                 </div>
@@ -100,22 +118,26 @@
                 <nav>
                     <ul>
                         <li data-front-action="active-tab"
-                            data-front-arg="tab1" class="active">
-                            Configurações
+                            data-front-arg="tabConfigPanel"
+                            data-label-locale-settings-nav="tabConfig"
+                            class="active">
                         </li>
                         <li data-front-action="active-tab"
-                            data-front-arg="tab2">
-                            Sobre
+                            data-front-arg="tabAboutPanel"
+                            data-label-locale-settings-nav="tabAbout">
                         </li>
                     </ul>
                 </nav>
 
-                <div id="tab1" class="active">
+                <div id="tabConfigPanel" class="active">
                     <form>
                         <fieldset>
-                            <legend>Geral</legend>
+                            <legend data-label-locale-settings-panel-configuration="ttlGeneral">
+                            </legend>
                             <div class="inline">
-                                <label for="configEditorLocale">Linguagem</label>
+                                <label for="configEditorLocale"
+                                        data-label-locale-settings-panel-configuration="fldLblLanguage">
+                                </label>
                                 <select id="configEditorLocale">
                                     <option value="en-US">English</option>
                                     <option value="pt-BR">Português [Brasil]</option>
@@ -126,15 +148,20 @@
                         <hr />
 
                         <fieldset>
-                            <legend>Editor de texto</legend>
+                            <legend data-label-locale-settings-panel-configuration="ttlTextEditor">
+                            </legend>
 
                             <div>
-                                <label for="configEditorBackgroundColor">Cor de fundo</label>
+                                <label for="configEditorBackgroundColor"
+                                     data-label-locale-settings-panel-configuration="fldLblEditorBackgroundColor">
+                                </label>
                                 <input type="color" id="configEditorBackgroundColor" />
                             </div>
 
                             <div class="inline">
-                                <label for="configEditorFontFace">Fonte</label>
+                                <label for="configEditorFontFace"
+                                        data-label-locale-settings-panel-configuration="fldLblEditorFontFace">
+                                </label>
                                 <select id="configEditorFontFace">
                                     <option value="Fira Code">Fira Code [Padrão]</option>
                                     <option value="Arial">Arial</option>
@@ -152,7 +179,9 @@
                                 </select>
                             </div>
                             <div class="inline">
-                                <label for="configEditorFontStyle">Estilo</label>
+                                <label for="configEditorFontStyle"
+                                        data-label-locale-settings-panel-configuration="fldLblEditorFontStyle">
+                                </label>
                                 <select id="configEditorFontStyle">
                                     <option value="">normal</option>
                                     <option value="bold">bold</option>
@@ -160,30 +189,36 @@
                                 </select>
                             </div>
                             <div class="inline">
-                                <label for="configEditorFontColor">Cor</label>
+                                <label for="configEditorFontColor"
+                                        data-label-locale-settings-panel-configuration="fldLblEditorFontColor">
+                                </label>
                                 <input type="color" id="configEditorFontColor" />
                             </div>
                             <div class="inline">
-                                <label for="configEditorFontSize">Tamanho da fonte</label>
+                                <label for="configEditorFontSize"
+                                        data-label-locale-settings-panel-configuration="fldLblEditorFontSize">
+                                </label>
                                 <input type="range" id="configEditorFontSize" min="10" max="40" step="1" />
                                 <input type="number" id="configEditorFontSizeKey" min="10" max="40" step="1" />
                             </div>
                             <div class="inline">
-                                <label for="configEditorLineHeight">Tamanho da linha</label>
+                                <label for="configEditorLineHeight"
+                                        data-label-locale-settings-panel-configuration="fldLblEditorLineHeight">
+                                </label>
                                 <input type="range" id="configEditorLineHeight" min="10" max="50" step="1" />
                                 <input type="number" id="configEditorLineHeightKey" min="10" max="50" step="1" />
                             </div>
                         </fieldset>
                         <fieldset>
                             <div class="txt-right">
-                                <button type="button">
-                                    Salvar configurações
+                                <button type="button"
+                                        data-label-locale-settings-panel-configuration="btnSaveConfiguration">
                                 </button>
                             </div>
                         </fieldset>
                     </form>
                 </div>
-                <div id="tab2">
+                <div id="tabAboutPanel">
                     <h1>Insert Editor</h1>
 
                     <p class="txt-center">

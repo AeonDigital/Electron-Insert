@@ -19,7 +19,28 @@
         "cmdUnderline": "Sublinhado",
         "cmdStrike": "Tachado",
 
-        "newfile": "Novo arquivo"
+        "newfile": "Novo arquivo",
+        "cmdOpenSettings": "Configurações"
+    },
+    "settings": {
+        "nav": {
+            "tabConfig": "Configurações",
+            "tabAbout": "Sobre"
+        },
+        "panel": {
+            "configuration": {
+                "ttlGeneral": "Geral",
+                "fldLblLanguage": "Linguagem",
+                "ttlTextEditor": "Editor de texto",
+                "fldLblEditorBackgroundColor": "Cor de fundo",
+                "fldLblEditorFontFace": "Fonte",
+                "fldLblEditorFontStyle": "Estilo",
+                "fldLblEditorFontColor": "Cor",
+                "fldLblEditorFontSize": "Tamanho da fonte",
+                "fldLblEditorLineHeight": "Tamanho da linha",
+                "btnSaveConfiguration": "Salvar configurações"
+            }
+        }
     },
     "CMD": {
         "cmdFileClose": {

@@ -95,7 +95,28 @@ let appSettings = (() => {
                 "cmdUnderline": "underline",
                 "cmdStrike": "strike",
 
-                "newfile": "New file"
+                "newfile": "New file",
+                "cmdOpenSettings": "Settings"
+            },
+            "settings": {
+                "nav": {
+                    "tabConfig": "Settings",
+                    "tabAbout": "About"
+                },
+                "panel": {
+                    "configuration": {
+                        "ttlGeneral": "General",
+                        "fldLblLanguage": "Language",
+                        "ttlTextEditor": "Text editor",
+                        "fldLblEditorBackgroundColor": "Background color",
+                        "fldLblEditorFontFace": "Font",
+                        "fldLblEditorFontStyle": "Style",
+                        "fldLblEditorFontColor": "Color",
+                        "fldLblEditorFontSize": "Font size",
+                        "fldLblEditorLineHeight": "Line height",
+                        "btnSaveConfiguration": "Save configurations"
+                    }
+                }
             },
             "CMD": {
                 "cmdFileClose": {
