@@ -4,6 +4,7 @@
     top:0;
     z-index: 1;
     background-color: var(--main-bg-color);
+    box-shadow: 0px 5px 10px 0px #000;
 }
 #mainControls ul {
     list-style: none;
@@ -33,6 +34,8 @@ main > section.active {
         font-style: var(--btn-file-select-font-style);
         font-size: var(--btn-file-select-font-size);
         line-height: var(--btn-file-select-font-line-height);
+
+        transition: all 0.4s;
     }
     .menuFile li {
         display: flex;
@@ -65,6 +68,7 @@ main > section.active {
     top:var(--main-row-height);
     left: 0;
     border: 1px solid var(--main-font-color);
+    box-shadow: 5px 8px 10px 0px #000000;
 }
 .subMenu:hover > ul {
     display:flex;
@@ -144,4 +148,85 @@ button[data-btn-action] img {
     display: inline-block;
     width: calc(var(--main-row-height) / 3);
     height: 1px;
+}
+
+
+
+
+/*
+    Painel de configurações
+*/
+aside {
+    width: 100%;
+    max-width: 600px;
+    height: calc(var(--editor-main-height-v) - 2px);
+    position: absolute;
+    z-index: 1;
+    top: 2px;
+    right: -100%;
+
+    background-color: var(--main-bg-color);
+    border-left: 2px solid #EEE;
+
+    box-shadow: -5px 8px 10px 0px #000000;
+    transition: all 0.4s;
+}
+aside.open {
+    right: 0;
+}
+
+aside > div {
+    width: calc(100% - 40px);
+    padding:20px;
+
+    color: var(--main-font-color);
+}
+
+aside > div > nav {
+    width: 100%;
+}
+aside > div > nav > ul {
+    list-style: none;
+    text-align: center;
+    margin-bottom: 20px;
+}
+aside > div > nav > ul > li {
+    display: inline-block;
+    padding:10px 20px;
+
+    font-size: 16px;
+    line-height: 20px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-right: 2px;
+}
+aside > div > nav > ul > li:hover,
+aside > div > nav > ul > li.active {
+    background-color: var(--main-bg-color-hover);
+    border-bottom: 2px solid var(--main-font-color);
+}
+aside > div > div > h1 {
+    text-align: center;
+    font-size: 30px;
+}
+aside > div > div > p {
+    font-size: 16px;
+    line-height: 26px;
+    margin-bottom: 16px;
+}
+aside > div > div > img {
+    margin: 0 auto;
+    text-align: center;
+}
+aside .icon-insert {
+    background-color: rgba(28, 28, 28, 0.5);
+    padding: 0 50px;
+    border: 1px solid #333;
+    border-radius: 12px;
+    margin-top: 15px;
+}
+aside .icon-aeondigital {
+    width: 80px;
+    float: right;
+    margin-left: 15px;
 }

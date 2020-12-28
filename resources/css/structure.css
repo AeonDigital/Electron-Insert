@@ -4,7 +4,7 @@
     --main-bg-color-hover-invert: #444;
 
     --main-row-height: 45px;
-    --main-font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    --main-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     --main-font-color: #EEE;
     --main-font-invert-color: #444;
     --main-font-filter-color: invert(100%) sepia(0%) saturate(7480%) hue-rotate(69deg) brightness(120%) contrast(73%);
@@ -51,7 +51,9 @@ body.simpleEditor #mainMarkupButtons {
     padding:0; margin:0; border:none; outline: 0;
 }
 html, body {
-    background-color: var(--main-bg-color); font-size: 0; height:100%;
+    background-color: var(--main-bg-color);
+    font-size: 0;
+    height:100%;
     font-family: var(--main-font-family);
     color: var(--main-font-color);
 }
@@ -90,4 +92,13 @@ main > section p:empty {
 }
 .d-flex {
     display: flex;
+}
+.txt-left {
+    text-align: left;
+}
+.txt-right {
+    text-align: right;
+}
+.txt-center {
+    text-align: center;
 }

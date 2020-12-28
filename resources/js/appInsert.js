@@ -348,7 +348,6 @@ const appInsert = (() => {
         fileSelector.stageWidth = menuWindow.offsetWidth;
         fileSelector.activeAreaWidth = activeAreaWidth;
         fileSelector.emptyAreaWidth = ((emptyAreaWidth > 0) ? emptyAreaWidth : 0);
-        console.log(fileSelector);
     };
     /**
      * Ajusta os botões das tabs referentes aos arquivos abertos para que
@@ -681,6 +680,12 @@ const appInsert = (() => {
          */
         cmdSelectNext: () => {
             evtMoveInsertFileSelectorFocus('next');
+        },
+        /**
+         * Abre o painel de configurações do editor.
+         */
+        cmdOpenSettings: () => {
+            document.getElementById('mainAside').classList.toggle('open');
         }
     };
 
