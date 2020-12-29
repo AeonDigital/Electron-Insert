@@ -675,6 +675,8 @@ const appInsert = (() => {
             btnFavorite.setAttribute('title',
                 ((isFav === false) ? appSettings.locale.button.cmdAddFavorite : appSettings.locale.button.cmdRemoveFavorite)
             );
+            btnFavorite.addEventListener('click', CMD.cmdToggleFavorite);
+
 
             let imgNoHover = document.createElement('img');
             imgNoHover.setAttribute('src', '../../resources/icons/star.png');
@@ -708,6 +710,21 @@ const appInsert = (() => {
             }
 
             return ((li.tagName === 'LI' && li.attributes['data-btn-action-arg'] !== undefined) ? li : null);
+        },
+        /**
+         * Retorna o elemento <button> que foi acionado para adicionar/remover um arquivo
+         * da lista de favoritos.
+         *
+         * @param {node} node
+         *
+         * @return {node}
+         */
+        getFavButton: (node) => {
+            let btn = node;
+            while (btn !== null && btn.tagName !== 'BUTTON') {
+                btn = btn.parentNode;
+            }
+            return btn;
         }
     };
 
@@ -844,6 +861,27 @@ const appInsert = (() => {
          */
         cmdOpenSettings: () => {
             document.getElementById('mainAside').classList.toggle('open');
+        },
+        /**
+         * Adiciona ou remove o item da lista de favoritos.
+         */
+        cmdToggleFavorite: (e) => {
+            let cmdLI = DOM.getOpenFileLI(e.target);
+            let cmdBtn = DOM.getFavButton(e.target);
+
+            if (cmdLI !== null && cmdBtn !== null) {
+                let fullName = cmdLI.attributes['data-btn-action-arg'].value;
+
+                // Se o arquivo ainda não está na lista dos favoritos, adiciona-o.
+                // se estiver, remove-o
+                appSettings.ini.recentFileList.files.forEach((fileCfg, i) => {
+                    if (fileCfg[0] === fullName) {
+                        fileCfg[1] = (cmdBtn.classList.contains('active') === false);
+                    }
+                });
+
+                setRecentFileList();
+            }
         }
     };
 
