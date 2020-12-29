@@ -23,7 +23,8 @@ function createWindow() {
         height: 600,
         webPreferences: {
             nodeIntegration: true
-        }
+        },
+        icon: rootPath + '/insert.ico'
     });
 
     require(rootPath + '/views/main/index_IPCMain.js');
