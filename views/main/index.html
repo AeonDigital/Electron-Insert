@@ -22,7 +22,7 @@
         <script src="../../resources/js/insertFile.js"></script>
         <script src="../../resources/js/insertCursor.js"></script>
         <script src="../../resources/js/appInsert.js"></script>
-        <script src="../../resources/js/configInsert.js"></script>
+        <script src="../../resources/js/insertConfig.js"></script>
         <script src="index_IPCRenderer.js"></script>
     </head>
     <body class="simpleEditor">
@@ -117,19 +117,18 @@
             <div>
                 <nav>
                     <ul>
-                        <li data-front-action="active-tab"
-                            data-front-arg="tabConfigPanel"
-                            data-label-locale-settings-nav="tabConfig"
-                            class="active">
+                        <li data-tab-button="active-tab"
+                            data-tab-target-panel="tabConfigPanel"
+                            data-label-locale-settings-nav="tabConfig">
                         </li>
-                        <li data-front-action="active-tab"
-                            data-front-arg="tabAboutPanel"
+                        <li data-tab-button="active-tab"
+                            data-tab-target-panel="tabAboutPanel"
                             data-label-locale-settings-nav="tabAbout">
                         </li>
                     </ul>
                 </nav>
 
-                <div id="tabConfigPanel" class="active">
+                <div data-tab-panel="tabConfigPanel">
                     <form>
                         <fieldset>
                             <legend data-label-locale-settings-panel-configuration="ttlGeneral">
@@ -218,7 +217,7 @@
                         </fieldset>
                     </form>
                 </div>
-                <div id="tabAboutPanel">
+                <div data-tab-panel="tabAboutPanel">
                     <h1>Insert Editor</h1>
 
                     <p class="txt-center">

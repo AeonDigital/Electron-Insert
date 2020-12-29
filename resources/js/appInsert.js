@@ -439,7 +439,7 @@ const appInsert = (() => {
         setDefaultEventListeners();
         redefineFileSelectorProperties();
 
-        configInsert.init();
+        insertConfig.init();
     };
 
 

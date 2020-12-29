@@ -11,7 +11,7 @@
  * @copyright   2020, Rianna Cantarelli
  * @license     MIT
  */
-const configInsert = (() => {
+const insertConfig = (() => {
 
 
 
@@ -159,8 +159,18 @@ const configInsert = (() => {
      * @param {evt} e
      */
     let configEditorLocale = (e) => {
-        iniApp['locale'] = e.target.value;
-        applyLocale();
+        let localePath = ipcRenderer.sendSync('getPathSync', 'rootPath') +
+                '/resources/locale/' + e.target.value + '.json';
+        let locale = ipcRenderer.sendSync('loadJsonFileSync', localePath);
+
+        if (locale === undefined) {
+            alert('Lost ' + localePath);
+        }
+        else {
+            iniApp['locale'] = e.target.value;
+            appSettings.locale = locale;
+            applyLocale();
+        }
     };
     /**
      * Controla a cor de fundo do editor.
@@ -268,6 +278,41 @@ const configInsert = (() => {
 
 
 
+    /**
+     * Coleção de botões do tipo "tab"
+     */
+    let tabButtons = null;
+    /**
+     * Coleção de nodes do tipo "panel"
+     */
+    let tabPanels = null;
+    /**
+     * Mostra o painel selecionado e esconde os demais.
+     *
+     * @param {evt} e
+     */
+    let evtShowHidePanels = (e) => {
+        if (e === undefined) {
+            e = { 'target': tabButtons[0] };
+        }
+        let tgtPanel = e.target.attributes['data-tab-target-panel'].value;
+
+        for (var it in tabButtons) {
+            if (tabButtons[it].attributes['data-tab-target-panel'].value === tgtPanel) {
+                tabButtons[it].classList.add('active');
+                tabPanels[it].classList.add('active');
+            }
+            else {
+                tabButtons[it].classList.remove('active');
+                tabPanels[it].classList.remove('active');
+            }
+        }
+    };
+
+
+
+
+
 
 
 
@@ -340,6 +385,25 @@ const configInsert = (() => {
                 .addEventListener('change', configEditorLineHeight);
             configFields.configEditorLineHeightKey
                 .addEventListener('keydown', onKeyDownCheck_allowOnlyNumber);
+
+
+
+
+            tabButtons = [];
+            tabPanels = [];
+
+            document.querySelectorAll('[data-tab-button]').forEach((btn) => {
+                if (btn.nodeType === Node.ELEMENT_NODE) {
+                    tabButtons.push(btn);
+                    btn.addEventListener('click', evtShowHidePanels);
+                }
+            });
+            document.querySelectorAll('[data-tab-panel]').forEach((tab) => {
+                if (tab.nodeType === Node.ELEMENT_NODE) {
+                    tabPanels.push(tab);
+                }
+            });
+            evtShowHidePanels();
         }
     };
 

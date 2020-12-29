@@ -170,6 +170,7 @@ aside {
 
     box-shadow: -5px 8px 10px 0px #000000;
     transition: all 0.4s;
+    overflow: auto;
 }
 aside.open {
     right: 0;
@@ -308,8 +309,8 @@ aside > div > div > img {
     text-align: center;
 }
 aside .icon-insert {
-    background-color: rgba(28, 28, 28, 0.5);
-    padding: 0 50px;
+    background-color: rgba(28, 28, 28, 1);
+    padding: 10px 50px;
     border: 1px solid #333;
     border-radius: 12px;
     margin-top: 15px;
