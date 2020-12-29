@@ -34,6 +34,13 @@ IMPORTANTE:
 Este packager não cria um instalador, mas sim uma versão standalone do seu
 aplicativo.
 
+OBSERVAÇÃO:
+Use o comando abaixo para copiar o ícone ``icns`` para o build da plataforma ``mas``
+
+```bash
+  cp electron-insert.icns .\Insert-mas-arm64\Insert.app\Contents\Resources\electron.icns
+```
+
 
 Visite a [documentação oficial](https://electron.github.io/electron-packager/master/)
 
