@@ -4,6 +4,8 @@
 
 
 
+
+
 /**
  * Controlador das configurações
  *
@@ -17,17 +19,6 @@ const insertConfig = (() => {
 
 
 
-    /**
-     * Configurações gerais do editor.
-     */
-    let iniApp = {
-        'defaultPath': '',
-        'locale': '',
-        'commomFiles': {
-            'maxFiles': 10,
-            'files': []
-        },
-    };
     /**
      * Configuração de fonte e fundo para o editor
      */
@@ -78,7 +69,7 @@ const insertConfig = (() => {
      * que estão definidos para a aplicação;
      */
     let applyConfigFormValues = () => {
-        configEditorLocale.value = appSettings.ini.locale;
+        configFields.configEditorLocale.value = appSettings.ini.locale;
 
 
 
@@ -167,7 +158,7 @@ const insertConfig = (() => {
             alert('Lost ' + localePath);
         }
         else {
-            iniApp['locale'] = e.target.value;
+            appSettings.ini.locale = e.target.value;
             appSettings.locale = locale;
             applyLocale();
         }
@@ -312,6 +303,30 @@ const insertConfig = (() => {
 
 
 
+    /**
+     * Salva as configurações atuais do editor no arquivo de perferencias
+     * pessoais do usuário.
+     */
+    let cmdSaveConfigurations = () => {
+        let saveResult = ipcRenderer.sendSync(
+            'cmdSaveSync',
+            {
+                fullName: ipcRenderer.sendSync('getPathSync', 'userData') + '/user.json',
+                data: JSON.stringify(appSettings.ini, null, 4)
+            }
+        );
+
+        if (saveResult === false) {
+            alert('Error on save preferences');
+        }
+        else {
+            alert('Success on saved preferences');
+        }
+    };
+
+
+
+
 
 
 
@@ -323,11 +338,6 @@ const insertConfig = (() => {
          * Inicia a o formulário de configuração.
          */
         init: () => {
-            Object.keys(appSettings.ini).forEach((key) => {
-                if (iniApp[key] !== undefined) {
-                    iniApp[key] = appSettings.ini[key];
-                }
-            });
             applyLocale();
 
 
@@ -404,6 +414,10 @@ const insertConfig = (() => {
                 }
             });
             evtShowHidePanels();
+
+
+            document.getElementById('cmdSaveConfigurations')
+                .addEventListener('click', cmdSaveConfigurations);
         }
     };
 
