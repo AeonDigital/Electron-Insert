@@ -24,7 +24,7 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true
         },
-        icon: rootPath + '/insert.ico'
+        icon: rootPath + '/electron-insert.ico'
     });
 
     require(rootPath + '/views/main/index_IPCMain.js');

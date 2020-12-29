@@ -4,7 +4,8 @@
   "description": "Simples e despretencioso editor para arquivos de texto.",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-packager . Insert --all"
   },
   "keywords": [
     "editor"
