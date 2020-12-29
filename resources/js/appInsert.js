@@ -463,19 +463,33 @@ const appInsert = (() => {
      */
     let addRecentFile = (fullName, recreateRecentList) => {
         let fileIndex = null;
+        let favList = [];
+        let recList = [];
 
         // verifica se o arquivo indicado já não existe na lista
         appSettings.ini.recentFileList.files.forEach((fileCfg, i) => {
             if (fileCfg[0] === fullName) {
                 fileIndex = i;
             }
+
+            if (fileCfg[1] === true) { favList.push(fileCfg); }
+            else { recList.push(fileCfg); }
         });
 
 
         if (fileIndex === null) {
-            appSettings.ini.recentFileList.files.unshift([
+            recList.unshift([
                 fullName, false
             ]);
+
+            // Mantém a lista de itens recentes com o máximo de itens permitidos para a mesma.
+            // itens "favoritados" não entram nesta contagem.
+            if (recList.length > appSettings.ini.recentFileList.maxFiles) {
+                recList = recList.slice(0, appSettings.ini.recentFileList.maxFiles);
+            }
+
+            // redefine a lista de recentes.
+            appSettings.ini.recentFileList.files = favList.concat(recList);
         }
         else {
             let item = appSettings.ini.recentFileList.files.splice(fileIndex, 1)[0];
