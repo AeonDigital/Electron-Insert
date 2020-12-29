@@ -63,7 +63,12 @@ if (typeof (require) === 'undefined') {
                             break;
 
                         case 'cmdOpenSync':
-                            let c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
+                        case 'cmdOpenFileSync':
+                            let c = true;
+                            if (channel === 'cmdOpenSync') {
+                                c = confirm('Abrir caixa de dialogo e selecionar um arquivo.\nConfirme para carregar\nCancele para desistir.');
+                            }
+
                             if (c === true) {
                                 r = {
                                     fullName: 'full/path/to/virtual/file/selectedFile.txt',

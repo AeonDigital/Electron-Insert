@@ -278,6 +278,26 @@ ipcMain.on('cmdOpenSync', (event, args) => {
     event.returnValue = r;
 });
 /**
+ * Abre o arquivo indicado e retorna seus dados para a view
+ */
+ipcMain.on('cmdOpenFileSync', (event, args) => {
+    let r = null;
+
+    // Verifica se o arquivo alvo existe
+    if (fs.existsSync(args) === true) {
+        let name = args.split('/').pop();
+
+        r = {
+            fullName: args,
+            shortName: name,
+            data: fs.readFileSync(args).toString(),
+            isNew: false
+        };
+    }
+
+    event.returnValue = r;
+});
+/**
  * Salva o estado atual do documento indicado.
  */
 ipcMain.on('cmdSaveSync', (event, args) => {

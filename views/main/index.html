@@ -30,7 +30,7 @@
             <div class="row d-flex">
                 <div class="subMenu">
                     <button type="button" data-btn-action="cmdMenu"
-                            data-label-locale-button="menu"
+                            data-label-locale-button="cmdMenu"
                             data-label-type="title">...</button>
                     <ul>
                         <li>
@@ -56,6 +56,20 @@
                                     data-btn-action="cmdSaveAs"
                                     data-btn-shortcut="Ctrl + Shift + S"
                                     data-label-locale-button="cmdSaveAs"></button>
+                        </li>
+                        <li class="subMenu">
+                            <button type="button"
+                                    data-btn-action="cmdRecents"
+                                    data-label-locale-button="cmdRecents"
+                                    data-btn-shortcut="›"></button>
+                            <ul id="recentList"></ul>
+                        </li>
+                        <li class="subMenu">
+                            <button type="button"
+                                    data-btn-action="cmdFavorites"
+                                    data-label-locale-button="cmdFavorites"
+                                    data-btn-shortcut="›"></button>
+                            <ul id="favoriteList"></ul>
                         </li>
                         <li>
                             <button type="button"
@@ -90,7 +104,8 @@
                     <button type="button"
                             data-btn-action="cmdOpenSettings"
                             data-label-locale-button="cmdOpenSettings"
-                            data-label-type="title">
+                            data-label-type="title"
+                            class="ico-d2">
                         <img src="../../resources/icons/gear.png" alt="" />
                     </button>
                 </div>

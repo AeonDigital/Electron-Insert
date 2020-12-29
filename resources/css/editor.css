@@ -77,7 +77,6 @@ main > section.active {
     list-style: none;
 }
 .subMenu > ul > li > button {
-    width:100%;
     min-width: 260px;
     padding:0 0 0 var(--main-button-shortcut-font-size);
     text-align: left;
@@ -91,6 +90,27 @@ main > section.active {
     font-size: var(--main-button-shortcut-font-size);
     padding-right: var(--main-button-shortcut-font-size);
 }
+
+
+.subMenu .subMenu > ul {
+    top:0;
+    left: 260px;
+}
+.subMenu .subMenu > ul > li {
+    display: flex;
+}
+.subMenu .subMenu > ul > li > button {
+    min-width: auto;
+    width: 220px;
+    padding-right: 20px;
+    overflow: hidden;
+}
+.subMenu .subMenu > ul > li > button + button {
+    min-width: auto;
+    width: 45px;
+    padding-right: var(--main-button-shortcut-font-size);
+}
+
 
 
 
@@ -121,8 +141,27 @@ button[data-btn-action]:hover {
     font-weight: bold;
 }
 button[data-btn-action] img {
-    max-width: calc(var(--main-button-min-width) / 2);
     filter: var(--main-font-filter-color);
+}
+button[data-btn-action].ico-d2,
+button[data-btn-action].ico-d3 {
+    text-align: center;
+}
+button[data-btn-action].ico-d2 img {
+    max-width: calc(var(--main-button-min-width) / 2);
+}
+button[data-btn-action].ico-d3 img {
+    max-width: calc(var(--main-button-min-width) / 3);
+}
+
+button[data-btn-action].active > .no-hover,
+button[data-btn-action]:hover > .no-hover,
+button[data-btn-action] > .on-hover {
+    display: none;
+}
+button[data-btn-action].active> .on-hover,
+button[data-btn-action]:hover > .on-hover {
+    display: inline-block;
 }
 .menuFile li.active button:hover,
 .menuFile li:hover button:hover {

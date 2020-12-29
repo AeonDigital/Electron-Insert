@@ -32,9 +32,22 @@ let appSettings = (() => {
             "extensions": ["", "txt", "md"],
             "locale": "us-EN",
             "spellcheck": false,
-            "commomFiles": {
+            "recentFileList": {
                 "maxFiles": 10,
-                "files": []
+                "files": [
+                    [
+                        "fullNameFromFirstFile",
+                        true
+                    ],
+                    [
+                        "fullNameFromSecondFile",
+                        false
+                    ],
+                    [
+                        "fullNameFromThirdFile",
+                        false
+                    ]
+                ]
             },
             "editorStyle": {
                 "background-color": "#666666",
@@ -80,6 +93,10 @@ let appSettings = (() => {
                 "cmdOpen": "Open",
                 "cmdSave": "Save",
                 "cmdSaveAs": "Save as",
+                "cmdRecents": "Recents",
+                "cmdFavorites": "Favorites",
+                "cmdAddFavorite": "Add to favorites",
+                "cmdRemoveFavorite": "Remove from favorites",
                 "cmdCanClose": "Close",
                 "cmdMenu": "Menu",
 
@@ -141,6 +158,13 @@ let appSettings = (() => {
                 },
                 "cmdCanClose": {
                     "dialogConfirmClose": "There are open files that have not been saved.\nIf you continue all unsaved data will be lost.\nAre you sure you want to close?"
+                },
+                "cmdOpenFile": {
+                    "onFail": "Cannot find file \"[[fullName]]\""
+                },
+                "cmdSaveConfigurations": {
+                    "onFail": "Error on save preferences",
+                    "onSuccess": "Success on saved preferences"
                 }
             }
         };

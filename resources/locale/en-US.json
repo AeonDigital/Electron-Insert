@@ -4,6 +4,10 @@
         "cmdOpen": "Open",
         "cmdSave": "Save",
         "cmdSaveAs": "Save as",
+        "cmdRecents": "Recents",
+        "cmdFavorites": "Favorites",
+        "cmdAddFavorite": "Add to favorites",
+        "cmdRemoveFavorite": "Remove from favorites",
         "cmdCanClose": "Close",
         "cmdMenu": "Menu",
 
@@ -65,6 +69,13 @@
         },
         "cmdCanClose": {
             "dialogConfirmClose": "There are open files that have not been saved.\nIf you continue all unsaved data will be lost.\nAre you sure you want to close?"
+        },
+        "cmdOpenFile": {
+            "onFail": "Cannot find file \"[[fullName]]\""
+        },
+        "cmdSaveConfigurations": {
+            "onFail": "Error on save preferences",
+            "onSuccess": "Success on saved preferences"
         }
     }
 }

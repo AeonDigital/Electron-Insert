@@ -77,8 +77,6 @@ const insertConfig = (() => {
 
         configFields.configEditorBackgroundColor.value = editorStyle['background-color'];
 
-        console.log(configFields.configEditorFontFace);
-        console.log(editorStyle['font-family']);
         configFields.configEditorFontFace.value = editorStyle['font-family'];
         configFields.configEditorFontStyle.value = (
             (editorStyle['font-style'] === '') ? editorStyle['font-weight'] : editorStyle['font-style']
@@ -303,30 +301,6 @@ const insertConfig = (() => {
 
 
 
-    /**
-     * Salva as configurações atuais do editor no arquivo de perferencias
-     * pessoais do usuário.
-     */
-    let cmdSaveConfigurations = () => {
-        let saveResult = ipcRenderer.sendSync(
-            'cmdSaveSync',
-            {
-                fullName: ipcRenderer.sendSync('getPathSync', 'userData') + '/user.json',
-                data: JSON.stringify(appSettings.ini, null, 4)
-            }
-        );
-
-        if (saveResult === false) {
-            alert('Error on save preferences');
-        }
-        else {
-            alert('Success on saved preferences');
-        }
-    };
-
-
-
-
 
 
 
@@ -417,7 +391,29 @@ const insertConfig = (() => {
 
 
             document.getElementById('cmdSaveConfigurations')
-                .addEventListener('click', cmdSaveConfigurations);
+                .addEventListener('click', _public.cmdSaveConfigurations);
+        },
+        /**
+         * Salva as configurações atuais do editor no arquivo de perferencias
+         * pessoais do usuário.
+         */
+        cmdSaveConfigurations: (e) => {
+            let saveResult = ipcRenderer.sendSync(
+                'cmdSaveSync',
+                {
+                    fullName: ipcRenderer.sendSync('getPathSync', 'userData') + '/user.json',
+                    data: JSON.stringify(appSettings.ini, null, 4)
+                }
+            );
+
+            if (saveResult === false) {
+                alert(appSettings.locale.CMD.cmdSaveConfigurations.onFail);
+            }
+            else {
+                if (e !== undefined) {
+                    alert(appSettings.locale.CMD.cmdSaveConfigurations.onSuccess);
+                }
+            }
         }
     };
 

@@ -4,6 +4,10 @@
         "cmdOpen": "Abrir",
         "cmdSave": "Salvar",
         "cmdSaveAs": "Salvar como",
+        "cmdRecents": "Recentes",
+        "cmdFavorites": "Favoritos",
+        "cmdAddFavorite": "Adicionar aos favoritos",
+        "cmdRemoveFavorite": "Remover dos favoritos",
         "cmdCanClose": "Fechar",
         "cmdMenu": "Menu",
 
@@ -65,6 +69,13 @@
         },
         "cmdCanClose": {
             "dialogConfirmClose": "Há arquivos abertos que não foram salvos.\nSe prosseguir todo os os dados não salvos serão perdidos.\nTem certeza que deseja fechar?"
+        },
+        "cmdOpenFile": {
+            "onFail": "Não foi possível encontrar o arquivo \"[[fullName]]\""
+        },
+        "cmdSaveConfigurations": {
+            "onFail": "Ocorreu um erro ao salvar as suas preferências",
+            "onSuccess": "Suas preferências foram salvas com sucesso"
         }
     }
 }

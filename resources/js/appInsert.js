@@ -427,6 +427,85 @@ const appInsert = (() => {
 
 
 
+    /**
+     * Indica quando as ações de abrir e salvar arquivos podem redefinir a lista de
+     * arquivos recentes.
+     */
+    let canRecreateRecentList = false;
+    /**
+     * Baseado na lista dos últimos arquivos abertos preenche o menu de opções recentes
+     * e o menu de opções "favoritados".
+     */
+    let setRecentFileList = () => {
+        let recentList = document.getElementById('recentList');
+        let favoriteList = document.getElementById('favoriteList');
+
+        // Remove todos os nodes filhos
+        recentList.querySelectorAll('*').forEach((n) => { n.remove() });
+        favoriteList.querySelectorAll('*').forEach((n) => { n.remove() });
+
+        // Para cada item na lista, adiciona um novo node nos respectivos menus
+        appSettings.ini.recentFileList.files.forEach((fileCfg) => {
+            let li = DOM.createRecentFile(fileCfg[0], fileCfg[1]);
+
+            if (fileCfg[1] === false) { recentList.appendChild(li); }
+            else { favoriteList.appendChild(li); }
+        });
+
+        insertConfig.cmdSaveConfigurations();
+    };
+    /**
+     * Sempre que um arquivo for aberto ou "salvo como", seu nome deverá ir para a o
+     * primeiro item da lista de arquivos recentes.
+     *
+     * @param {string} fullName
+     * @param {bool} recreateRecentList
+     */
+    let addRecentFile = (fullName, recreateRecentList) => {
+        let fileIndex = null;
+
+        // verifica se o arquivo indicado já não existe na lista
+        appSettings.ini.recentFileList.files.forEach((fileCfg, i) => {
+            if (fileCfg[0] === fullName) {
+                fileIndex = i;
+            }
+        });
+
+
+        if (fileIndex === null) {
+            appSettings.ini.recentFileList.files.unshift([
+                fullName, false
+            ]);
+        }
+        else {
+            let item = appSettings.ini.recentFileList.files.splice(fileIndex, 1)[0];
+            appSettings.ini.recentFileList.files.unshift(item);
+        }
+
+
+        if (recreateRecentList === true) {
+            setRecentFileList();
+        }
+    };
+    /**
+     * Abre os arquivos que estão na lista de favoritos.
+     * Esta ação é executada apenas 1 vez.
+     */
+    let openRecentFiles = () => {
+        if (canRecreateRecentList === false) {
+
+            document.querySelectorAll('#favoriteList > li').forEach((cmdLI) => {
+                CMD.cmdOpenFile({ target: cmdLI });
+            });
+
+            canRecreateRecentList = true;
+        }
+    };
+
+
+
+
+
 
 
 
@@ -438,8 +517,10 @@ const appInsert = (() => {
     let constructor = () => {
         setDefaultEventListeners();
         redefineFileSelectorProperties();
+        setRecentFileList();
 
         insertConfig.init();
+        openRecentFiles();
     };
 
 
@@ -560,6 +641,73 @@ const appInsert = (() => {
 
                 return parseInt(el.attributes['data-file-id'].value);
             }
+        },
+        /**
+         * Cria uma node <li> para ser adicionado em uma das listas de itens recentes.
+         *
+         * @param {string} fullName
+         * @param {bool} isFav
+         *
+         * @return {node}
+         */
+        createRecentFile: (fullName, isFav) => {
+            let li = document.createElement('li');
+            li.setAttribute('data-btn-action-arg', fullName);
+
+            let btnOpenFile = document.createElement('button');
+            btnOpenFile.setAttribute('type', 'button');
+            btnOpenFile.setAttribute('data-btn-action', 'cmdOpenFile');
+            btnOpenFile.setAttribute('title', fullName);
+            btnOpenFile.innerHTML = fullName.split('/').pop();
+            btnOpenFile.addEventListener('click', CMD.cmdOpenFile);
+
+
+            let btnFavorite = document.createElement('button');
+            btnFavorite.setAttribute('type', 'button');
+            btnFavorite.setAttribute('data-btn-action', 'cmdToggleFavorite');
+            btnFavorite.setAttribute('data-label-locale-button',
+                ((isFav === false) ? 'cmdAddFavorite' : 'cmdRemoveFavorites')
+            );
+            btnFavorite.setAttribute('data-label-type', 'title');
+            btnFavorite.setAttribute('class',
+                ((isFav === false) ? 'ico-d3' : 'ico-d3 active')
+            );
+            btnFavorite.setAttribute('title',
+                ((isFav === false) ? appSettings.locale.button.cmdAddFavorite : appSettings.locale.button.cmdRemoveFavorite)
+            );
+
+            let imgNoHover = document.createElement('img');
+            imgNoHover.setAttribute('src', '../../resources/icons/star.png');
+            imgNoHover.setAttribute('class', 'no-hover');
+            imgNoHover.setAttribute('alt', '');
+
+            let imgOnHover = document.createElement('img');
+            imgOnHover.setAttribute('src', '../../resources/icons/star-bg.png');
+            imgOnHover.setAttribute('class', 'on-hover');
+            imgOnHover.setAttribute('alt', '');
+
+
+            btnFavorite.appendChild(imgNoHover);
+            btnFavorite.appendChild(imgOnHover);
+            li.appendChild(btnOpenFile);
+            li.appendChild(btnFavorite);
+
+            return li;
+        },
+        /**
+         * Retorna o elemento <li> que foi acionado para abrir um arquivo recente.
+         *
+         * @param {node} node
+         *
+         * @return {node}
+         */
+        getOpenFileLI: (node) => {
+            let li = node;
+            while (li !== null && li.tagName !== 'LI' && li.attributes['data-btn-action-arg'] === undefined) {
+                li = li.parentNode;
+            }
+
+            return ((li.tagName === 'LI' && li.attributes['data-btn-action-arg'] !== undefined) ? li : null);
         }
     };
 
@@ -582,8 +730,37 @@ const appInsert = (() => {
             let fileData = ipcRenderer.sendSync(
                 'cmdOpenSync', { appSettings: appSettings }
             );
+
             if (fileData !== undefined) {
                 addInsertFile(fileData);
+                addRecentFile(fileData.fullName, canRecreateRecentList);
+            }
+        },
+        /**
+         * Abre o arquivo referente ao botão que foi clicado.
+         */
+        cmdOpenFile: (e) => {
+            let cmdLI = DOM.getOpenFileLI(e.target);
+
+            if (cmdLI !== null) {
+                let fullName = cmdLI.attributes['data-btn-action-arg'].value;
+
+                let fileData = ipcRenderer.sendSync(
+                    'cmdOpenFileSync', fullName
+                );
+
+
+                // Se não foi possível abrir o arquivo, remove o mesmo da respectiva lista
+                if (fileData === null) {
+                    cmdLI.parentNode.remove(cmdLI);
+                    alert(appSettings.locale.CMD.cmdOpenFile.onFail.replace(
+                        '[[fullName]]', fullName
+                    ));
+                }
+                else {
+                    addInsertFile(fileData);
+                    addRecentFile(fileData.fullName, canRecreateRecentList);
+                }
             }
         },
         /**
@@ -633,6 +810,7 @@ const appInsert = (() => {
                     if (saveResult.success === true) {
                         fileData.saveAs(saveResult.fullName, saveResult.shortName);
                         adjustFileSelectorButtonPosition();
+                        addRecentFile(fileData.fullName, canRecreateRecentList);
                     }
                     else {
                         alert(appSettings.locale.CMD.cmdSaveAs.onFail.replace(
