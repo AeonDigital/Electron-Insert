@@ -162,6 +162,28 @@ let insertCursor = (() => {
             }
         }
     };
+    /**
+     * Evento que intercepta uma ação de "copiar|recortar".
+     *
+     * Limpa a seleção para que o formato de saída seja compatível com aquilo que se está
+     * visualizando.
+     *
+     * @param {evt} e
+     */
+    let evtOnCopy = (e) => {
+        let nodeCursor = getNodeCursorByChildNode(e.target);
+
+        // Encontrando o objeto alvo e ele estando apto para receber atualizações
+        // de seu cursor e seleção...
+        if (nodeCursor !== null) {
+            e.preventDefault();
+            let cP = document.getSelection();
+            console.log(cP);
+            console.log(cP.toString());
+            console.log(cP.htmlText);
+            e.clipboardData.setData('text/html', cP.toString());
+        }
+    };
 
 
 
@@ -225,6 +247,7 @@ let insertCursor = (() => {
                 editNode.addEventListener('keyup', onKeyUpSaveCursorPosition);
                 editNode.addEventListener('mouseup', onKeyUpSaveCursorPosition);
                 editNode.addEventListener('paste', evtOnPaste);
+                //editNode.addEventListener('copy', evtOnCopy);
             }
 
             return r;
