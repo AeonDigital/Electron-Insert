@@ -68,19 +68,15 @@ body {
 main {
     background-color: #666;
     height: var(--editor-main-height-v);
-    overflow-y: auto;
+    overflow: hidden;
     margin-top: var(--editor-main-margin-top);
-
-    font-style: var(--editor-main-p-font-style);
-    font-family: var(--editor-main-p-family);
-    font-size: var(--editor-main-p-font-size);
-    line-height: var(--editor-main-p-font-line-height);
 }
 main > section {
     width: calc(100% - calc(var(--main-width-division) * 2));
-    height: auto;
-    min-height: var(--editor-main-height-v);
-    padding:var(--main-width-division);
+    height: calc(100% - var(--main-width-division));
+    padding:0 var(--main-width-division);
+    margin-top: var(--main-width-division);
+    overflow-y: auto;
 }
 main > section p:empty {
     height: var(--editor-main-p-font-line-height);
