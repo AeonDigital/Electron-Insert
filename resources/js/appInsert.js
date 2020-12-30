@@ -628,7 +628,9 @@ const appInsert = (() => {
             let dataLines = data.split('\n');
             for (let it in dataLines) {
                 let p = document.createElement('p');
-                p.innerText = dataLines[it];
+                if (dataLines[it] === '') { p.innerHTML = '<br />'; }
+                else { p.innerText = dataLines[it]; }
+
 
                 section.appendChild(p);
             }
