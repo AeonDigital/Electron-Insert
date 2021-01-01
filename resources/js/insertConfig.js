@@ -71,7 +71,9 @@ const insertConfig = (() => {
     let applyConfigFormValues = () => {
         configFields.configEditorLocale.value = appSettings.ini.locale;
         configFields.configEditorLineCounter.checked = appSettings.ini.lineCounter;
+        configFields.configEditorVerticalRightMargin.value = appSettings.ini.verticalRightMargin;
         configEditorLineCounter();
+        configEditorVerticalRightMargin();
 
 
 
@@ -176,6 +178,30 @@ const insertConfig = (() => {
         }
         else {
             document.body.classList.remove('lineCounter');
+        }
+    };
+    /**
+     * Define a posição da margem vertical direita que auxilia na digitação.
+     *
+     * @param {evt} e
+     */
+    let configEditorVerticalRightMargin = (e) => {
+        appSettings.ini.verticalRightMargin = parseInt(configFields.configEditorVerticalRightMargin.value);
+        if (appSettings.ini.verticalRightMargin === 0) {
+            document.body.classList.remove('verticalRightMargin');
+        }
+        else {
+            document.body.classList.add('verticalRightMargin');
+
+            let cssRules = document.styleSheets[0].cssRules;
+            let tgtClass = 'body.verticalRightMargin main > section::after';
+            let newValue = 'calc(' + (appSettings.ini.verticalRightMargin + 2) + 'ch + var(--main-width-division) + 14px)';
+
+            for (let it in cssRules) {
+                if (cssRules[it].selectorText === tgtClass) {
+                    cssRules[it].style.left = newValue;
+                }
+            }
         }
     };
     /**
@@ -343,6 +369,7 @@ const insertConfig = (() => {
             configFields = {
                 'configEditorLocale': document.getElementById('configEditorLocale'),
                 'configEditorLineCounter': document.getElementById('configEditorLineCounter'),
+                'configEditorVerticalRightMargin': document.getElementById('configEditorVerticalRightMargin'),
 
                 'configEditorBackgroundColor': document.getElementById('configEditorBackgroundColor'),
 
@@ -363,6 +390,8 @@ const insertConfig = (() => {
                 .addEventListener('change', configEditorLocale);
             configFields.configEditorLineCounter
                 .addEventListener('change', configEditorLineCounter);
+            configFields.configEditorVerticalRightMargin
+                .addEventListener('change', configEditorVerticalRightMargin);
 
 
             configFields.configEditorBackgroundColor

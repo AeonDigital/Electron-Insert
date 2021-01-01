@@ -117,6 +117,12 @@ let insertFileCursor = (() => {
         for (var it in node.childNodes) {
             let pElem = node.childNodes[it];
 
+            if (pElem.nodeType === Node.TEXT_NODE) {
+                let p = document.createElement('p');
+                p.textContent = pElem.textContent;
+                pElem = p;
+            }
+
             // Apenas se trata-se mesmo de um elemento P
             if (pElem.nodeType === Node.ELEMENT_NODE && pElem.tagName === 'P') {
                 let line = [];

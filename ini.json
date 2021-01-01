@@ -22,6 +22,9 @@
     "// Enable or disable linecounter": "",
     "lineCounter": false,
 
+    "// Define a posição da linha vertical à direita do texto para auxiliar a digitação": "",
+    "verticalRightMargin": 0,
+
     "// Last used files.": "",
     "recentFileList": {
         "// Max files in this list.": "",

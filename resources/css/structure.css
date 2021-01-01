@@ -78,6 +78,7 @@ main > section {
     margin-top: var(--main-width-division);
     overflow-y: auto;
 
+    position:relative;
     counter-reset: lines;
 }
 main > section p:empty {
@@ -87,18 +88,31 @@ body.lineCounter main > section {
     width: calc(100% - var(--main-width-division));
     padding-left:0;
 }
+
+
+
 body.lineCounter main > section > p:before {
     counter-increment: lines;
     content: counter(lines);
 
     display: inline-block;
-    min-width: 45px;
+    min-width: 4ch;
     height: inherit;
     padding-right: 4px;
     margin-right: 10px;
     line-height: inherit;
     background-color: #000;
     text-align: right;
+}
+body.verticalRightMargin main > section:after {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(50ch + var(--main-width-division) + 14px);
+    z-index: 1;
+
+    border-left: 1px solid #999;
+    content:"";
 }
 
 

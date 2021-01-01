@@ -36,6 +36,7 @@
                 "ttlGeneral": "Geral",
                 "fldLblLanguage": "Linguagem",
                 "fldLblLineCounter": "Contador de linhas",
+                "fldLblEditorVerticalRightMargin": "Margem vertical a direita",
                 "ttlTextEditor": "Editor de texto",
                 "fldLblEditorBackgroundColor": "Cor de fundo",
                 "fldLblEditorFontFace": "Fonte",
