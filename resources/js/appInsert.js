@@ -165,8 +165,11 @@ const appInsert = (() => {
         }
 
 
+        // Apenas se for um arquivo que ainda não está
+        // aberto no editor
         if (isNewFile === true) {
             let nodes = DOM.createSelectFileButton(
+                fileData.fullName,
                 fileData.shortName,
                 fileData.id,
                 fileData.evtSetFocus,
@@ -289,6 +292,8 @@ const appInsert = (() => {
         if (canClose === true) {
             removeInsertFileById(id);
         }
+
+        insertConfig.cmdSaveConfigurations();
     };
     /**
      * Questiona o usuário sobre sair sem salvar o arquivo atualmente aberto que contem
@@ -482,7 +487,7 @@ const appInsert = (() => {
 
         if (fileIndex === null) {
             recList.unshift([
-                fullName, false
+                fullName, false, null
             ]);
 
             // Mantém a lista de itens recentes com o máximo de itens permitidos para a mesma.
@@ -579,6 +584,7 @@ const appInsert = (() => {
          * Gera um botão que identifica um arquivo aberto no editor.
          * Retorna a coleção de nodes que o formam.
          *
+         * @param {string} fullName
          * @param {string} fileName
          * @param {int} id
          * @param {evt} evtSetFocus
@@ -586,13 +592,14 @@ const appInsert = (() => {
          *
          * @return {node[]}
          */
-        createSelectFileButton: (fileName, id, evtSetFocus, evtClose) => {
+        createSelectFileButton: (fullName, fileName, id, evtSetFocus, evtClose) => {
 
             let li = document.createElement('li');
             li.setAttribute('data-file-id', id);
 
             let span = document.createElement('span');
             span.addEventListener('click', evtSetFocus);
+            span.setAttribute('data-file-fullname', fullName);
             span.innerHTML = fileName;
 
             let btn = document.createElement('button');
@@ -849,6 +856,7 @@ const appInsert = (() => {
          * Em caso afirmativo, encerra-a
          */
         cmdCanClose: () => {
+            insertConfig.cmdSaveConfigurations();
             _public.cmdCanClose();
         },
         /**
@@ -916,6 +924,58 @@ const appInsert = (() => {
 
             if (r === true) {
                 ipcRenderer.sendSync('cmdCanCloseOk');
+            }
+        },
+        /**
+         * Define nas informações do arquivos recentes a posição atual do objeto
+         * Range para o arquivo de id passado, permitindo assim que esta posição
+         * seja resgatada ao reabrir o editor.
+         *
+         * @param {int} id
+         * @param {Range} range
+         */
+        cmdSetRecentFileRangeSelection: (id, range) => {
+            let file = getInsertFileById(id);
+
+            if (file !== null) {
+                appSettings.ini.recentFileList.files.forEach((fileCfg, i) => {
+                    if (fileCfg[0] === file.getFullName()) {
+                        let iniN = range.startContainer;
+                        while (iniN !== null && iniN.nodeType !== Node.ELEMENT_NODE && iniN.tagName !== 'P') {
+                            iniN = iniN.parentElement;
+                        }
+
+                        let endN = range.endContainer;
+                        while (endN !== null && endN.nodeType !== Node.ELEMENT_NODE && endN.tagName !== 'P') {
+                            endN = endN.parentElement;
+                        }
+
+                        if (iniN !== null && endN !== null) {
+                            let parentChildren = iniN.parentNode.children;
+                            let iniI = Array.prototype.indexOf.call(parentChildren, iniN);
+                            let endI = Array.prototype.indexOf.call(parentChildren, endN);
+
+                            let iniNode = iniI;
+                            let iniOffSet = range.startOffset;
+                            let endNode = endI;
+                            let endOffSet = range.endOffset;
+
+                            if (iniNode > endNode) {
+                                iniNode = endI;
+                                iniOffSet = endOffSet;
+                                endNode = iniI;
+                                endOffSet = iniOffSet;
+                            }
+
+                            appSettings.ini.recentFileList.files[i][2] = {
+                                iniNode: iniNode,
+                                iniOffSet: iniOffSet,
+                                endNode: endNode,
+                                endOffSet: endOffSet
+                            };
+                        }
+                    }
+                });
             }
         }
     };

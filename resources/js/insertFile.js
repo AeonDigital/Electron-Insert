@@ -205,8 +205,10 @@ let insertFile = function (fileData) {
             shortName = newShortName;
 
             insertFileCursor.checkIfEditorHasChanges(id, true);
-            isNew = false;
+            fileLabel.setAttribute('data-file-fullname', newFullName);
             fileLabel.innerHTML = shortName;
+
+            isNew = false;
         }
     };
 

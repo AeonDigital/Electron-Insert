@@ -292,6 +292,7 @@ let insertFileCursor = (() => {
         // de seu cursor e seleção...
         if (nodeCursor !== null) {
             nodeCursor.rangeSelection = document.getSelection().getRangeAt(0).cloneRange();
+            appInsert.cmdSetRecentFileRangeSelection(nodeCursor.id, nodeCursor.rangeSelection);
         }
     };
     /**
@@ -463,6 +464,19 @@ let insertFileCursor = (() => {
                     let range = new Range();
                     range.setStart(nodeCursor.editNode.firstElementChild, 0);
                     range.setEnd(nodeCursor.editNode.firstElementChild, 0);
+
+                    appSettings.ini.recentFileList.files.forEach((fileCfg) => {
+                        if (nodeCursor.fileLabel.attributes['data-file-fullname'].value === fileCfg[0]) {
+                            let iniNode = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].iniNode].childNodes[0];
+                            let iniOffSet = fileCfg[2].iniOffSet;
+                            let endNode = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].endNode].childNodes[0];
+                            let endOffSet = fileCfg[2].endOffSet;
+
+                            range.setStart(iniNode, iniOffSet);
+                            range.setEnd(endNode, endOffSet);
+                        }
+                    });
+
                     nodeCursor.rangeSelection = range;
                 }
 
