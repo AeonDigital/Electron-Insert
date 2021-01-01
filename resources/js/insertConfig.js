@@ -186,22 +186,29 @@ const insertConfig = (() => {
      * @param {evt} e
      */
     let configEditorVerticalRightMargin = (e) => {
-        appSettings.ini.verticalRightMargin = parseInt(configFields.configEditorVerticalRightMargin.value);
-        if (appSettings.ini.verticalRightMargin === 0) {
+        let val = configFields.configEditorVerticalRightMargin.value;
+        if (val === '') { val = 0; }
+        else { val = parseInt(val); }
+
+        appSettings.ini.verticalRightMargin = parseInt(val);
+        if (val === 0) {
             document.body.classList.remove('verticalRightMargin');
         }
         else {
             document.body.classList.add('verticalRightMargin');
 
-            let cssRules = document.styleSheets[0].cssRules;
-            let tgtClass = 'body.verticalRightMargin main > section::after';
-            let newValue = 'calc(' + (appSettings.ini.verticalRightMargin + 2) + 'ch + var(--main-width-division) + 14px)';
+            try {
+                let cssRules = document.styleSheets[0].cssRules;
+                let tgtClass = 'body.verticalRightMargin main > section::after';
+                let newValue = 'calc(' + (val + 2) + 'ch + var(--main-width-division) + 14px)';
 
-            for (let it in cssRules) {
-                if (cssRules[it].selectorText === tgtClass) {
-                    cssRules[it].style.left = newValue;
+                for (let it in cssRules) {
+                    if (cssRules[it].selectorText === tgtClass) {
+                        cssRules[it].style.left = newValue;
+                    }
                 }
             }
+            catch (err) { }
         }
     };
     /**
@@ -392,6 +399,8 @@ const insertConfig = (() => {
                 .addEventListener('change', configEditorLineCounter);
             configFields.configEditorVerticalRightMargin
                 .addEventListener('change', configEditorVerticalRightMargin);
+            configFields.configEditorVerticalRightMargin
+                .addEventListener('keydown', onKeyDownCheck_allowOnlyNumber);
 
 
             configFields.configEditorBackgroundColor

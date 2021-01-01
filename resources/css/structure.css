@@ -108,7 +108,6 @@ body.verticalRightMargin main > section:after {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(50ch + var(--main-width-division) + 14px);
     z-index: 1;
 
     border-left: 1px solid #999;

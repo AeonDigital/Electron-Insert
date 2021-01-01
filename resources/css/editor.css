@@ -321,6 +321,9 @@ aside > div > div > form input[type="color"] {
     height: 33px;
     border:1px solid var(--main-font-color);
 }
+aside > div > div > form input[type="number"] {
+    width: 65px;
+}
 
 
 aside > div > div > form .checkbox {
