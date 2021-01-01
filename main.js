@@ -10,6 +10,7 @@
 
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const rootPath = require('path').dirname(require.main.filename).replace(new RegExp('\\\\', 'g'), '/');
+const userData = app.getPath('userData');
 const fs = require('fs');
 let mainWindow = null;
 
@@ -18,15 +19,19 @@ let mainWindow = null;
 
 
 function createWindow() {
+    let userIni = loadUserDataSettings();
+
     mainWindow = new BrowserWindow({
-        width: 880,
-        height: 600,
+        width: userIni.initialWidth,
+        height: userIni.initialHeight,
+        minWidth: 320,
+        minHeight: 480,
         webPreferences: {
             nodeIntegration: true
         },
         icon: rootPath + '/electron-insert.ico'
     });
-    mainWindow.removeMenu();
+    //mainWindow.removeMenu();
 
     require(rootPath + '/views/main/index_IPCMain.js');
     mainWindow.loadFile(rootPath + '/views/main/index.html');
@@ -46,10 +51,48 @@ function createWindow() {
 
 
 
+
+/**
+ * Carrega as definições de personalização do aplicativo salvo no arquivo de
+ * configuração do usuário.
+ *
+ * @return {object}
+ */
+let loadUserDataSettings = () => {
+    let userIni = {
+        initialWidth: 800,
+        initialHeight: 600
+    };
+
+    let path = userData + '/user.json';
+    if (fs.existsSync(path) === true) {
+        userIni = loadJsonFileSync(path);
+
+        if (isNaN(userIni.initialWidth) === true || userIni.initialWidth < 320 ||
+            isNaN(userIni.initialHeight) === true || userIni.initialHeight < 480) {
+            userIni.initialWidth = 800;
+            userIni.initialHeight = 600;
+        }
+    }
+
+    return userIni;
+};
+
+
+
+
+
 /**
  * Encerra completamente a aplicação.
  */
 let closeAppWindow = () => {
+    let size = mainWindow.getSize();
+
+    let userIni = loadUserDataSettings();
+    userIni.initialWidth = size[0];
+    userIni.initialHeight = size[1];
+    saveFileSync(userData + '/user.json', JSON.stringify(userIni, null, 4));
+
     mainWindow = null;
     if (process.platform !== 'darwin') {
         app.quit();

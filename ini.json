@@ -25,6 +25,13 @@
     "// Define a posição da linha vertical à direita do texto para auxiliar a digitação": "",
     "verticalRightMargin": 0,
 
+    "// Largura inicial da janela": "",
+    "initialWidth": 800,
+
+    "// Altura inicial da janela": "",
+    "initialHeight": 600,
+
+
     "// Last used files.": "",
     "recentFileList": {
         "// Max files in this list.": "",
