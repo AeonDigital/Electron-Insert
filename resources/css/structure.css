@@ -77,10 +77,30 @@ main > section {
     padding:0 var(--main-width-division);
     margin-top: var(--main-width-division);
     overflow-y: auto;
+
+    counter-reset: lines;
 }
 main > section p:empty {
     height: var(--editor-main-p-font-line-height);
 }
+body.lineCounter main > section {
+    width: calc(100% - var(--main-width-division));
+    padding-left:0;
+}
+body.lineCounter main > section > p:before {
+    counter-increment: lines;
+    content: counter(lines);
+
+    display: inline-block;
+    min-width: 45px;
+    height: inherit;
+    padding-right: 4px;
+    margin-right: 10px;
+    line-height: inherit;
+    background-color: #000;
+    text-align: right;
+}
+
 
 
 .row {

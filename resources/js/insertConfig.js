@@ -70,6 +70,8 @@ const insertConfig = (() => {
      */
     let applyConfigFormValues = () => {
         configFields.configEditorLocale.value = appSettings.ini.locale;
+        configFields.configEditorLineCounter.checked = appSettings.ini.lineCounter;
+        configEditorLineCounter();
 
 
 
@@ -159,6 +161,21 @@ const insertConfig = (() => {
             appSettings.ini.locale = e.target.value;
             appSettings.locale = locale;
             applyLocale();
+        }
+    };
+    /**
+     * Liga ou desliga a mostragem de contador de linhas.
+     *
+     * @param {evt} e
+     */
+    let configEditorLineCounter = (e) => {
+        appSettings.ini.lineCounter = configFields.configEditorLineCounter.checked;
+
+        if (appSettings.ini.lineCounter === true) {
+            document.body.classList.add('lineCounter');
+        }
+        else {
+            document.body.classList.remove('lineCounter');
         }
     };
     /**
@@ -325,6 +342,7 @@ const insertConfig = (() => {
 
             configFields = {
                 'configEditorLocale': document.getElementById('configEditorLocale'),
+                'configEditorLineCounter': document.getElementById('configEditorLineCounter'),
 
                 'configEditorBackgroundColor': document.getElementById('configEditorBackgroundColor'),
 
@@ -343,6 +361,8 @@ const insertConfig = (() => {
 
             configFields.configEditorLocale
                 .addEventListener('change', configEditorLocale);
+            configFields.configEditorLineCounter
+                .addEventListener('change', configEditorLineCounter);
 
 
             configFields.configEditorBackgroundColor

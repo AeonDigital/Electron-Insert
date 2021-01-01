@@ -19,6 +19,9 @@
     "// Enable or disable spellcheck.": "",
     "spellcheck": false,
 
+    "// Enable or disable linecounter": "",
+    "lineCounter": false,
+
     "// Last used files.": "",
     "recentFileList": {
         "// Max files in this list.": "",

@@ -86,10 +86,11 @@ const appInsert = (() => {
      * @param {evt} e
      */
     let evtMainOnKeyDownListener = (e) => {
-        let cmd = null;
 
-        if (e.ctrlKey || e.metaKey) {
-            switch (String.fromCharCode(e.which).toLocaleLowerCase()) {
+        if (e.ctrlKey === true || e.metaKey === true) {
+            let cmd = null;
+
+            switch (e.key.toLocaleLowerCase()) {
                 case 'n':
                     cmd = 'cmdNew';
                     break;
@@ -105,11 +106,16 @@ const appInsert = (() => {
                     }
                     break;
             }
-        }
 
-        if (cmd !== null) {
+            if (cmd !== null) {
+                e.preventDefault();
+                CMD[cmd]();
+                return false;
+            }
+        }
+        else if (e.shiftKey === true && e.key === 'Enter') {
             e.preventDefault();
-            CMD[cmd]();
+            document.execCommand('insertHTML', false, '<p></p>');
             return false;
         }
     };

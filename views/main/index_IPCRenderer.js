@@ -124,6 +124,7 @@ let appSettings = (() => {
                     "configuration": {
                         "ttlGeneral": "General",
                         "fldLblLanguage": "Language",
+                        "fldLblLineCounter": "Line counter",
                         "ttlTextEditor": "Text editor",
                         "fldLblEditorBackgroundColor": "Background color",
                         "fldLblEditorFontFace": "Font",
