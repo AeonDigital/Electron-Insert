@@ -15,6 +15,8 @@ let insertFile = function (fileData) {
 
 
 
+
+
     /**
      * Identificador deste arquivo.
      *
@@ -36,30 +38,17 @@ let insertFile = function (fileData) {
      */
     let shortName = '';
     /**
-     * Conteúdo total do arquivo referente à última versão salva.
-     * DEVE ser definido quando está abrindo um arquivo existente.
-     *
-     * @type {string}
-     */
-    let data = '';
-    /**
      * Indica quando o arquivo é um novo documento.
      *
      * @type {bool}
      */
     let isNew = false;
     /**
-     * Indica quando há ou não alteração realizada no documento e que ainda não foi salva
-     *
-     * @type {bool}
-     */
-    let hasChanges = false;
-    /**
      * Indica quando este arquivo está ou não em foco.
      *
      * @type {bool}
      */
-    let inFocus = false;
+    let hasFocus = false;
 
 
     /**
@@ -92,97 +81,17 @@ let insertFile = function (fileData) {
         id = fileData.id;
         fullName = fileData.fullName;
         shortName = fileData.shortName;
-        data = fileData.data;
         isNew = fileData.isNew;
         fileButton = fileData.fileButton;
         fileLabel = fileData.fileLabel;
         editNode = fileData.editNode;
 
-        editNode.addEventListener('keyup', setTimeout_checkIfHasChanges);
-        insertCursor.addListenerNode(id, editNode);
-    };
-
-
-
-
-
-    /**
-     * Resgata toda informação que está no node de edição do documento atual e
-     * trata o conteúdo para que ele seja plenamente compatível com um documento de texto.
-     */
-    let sanitizeViewData = () => {
-        let ndata = [];
-
-        for (var it in editNode.childNodes) {
-            let pElem = editNode.childNodes[it];
-
-            // Apenas se trata-se mesmo de um elemento P
-            if (pElem.nodeType === Node.ELEMENT_NODE && pElem.tagName === 'P') {
-                let line = [];
-
-                // Se o paragrafo está vazio...
-                if (pElem.innerText === '') {
-                    line.push('');
-                }
-                else {
-                    // Para cada node filho do elemento P
-                    for (var ii in pElem.childNodes) {
-                        let pChild = pElem.childNodes[ii];
-
-                        // Se o tipo do node for de texto, adiciona o mesmo
-                        // no coletor de dados do parágrafo atual.
-                        if (pChild.nodeType === Node.TEXT_NODE) {
-                            line.push(pChild.textContent);
-                        }
-                        // Senão, tratando-se de um outro tipo de elemento...
-                        else if (pChild.nodeType === Node.ELEMENT_NODE) {
-                            switch (pChild.tagName) {
-                                case 'BR':
-                                    if (pChild !== pElem.lastChild) {
-                                        line.push('\n');
-                                    }
-                                    break;
-                                default:
-                                    line.push(pChild.textContent);
-                                    break;
-                            }
-                        }
-                    }
-                }
-
-                ndata.push(line.join(''));
-            }
-        }
-
-        return ndata.join('\n');
-    };
-
-
-
-
-    /**
-     * Verifica se há alterações entre o arquivo originalmente aberto e a versão
-     * atualmente apresentada na tela.
-     *
-     * @param {bool} persist
-     */
-    let checkIfHasChanges = (persist) => {
-        let nData = sanitizeViewData();
-        if (persist === true) { data = nData; }
-
-        hasChanges = (data !== nData);
-
-        let lbl = shortName;
-        if (hasChanges === true) {
-            lbl += ' *';
-        }
-        fileLabel.innerText = lbl;
-        return hasChanges;
-    };
-    let timeout_checkIfHasChanges = null;
-    let setTimeout_checkIfHasChanges = () => {
-        clearTimeout(timeout_checkIfHasChanges);
-        timeout_checkIfHasChanges = setTimeout(checkIfHasChanges, 500);
+        insertFileCursor.addListenerFileNode(
+            id,
+            editNode,
+            fileData.fileLabel,
+            fileData.data
+        );
     };
 
 
@@ -214,34 +123,20 @@ let insertFile = function (fileData) {
          */
         getShortName: () => { return shortName; },
         /**
-         * Retorna o conteúdo atual do editor.
-         *
-         * @return {string}
-         */
-        getData: () => { return sanitizeViewData(); },
-        /**
          * Retorna o estado atual do arquivo indicando se ele é novo (aberto novo arquivo e ainda não salvo).
          *
          * @return {bool}
          */
         getIsNew: () => { return isNew; },
         /**
-         * Retorna 'true' caso existam modificações no arquivo que ainda não
-         * tenham sido salvas.
-         *
-         * @return {bool}
-         */
-        getHasChanges: () => {
-            clearTimeout(timeout_checkIfHasChanges);
-            checkIfHasChanges(false);
-            return hasChanges;
-        },
-        /**
          * Retorna 'true' caso este seja o arquivo que está em foco no momento.
          *
          * @return {bool}
          */
-        getInFocus: () => { return inFocus; },
+        getHasFocus: () => { return hasFocus; },
+
+
+
         /**
          * Define ou remove o foco deste arquivo.
          *
@@ -251,28 +146,51 @@ let insertFile = function (fileData) {
             if (active === true) {
                 fileButton.setAttribute('class', 'active');
                 editNode.setAttribute('class', 'active');
-                insertCursor.restoreCursorPosition(id, true);
+                insertFileCursor.restoreCursorPosition(id);
             }
             else {
                 fileButton.removeAttribute('class');
                 editNode.removeAttribute('class');
             }
-            inFocus = active;
+            hasFocus = active;
         },
+
+
+
+        /**
+         * Retorna o conteúdo atual do editor.
+         *
+         * @return {string}
+         */
+        getData: () => { return insertFileCursor.retrieveEditorStringData(id); },
+        /**
+         * Retorna 'true' caso existam modificações no arquivo que ainda não
+         * tenham sido salvas.
+         *
+         * @return {bool}
+         */
+        getHasChanges: () => { return insertFileCursor.checkIfEditorHasChanges(id, false); },
+
+
+
         /**
          * Remove do DOM os nodes representantes deste arquivo.
          */
         remove: () => {
             fileButton.parentNode.removeChild(fileButton);
             editNode.parentNode.removeChild(editNode);
+
+            insertFileCursor.removeListenerFileNode(id);
         },
+
+
+
         /**
          * Perssiste os dados que estão atualmente na view com os dados que estão
          * armazenados na propriedade 'data'.
          */
         save: () => {
-            clearTimeout(timeout_checkIfHasChanges);
-            checkIfHasChanges(true);
+            insertFileCursor.checkIfEditorHasChanges(id, true);
             isNew = false;
         },
         /**
@@ -286,9 +204,9 @@ let insertFile = function (fileData) {
             fullName = newFullName;
             shortName = newShortName;
 
-            clearTimeout(timeout_checkIfHasChanges);
-            checkIfHasChanges(true);
+            insertFileCursor.checkIfEditorHasChanges(id, true);
             isNew = false;
+            fileLabel.innerHTML = shortName;
         }
     };
 

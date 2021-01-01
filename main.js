@@ -26,9 +26,7 @@ function createWindow() {
         },
         icon: rootPath + '/electron-insert.ico'
     });
-    //mainWindow.removeMenu();
-    // Ver questão do "scroll até o topo!"
-    // ver questão do "copiar removendo os espaços extras"
+    mainWindow.removeMenu();
 
     require(rootPath + '/views/main/index_IPCMain.js');
     mainWindow.loadFile(rootPath + '/views/main/index.html');

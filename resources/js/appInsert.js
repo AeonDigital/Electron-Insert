@@ -170,7 +170,7 @@ const appInsert = (() => {
             fileData.fileButton = nodes.fileButton;
             fileData.fileLabel = nodes.fileLabel;
             fileData.closeButton = nodes.closeButton;
-            fileData.editNode = DOM.createEditableNode(fileData.id, fileData.data);
+            fileData.editNode = DOM.createEditableNode(fileData.id);
 
 
             collectionOfInsertFiles.push(new insertFile(fileData));
@@ -179,7 +179,6 @@ const appInsert = (() => {
             redefineFileSelectorProperties();
 
             evtInsertFileSetFocus({ target: fileData.id });
-            insertCursor.setCursorPositionOnStart(fileData.id);
         }
     };
     /**
@@ -213,9 +212,7 @@ const appInsert = (() => {
         for (let it in collectionOfInsertFiles) {
             let file = collectionOfInsertFiles[it];
 
-            if (file.getInFocus() === true) {
-                r = file;
-            }
+            if (file.getHasFocus() === true) { r = file; }
         }
 
         return r;
@@ -248,7 +245,7 @@ const appInsert = (() => {
 
         // Se o item removido é o que estava em foco e ainda há
         // algum arquivo aberto no editor
-        if (removeFile.getInFocus() === true && collectionOfInsertFiles.length > 0) {
+        if (removeFile.getHasFocus() === true && collectionOfInsertFiles.length > 0) {
             // Se possível,
             // Promove o item na mesma posição do anterior para o foco.
             if (removeFileIndex >= collectionOfInsertFiles.length) {
@@ -384,7 +381,7 @@ const appInsert = (() => {
                 file.redefineFocus(true);
             }
             else {
-                if (file.getInFocus() === true) {
+                if (file.getHasFocus() === true) {
                     file.redefineFocus(false);
                 }
             }
@@ -613,27 +610,15 @@ const appInsert = (() => {
          * permitir editar.
          *
          * @param {int} id
-         * @param {string} data
          *
          * @return {node}
          */
-        createEditableNode: (id, data) => {
+        createEditableNode: (id) => {
             let section = document.createElement('section');
             section.setAttribute('data-panel', 'editor-document');
             section.setAttribute('contenteditable', 'true');
             section.setAttribute('data-file-id', id);
             section.setAttribute('spellcheck', appSettings.ini.spellcheck);
-
-
-            let dataLines = data.split('\n');
-            for (let it in dataLines) {
-                let p = document.createElement('p');
-                if (dataLines[it] === '') { p.innerHTML = '<br />'; }
-                else { p.innerText = dataLines[it]; }
-
-
-                section.appendChild(p);
-            }
 
             return section;
         },
@@ -843,7 +828,7 @@ const appInsert = (() => {
                     if (saveResult.success === true) {
                         fileData.saveAs(saveResult.fullName, saveResult.shortName);
                         adjustFileSelectorButtonPosition();
-                        addRecentFile(fileData.fullName, canRecreateRecentList);
+                        addRecentFile(fileData.getFullName(), canRecreateRecentList);
                     }
                     else {
                         alert(appSettings.locale.CMD.cmdSaveAs.onFail.replace(
