@@ -186,7 +186,14 @@ let insertFileCursor = (() => {
                 let p = document.createElement('p');
 
                 if (dataLines[it] === '') { p.innerHTML = '<br />'; }
-                else { p.innerHTML = convertStringToValidHTMLText(dataLines[it]).split(' ').join('&nbsp;') + '<br />'; }
+                else {
+                    let l = convertStringToValidHTMLText(dataLines[it])
+                        .split('   ').join('&nbsp; &nbsp;')
+                        .split('  ').join(' &nbsp;');
+                    console.log(l);
+                    if (l[0] === ' ') { l = '&nbsp;' + l.substr(1); }
+                    p.innerHTML = l + '<br />';
+                }
 
                 nodeCursor.editNode.appendChild(p);
             }
@@ -466,7 +473,8 @@ let insertFileCursor = (() => {
                     range.setEnd(nodeCursor.editNode.firstElementChild, 0);
 
                     appSettings.ini.recentFileList.files.forEach((fileCfg) => {
-                        if (nodeCursor.fileLabel.attributes['data-file-fullname'].value === fileCfg[0]) {
+                        let fileFullName = nodeCursor.fileLabel.attributes['data-file-fullname'].value;
+                        if (fileFullName === fileCfg[0] && fileCfg[2] !== null) {
                             let iniP = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].iniNode];
                             let endP = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].endNode];
 
