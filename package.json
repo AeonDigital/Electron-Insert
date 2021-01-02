@@ -1,6 +1,6 @@
 {
   "name": "insert",
-  "version": "0.8.0-beta",
+  "version": "0.8.5-beta",
   "description": "Simples e despretencioso editor para arquivos de texto.",
   "main": "main.js",
   "scripts": {

@@ -31,7 +31,7 @@ function createWindow() {
         },
         icon: rootPath + '/electron-insert.ico'
     });
-    //mainWindow.removeMenu();
+    mainWindow.removeMenu();
 
     require(rootPath + '/views/main/index_IPCMain.js');
     mainWindow.loadFile(rootPath + '/views/main/index.html');

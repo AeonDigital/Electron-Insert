@@ -467,13 +467,18 @@ let insertFileCursor = (() => {
 
                     appSettings.ini.recentFileList.files.forEach((fileCfg) => {
                         if (nodeCursor.fileLabel.attributes['data-file-fullname'].value === fileCfg[0]) {
-                            let iniNode = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].iniNode].childNodes[0];
+                            let iniP = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].iniNode];
+                            let endP = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].endNode];
+
+                            let iniNode = iniP.childNodes[0];
                             let iniOffSet = fileCfg[2].iniOffSet;
-                            let endNode = nodeCursor.editNode.querySelectorAll('p')[fileCfg[2].endNode].childNodes[0];
+                            let endNode = endP.childNodes[0];
                             let endOffSet = fileCfg[2].endOffSet;
 
                             range.setStart(iniNode, iniOffSet);
                             range.setEnd(endNode, endOffSet);
+
+                            iniP.scrollIntoView({ block: "end" });
                         }
                     });
 
@@ -481,6 +486,7 @@ let insertFileCursor = (() => {
                 }
 
                 insertFileCursor.setCursorPosition(nodeCursor.rangeSelection);
+
             }
         },
         /**
