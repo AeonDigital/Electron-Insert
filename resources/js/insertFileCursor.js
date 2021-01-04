@@ -190,7 +190,6 @@ let insertFileCursor = (() => {
                     let l = convertStringToValidHTMLText(dataLines[it])
                         .split('   ').join('&nbsp; &nbsp;')
                         .split('  ').join(' &nbsp;');
-                    console.log(l);
                     if (l[0] === ' ') { l = '&nbsp;' + l.substr(1); }
                     p.innerHTML = l + '<br />';
                 }
@@ -212,7 +211,7 @@ let insertFileCursor = (() => {
      * @return {string}
      */
     let convertStringToValidHTMLText = (str) => {
-        let regex = /[<|>]/g;
+        let regex = /([<]|[>])/g;
 
         return str.replace(regex, (match) => {
             if (match === "<") { return "&lt;" }
@@ -316,16 +315,34 @@ let insertFileCursor = (() => {
         if (nodeCursor !== null) {
             e.preventDefault();
 
-            let useStrLines = sanitizeOriginalStringData(e.clipboardData.getData('text/plain')).split('\n');
-            if (useStrLines.length > 0) {
-                let div = document.createElement('div');
-                for (let it in useStrLines) {
-                    let p = document.createElement('p');
-                    p.innerHTML = useStrLines[it].split(' ').join('&nbsp;') + '<br />';
-                    div.appendChild(p);
-                }
+            let useStr = sanitizeOriginalStringData(e.clipboardData.getData('text/plain'));
+            if (useStr.indexOf('<') === -1 && useStr.indexOf('>') === -1 && useStr.indexOf('\n') === -1) {
+                document.execCommand('insertHTML', false, useStr);
+            }
+            else {
+                let useStrLines = useStr.split('\n');
 
-                document.execCommand('insertHTML', false, div.innerHTML);
+                if (useStrLines.length > 0) {
+                    let div = document.createElement('div');
+
+                    for (let it in useStrLines) {
+                        let strLine = useStrLines[it]
+                            .split('   ').join('&nbsp; &nbsp;')
+                            .split('  ').join(' &nbsp;') + '<br />';
+                        if (strLine[0] === ' ') { strLine = '&nbsp;' + strLine.substr(1); }
+
+                        if (parseInt(it) === 0) {
+                            div.innerHTML = strLine;
+                        }
+                        else {
+                            let p = document.createElement('p');
+                            p.innerHTML = strLine;
+                            div.appendChild(p);
+                        }
+                    }
+
+                    document.execCommand('insertHTML', false, div.innerHTML);
+                }
             }
         }
     };

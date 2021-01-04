@@ -73,7 +73,7 @@ if (typeof (require) === 'undefined') {
                                 r = {
                                     fullName: 'full/path/to/virtual/file/selectedFile.txt',
                                     shortName: 'selectedFile.txt',
-                                    data: '\nInformação fake\npara simular <b>a</b> abertura de um arquivo.\n\n E aqui uma nova linha e tals\n\n\n\n\nTeste!\n inicio  e   aqui    segue     cinco... '
+                                    data: '\nInformação | fake\npara simular <b>a</b> abertura de um arquivo.\n\n E aqui uma nova linha e tals\n\n\n\n\nTeste!\n inicio  e   aqui    segue     cinco... '
                                 };
                             }
                             break;
