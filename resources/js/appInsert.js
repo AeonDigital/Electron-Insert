@@ -523,6 +523,28 @@ const appInsert = (() => {
             canRecreateRecentList = true;
         }
     };
+    /**
+     * Remove o arquivo identificado da lista de arquivos recentes.
+     *
+     * @param {string} fullName
+     */
+    let removeRecentFile = (fullName) => {
+        let favList = [];
+        let recList = [];
+
+        // verifica toda a lista de arquivos recentes
+        appSettings.ini.recentFileList.files.forEach((fileCfg, i) => {
+            if (fileCfg[0] !== fullName) {
+                if (fileCfg[1] === true) { favList.push(fileCfg); }
+                else { recList.push(fileCfg); }
+            }
+        });
+
+
+        // redefine a lista de recentes.
+        appSettings.ini.recentFileList.files = favList.concat(recList);
+        insertConfig.cmdSaveConfigurations();
+    };
 
 
 
@@ -783,7 +805,9 @@ const appInsert = (() => {
 
                 // Se não foi possível abrir o arquivo, remove o mesmo da respectiva lista
                 if (fileData === null) {
-                    cmdLI.parentNode.remove(cmdLI);
+                    cmdLI.remove();
+                    removeRecentFile(fullName);
+
                     alert(appSettings.locale.CMD.cmdOpenFile.onFail.replace(
                         '[[fullName]]', fullName
                     ));
