@@ -500,8 +500,11 @@ let insertFileCursor = (() => {
                             let endNode = endP.childNodes[0];
                             let endOffSet = fileCfg[2].endOffSet;
 
-                            range.setStart(iniNode, iniOffSet);
-                            range.setEnd(endNode, endOffSet);
+                            try {
+                                range.setStart(iniNode, iniOffSet);
+                                range.setEnd(endNode, endOffSet);
+                            }
+                            catch (err) { }
 
                             iniP.scrollIntoView({ block: "end" });
                         }
