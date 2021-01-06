@@ -88,15 +88,26 @@ body.lineCounter main > section {
     width: calc(100% - var(--main-width-division));
     padding-left:4ch;
 }
+body.lineCounter main > section::before {
+    position: fixed;
+    top:0;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
 
-
-body.lineCounter main > section > p {
-    display: flex;
+    content:"";
+    width: 4ch;
+    padding-right: 4px;
+    background-color: #000;
 }
+
+
 body.lineCounter main > section > p:before {
     counter-increment: lines;
     content: counter(lines);
 
+    position: relative;
+    z-index: 1;
     display: inline-block;
     min-width: 4ch;
     height: inherit;
