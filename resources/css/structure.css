@@ -86,11 +86,13 @@ main > section p:empty {
 }
 body.lineCounter main > section {
     width: calc(100% - var(--main-width-division));
-    padding-left:0;
+    padding-left:4ch;
 }
 
 
-
+body.lineCounter main > section > p {
+    display: flex;
+}
 body.lineCounter main > section > p:before {
     counter-increment: lines;
     content: counter(lines);
@@ -100,12 +102,13 @@ body.lineCounter main > section > p:before {
     height: inherit;
     padding-right: 4px;
     margin-right: 10px;
+    margin-left: -4ch;
     line-height: inherit;
     background-color: #000;
     text-align: right;
 }
-body.verticalRightMargin main > section:after {
-    position: absolute;
+body.verticalRightMargin main > section::after {
+    position: fixed;
     top: 0;
     bottom: 0;
     z-index: 1;
