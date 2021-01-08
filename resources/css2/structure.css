@@ -1,0 +1,264 @@
+:root {
+    --struct-top-bar: 50px;
+    --struct-meta-data-bar: 30px;
+
+    --struct-document-horizontal-padding: 4ch;
+    --struct-document-top-margin: 1ch;
+    --struct-document-line-counter-paragraph-space: .5ch;
+}
+
+
+
+
+
+* {
+    padding:0; margin:0; border:none; outline: 0;
+    transition: all 0.4s;
+}
+html, body {
+    position: relative;
+    overflow: hidden;
+    height:100%;
+
+    font-size: 0;
+}
+html, body, main, header, section, footer, form, fieldset {
+    width: 100%;
+}
+
+
+
+
+
+body > header {
+    position: relative;
+    z-index: 10;
+
+    height: var(--struct-top-bar);
+
+
+    background-color: #666;
+}
+body > main {
+    height: calc(100% - var(--struct-top-bar));
+
+
+    background-color:bisque;
+}
+body > main > section {
+    position:relative;
+
+    width: calc(100% - calc(var(--struct-document-horizontal-padding) * 2));
+    height: calc(100% - var(--struct-document-top-margin));
+
+    padding-left: var(--struct-document-horizontal-padding);
+    padding-right: var(--struct-document-horizontal-padding);
+
+    margin-top: var(--struct-document-top-margin);
+    overflow-y: auto;
+
+    counter-reset: lines;
+
+
+    background-color:cadetblue;
+    font-family: monospace;
+    font-size: 22px;
+}
+body > main > section p {
+    position: relative;
+}
+body > main > section p:empty {
+    height: 22px;
+}
+body > main > footer {
+    position: relative;
+    z-index: 1;
+    display: none;
+    height: var(--struct-meta-data-bar);
+
+
+    background-color: coral;
+}
+body > aside {
+    position: absolute;
+    z-index: 1;
+    right: -50%;
+    top: var(--struct-top-bar);
+
+    width: 50%;
+    height: calc(100% - var(--struct-top-bar));
+
+
+    background-color: crimson;
+}
+
+
+
+
+
+/*
+    Barra de meta dados.
+*/
+body.showMetaDataBar > main > footer {
+    display: block;
+}
+body.showMetaDataBar > main > section {
+    height: calc(100% - var(--struct-meta-data-bar));
+}
+
+
+
+
+
+/*
+    Contador de linhas
+*/
+body.showLineCounter > main > section p {
+    padding-left: var(--struct-document-line-counter-paragraph-space);
+}
+body.showLineCounter main > section::before {
+    position: fixed;
+    top:0;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+
+    content: "";
+    width: var(--struct-document-horizontal-padding);
+    background-color: #000;
+}
+
+body.showLineCounter main > section > p::before {
+    counter-increment: lines;
+    content: counter(lines);
+
+    position: absolute;
+    left: calc((var(--struct-document-horizontal-padding) + var(--struct-document-line-counter-paragraph-space)) * -1);
+    z-index: 1;
+
+    display: inline-block;
+    width: var(--struct-document-horizontal-padding);
+
+
+    color:#FFF;
+    text-align: right;
+}
+
+
+
+
+
+/*
+    Linha guia para auxiliar digitação
+*/
+body.showVerticalLineAtRight main > section::after {
+    position: fixed;
+    top: 0;
+    left: calc(var(--struct-document-horizontal-padding) + var(--struct-document-line-counter-paragraph-space) + 0ch);
+    bottom: 0;
+    z-index: 1;
+
+    border-left: 1px solid #000;
+    content:"";
+}
+
+
+
+
+
+/*
+    Forçar quebra de linha (visualmente apenas)
+*/
+body.showBreakLineAt main > section > p {
+    max-width: 100ch;
+}
+
+
+
+
+/*body {
+    position: relative;
+    overflow: hidden;
+}
+main {
+    background-color: #666;
+    height: var(--editor-main-height-v);
+    overflow: hidden;
+    margin-top: var(--editor-main-margin-top);
+}
+main > section {
+    width: calc(100% - calc(var(--main-width-division) * 2));
+    height: calc(100% - var(--main-width-division));
+    padding:0 var(--main-width-division);
+    margin-top: var(--main-width-division);
+    overflow-y: auto;
+
+    position:relative;
+    counter-reset: lines;
+}
+main > section p:empty {
+    height: var(--editor-main-p-font-line-height);
+}
+body.lineCounter main > section {
+    width: calc(100% - var(--main-width-division));
+    padding-left:4ch;
+}
+body.lineCounter main > section::before {
+    position: fixed;
+    top:0;
+    left: 0;
+    bottom: 0;
+    z-index: 1;
+
+    content:"";
+    width: 4ch;
+    padding-right: 4px;
+    background-color: #000;
+}
+
+
+body.lineCounter main > section > p:before {
+    counter-increment: lines;
+    content: counter(lines);
+
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    min-width: 4ch;
+    height: inherit;
+    padding-right: 4px;
+    margin-right: 10px;
+    margin-left: -4ch;
+    line-height: inherit;
+    background-color: #000;
+    text-align: right;
+}
+body.verticalRightMargin main > section::after {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 1;
+
+    border-left: 1px solid #999;
+    content:"";
+}
+
+
+
+.row {
+    display: inline-block;
+    width: 100%;
+}
+.d-flex {
+    display: flex;
+}
+.txt-left {
+    text-align: left;
+}
+.txt-right {
+    text-align: right;
+}
+.txt-center {
+    text-align: center;
+}
+*/

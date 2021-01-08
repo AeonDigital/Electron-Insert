@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Insert Editor</title>
+        <link rel="icon" href="../../electron-insert.ico">
+        <link rel="stylesheet" href="../../resources/css/structure.css">
+        <link rel="stylesheet" href="../../resources/css/editor.css">
+
+        <link rel="stylesheet" href="../../resources/fonts/fira_code/fira_code.css">
+        <link rel="stylesheet" href="../../resources/fonts/inter/inter.css">
+        <link rel="stylesheet" href="../../resources/fonts/svg/icons.css">
+
+
+        <script src="../../resources/js/sym-e.js"></script>
+        <script>
+            const { ipcRenderer } = require('electron');
+        </script>
+
+
+        <script src="../../resources/js/onResizeEnd.js"></script>
+        <script src="../../resources/js/insertFile.js"></script>
+        <script src="../../resources/js/insertFileCursor.js"></script>
+        <script src="../../resources/js/appInsert.js"></script>
+        <script src="../../resources/js/insertConfig.js"></script>
+        <script src="index_IPCRenderer.js"></script>
+    </head>
+
+    <body class="simpleEditor lineCounter verticalRightMargin">
+        <section id="mainControls">
+            <div class="row d-flex">
+                <div class="subMenu">
+                    <button type="button" data-btn-action="cmdMenu" data-label-locale-button="cmdMenu" data-label-type="title" title="Menu">...</button>
+                    <ul>
+                        <li>
+                            <button type="button" data-btn-action="cmdNew" data-btn-shortcut="Ctrl + N" data-label-locale-button="cmdNew">New File<span>Ctrl + N</span></button>
+                        </li>
+                        <li>
+                            <button type="button" data-btn-action="cmdOpen" data-btn-shortcut="Ctrl + O" data-label-locale-button="cmdOpen">Open<span>Ctrl + O</span></button>
+                        </li>
+                        <li>
+                            <button type="button" data-btn-action="cmdSave" data-btn-shortcut="Ctrl + S" data-label-locale-button="cmdSave">Save<span>Ctrl + S</span></button>
+                        </li>
+                        <li>
+                            <button type="button" data-btn-action="cmdSaveAs" data-btn-shortcut="Ctrl + Shift + S" data-label-locale-button="cmdSaveAs">Save as<span>Ctrl + Shift + S</span></button>
+                        </li>
+                        <li class="subMenu">
+                            <button type="button" data-btn-action="cmdRecents" data-label-locale-button="cmdRecents" data-btn-shortcut="›">Recents<span>›</span></button>
+                            <ul id="recentList">
+                                <li data-btn-action-arg="fullNameFromSecondFile"><button type="button" data-btn-action="cmdOpenFile" title="fullNameFromSecondFile">fullNameFromSecondFile</button><button type="button" data-btn-action="cmdToggleFavorite" data-label-locale-button="cmdAddFavorite" data-label-type="title" class="ico-d3" title="Add to favorites"><img src="../../resources/icons/star.png" class="no-hover" alt=""><img src="../../resources/icons/star-bg.png" class="on-hover" alt=""></button></li>
+                                <li data-btn-action-arg="fullNameFromThirdFile"><button type="button" data-btn-action="cmdOpenFile" title="fullNameFromThirdFile">fullNameFromThirdFile</button><button type="button" data-btn-action="cmdToggleFavorite" data-label-locale-button="cmdAddFavorite" data-label-type="title" class="ico-d3" title="Add to favorites"><img src="../../resources/icons/star.png" class="no-hover" alt=""><img src="../../resources/icons/star-bg.png" class="on-hover" alt=""></button></li>
+                            </ul>
+                        </li>
+                        <li class="subMenu">
+                            <button type="button" data-btn-action="cmdFavorites" data-label-locale-button="cmdFavorites" data-btn-shortcut="›">Favorites<span>›</span></button>
+                            <ul id="favoriteList">
+                                <li data-btn-action-arg="fullNameFromFirstFile"><button type="button" data-btn-action="cmdOpenFile" title="fullNameFromFirstFile">fullNameFromFirstFile</button><button type="button" data-btn-action="cmdToggleFavorite" data-label-locale-button="cmdRemoveFavorites" data-label-type="title" class="ico-d3 active" title="Remove from favorites"><img src="../../resources/icons/star.png" class="no-hover" alt=""><img src="../../resources/icons/star-bg.png" class="on-hover" alt=""></button></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <button type="button" data-btn-action="cmdCanClose" data-label-locale-button="cmdCanClose">Close</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="d-flex">
+                    <button type="button" data-btn-action="cmdNew" data-label-locale-button="cmdNew" data-label-type="title" title="New File">+</button>
+                    <button type="button" data-btn-action="cmdSelectPrev" data-label-locale-button="cmdSelectPrev" data-label-type="title">
+                        <span>‹</span>
+                    </button>
+                </div>
+                <div id="menuWindow" class="menuWindow">
+                    <ul id="mainMenu" class="menuFile">
+                        <li data-file-id="1" class="active"><span data-file-fullname="full/path/to/virtual/file/selectedFile.txt">selectedFile.txt *</span><button type="button" data-btn-action="closeFile">X</button></li>
+                    </ul>
+                </div>
+                <div class="d-flex">
+                    <button type="button" data-btn-action="cmdSelectNext" data-label-locale-button="cmdSelectNext" data-label-type="title">
+                        <span>›</span>
+                    </button>
+                    <button type="button" data-btn-action="cmdOpenSettings" data-label-locale-button="cmdOpenSettings" data-label-type="title" class="ico-d2" title="Settings">
+                        <img src="../../resources/icons/gear.png" alt="">
+                    </button>
+                </div>
+            </div>
+            <div id="mainMarkupButtons" class="row">
+                <div>
+                    <button type="button" data-btn-action="cmdHeader1">H1</button>
+                    <button type="button" data-btn-action="cmdHeader2">H2</button>
+                    <button type="button" data-btn-action="cmdHeader3">H3</button>
+                    <button type="button" data-btn-action="cmdHeader4">H4</button>
+                    <button type="button" data-btn-action="cmdHeader5">H5</button>
+                    <button type="button" data-btn-action="cmdHeader6">H6</button>
+                    <span></span>
+                    <button type="button" data-btn-action="cmdBold">B</button>
+                    <button type="button" data-btn-action="cmdItalic"><i>I</i></button>
+                    <button type="button" data-btn-action="cmdUnderline"><u>U</u></button>
+                    <button type="button" data-btn-action="cmdStrike"><s>ab</s></button>
+                </div>
+            </div>
+        </section>
+        <main id="mainPanel" style="background-color: #666666; font-family: Fira Code; color: #EEEEEE; font-size: 16px; line-height: 24px">
+            <section data-panel="editor-document" data-file-id="1" spellcheck="false" class="active" contenteditable="true">
+                <p><br></p>
+                <p>Informação | fake<br></p>
+                <p>para simular &lt;b&gt;a&lt;/b&gt; abertura de um arquivo.<br></p>
+                <p><br></p>
+                <p>&nbsp;E aqui uma nova linha e tals<br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p><br></p>
+                <p>Teste!<br></p>
+                <p>&nbsp;inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco...&nbsp; inicio &nbsp;e&nbsp; &nbsp;aqui&nbsp; &nbsp; segue&nbsp; &nbsp; &nbsp;cinco... </p>
+            </section>
+        </main>
+        <aside id="mainAside" class="">
+            <div>
+                <nav>
+                    <ul>
+                        <li data-tab-button="active-tab" data-tab-target-panel="tabConfigPanel" data-label-locale-settings-nav="tabConfig" class="active">Settings</li>
+                        <li data-tab-button="active-tab" data-tab-target-panel="tabAboutPanel" data-label-locale-settings-nav="tabAbout">About</li>
+                    </ul>
+                </nav>
+
+                <div data-tab-panel="tabConfigPanel" class="active">
+                    <form>
+                        <fieldset>
+                            <legend data-label-locale-settings-panel-configuration="ttlGeneral">General</legend>
+                            <div class="inline">
+                                <label for="configEditorLocale" data-label-locale-settings-panel-configuration="fldLblLanguage">Language</label>
+                                <select id="configEditorLocale">
+                                    <option value="en-US">English</option>
+                                    <option value="pt-BR">Português [Brasil]</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorLineCounter" data-label-locale-settings-panel-configuration="fldLblLineCounter">Line counter</label>
+                                <label class="checkbox">
+                                    <input id="configEditorLineCounter" type="checkbox"><i></i>
+                                </label>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorVerticalRightMargin" data-label-locale-settings-panel-configuration="fldLblEditorVerticalRightMargin">Vertical right margin</label>
+                                <input type="number" id="configEditorVerticalRightMargin" min="0" max="256" step="1">
+                            </div>
+                        </fieldset>
+
+                        <hr>
+
+                        <fieldset>
+                            <legend data-label-locale-settings-panel-configuration="ttlTextEditor">Text editor</legend>
+
+                            <div>
+                                <label for="configEditorBackgroundColor" data-label-locale-settings-panel-configuration="fldLblEditorBackgroundColor">Background color</label>
+                                <input type="color" id="configEditorBackgroundColor">
+                            </div>
+
+                            <div class="inline">
+                                <label for="configEditorFontFace" data-label-locale-settings-panel-configuration="fldLblEditorFontFace">Font</label>
+                                <select id="configEditorFontFace">
+                                    <option value="Fira Code">Fira Code [Padrão]</option>
+                                    <option value="Inter">Inter</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Cambria">Cambria</option>
+                                    <option value="Geneva">Geneva</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Helvetica">Helvetica</option>
+                                    <option value="Impact">Impact</option>
+                                    <option value="Tahoma">Tahoma</option>
+                                    <option value="Times">Times</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="monospace">monospace</option>
+                                    <option value="sans-serif">sans-serif</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontStyle" data-label-locale-settings-panel-configuration="fldLblEditorFontStyle">Style</label>
+                                <select id="configEditorFontStyle">
+                                    <option value="">normal</option>
+                                    <option value="bold">bold</option>
+                                    <option value="italic">italic</option>
+                                </select>
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontColor" data-label-locale-settings-panel-configuration="fldLblEditorFontColor">Color</label>
+                                <input type="color" id="configEditorFontColor">
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorFontSize" data-label-locale-settings-panel-configuration="fldLblEditorFontSize">Font size</label>
+                                <input type="range" id="configEditorFontSize" min="10" max="40" step="1">
+                                <input type="number" id="configEditorFontSizeKey" min="10" max="40" step="1">
+                            </div>
+                            <div class="inline">
+                                <label for="configEditorLineHeight" data-label-locale-settings-panel-configuration="fldLblEditorLineHeight">Line height</label>
+                                <input type="range" id="configEditorLineHeight" min="10" max="50" step="1">
+                                <input type="number" id="configEditorLineHeightKey" min="10" max="50" step="1">
+                            </div>
+                        </fieldset>
+                        <fieldset>
+                            <div class="txt-right">
+                                <button type="button" id="cmdSaveConfigurations" data-label-locale-settings-panel-configuration="btnSaveConfiguration">Save configurations</button>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+                <div data-tab-panel="tabAboutPanel">
+                    <h1>Insert Editor</h1>
+
+                    <p class="txt-center">
+                        <img src="../../resources/icons/insert.png" alt="Insert Editor" class="icon-insert">
+                    </p>
+                    <p>
+                        <br><br>
+                    </p>
+                    <p class="txt-right">
+                        <img src="../../resources/icons/aeondigital.png" alt="aeondigital" class="icon-aeondigital">
+                        Copyright (c) 2020 Rianna Cantarelli<br>
+                        Email: rianna@aeondigital.com.br<br>
+                        Licença: MIT
+                    </p>
+                </div>
+            </div>
+        </aside>
+
+
+    </body>
+
+</html>
