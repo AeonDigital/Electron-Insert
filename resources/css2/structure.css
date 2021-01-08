@@ -114,34 +114,25 @@ body.showMetaDataBar > main > section {
     Contador de linhas
 */
 body.showLineCounter > main > section p {
-    padding-left: var(--struct-document-line-counter-paragraph-space);
+    padding-left: calc(var(--struct-document-line-counter-paragraph-space) * 2);
 }
-body.showLineCounter main > section::before {
-    position: fixed;
-    top:0;
-    left: 0;
-    bottom: 0;
-    z-index: 1;
-
-    content: "";
-    width: var(--struct-document-horizontal-padding);
-    background-color: #000;
-}
-
 body.showLineCounter main > section > p::before {
     counter-increment: lines;
     content: counter(lines);
 
     position: absolute;
-    left: calc((var(--struct-document-horizontal-padding) + var(--struct-document-line-counter-paragraph-space)) * -1);
+    left: calc(var(--struct-document-horizontal-padding) * -1);
     z-index: 1;
 
     display: inline-block;
     width: var(--struct-document-horizontal-padding);
+    height: 100%;
+    padding-right: var(--struct-document-line-counter-paragraph-space);
 
 
     color:#FFF;
     text-align: right;
+    background-color: #000;
 }
 
 
