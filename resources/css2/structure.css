@@ -1,20 +1,44 @@
 :root {
     --struct-top-bar: 50px;
     --struct-top-bar-background-color: #444;
+    --struct-top-bar-background-color-contrast: #EEE;
+
+    --main-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --main-font-color: #EEE;
+
+    --main-button-background-color: #444;
+    --main-button-min-width: 50px;
+    --main-button-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --main-button-font-style: normal;
+    --main-button-font-weight: normal;
+    --main-button-font-size: 15px;
+    --main-button-font-color: 15px;
+    --main-button-icon-filter: invert(100%) sepia(0%) saturate(7480%) hue-rotate(69deg) brightness(120%) contrast(73%);
+
+    --btn-file-select-font-style: normal;
+    --btn-file-select-font-size: 16px;
+    --btn-file-select-font-line-height: 16px;
+
+
 
     --struct-document-background-color: #555;
+    --struct-document-background-color-contrast: #666;
     --struct-document-horizontal-padding: 4ch;
     --struct-document-top-margin: 1ch;
     --struct-document-line-counter-paragraph-space: .5ch;
     --struct-document-font-family: monospace;
+    --struct-document-font-style: normal;
+    --struct-document-font-weight: normal;
     --struct-document-font-size: 22px;
     --struct-document-font-line-height: 26px;
     --struct-document-font-color: #EEE;
     --struct-document-vertical-line-at-right: 120ch;
     --struct-document-break-line-at: 120ch;
 
+
     --struct-meta-data-bar-height: 25px;
     --struct-meta-data-bar-background-color: #222;
+
 
     --struct-aside-config-background-color: #444;
 }
@@ -33,6 +57,8 @@ html, body {
     height:100%;
     background-color: var(--struct-document-background-color);
 
+    font-family: var(--main-font-family);
+    color: var(--main-font-color);
     font-size: 0;
 }
 html, body, main, header, section, footer, form, fieldset {
@@ -42,14 +68,184 @@ html, body, main, header, section, footer, form, fieldset {
 
 
 
+/*
+    Botões padrão do Editor
+*/
+button[data-btn-action] {
+    display: inline-block;
+    min-width: var(--main-button-min-width);
 
+    background-color: var(--main-button-background-color);
+
+    font-family: var(--main-button-font-family);
+    font-style: var(--main-button-font-style);
+    font-weight: var(--main-button-font-weight);
+    font-size: var(--main-button-font-size);
+    color: var(--main-button-font-color);
+
+    white-space: nowrap;
+    cursor:pointer;
+}
+button[data-btn-action]:hover {
+    background-color:var(--struct-document-background-color-contrast);
+    font-weight: bold;
+}
+button[data-btn-action].ico,
+button[data-btn-action].ico-min {
+    text-align: center;
+    font-size: 0;
+}
+button[data-btn-action].ico img,
+button[data-btn-action].ico-min img {
+    filter: var(--main-button-icon-filter);
+}
+button[data-btn-action].ico img {
+    width: calc(var(--main-button-min-width) / 2);
+    height: calc(var(--main-button-min-width) / 2);
+}
+button[data-btn-action].ico-min img {
+    width: calc(var(--main-button-min-width) / 3);
+    height: calc(var(--main-button-min-width) / 3);
+}
+button[data-btn-action].active > .no-hover,
+button[data-btn-action]:hover > .no-hover,
+button[data-btn-action] > .on-hover {display: none;}
+button[data-btn-action].active> .on-hover,
+button[data-btn-action]:hover > .on-hover {display: inline-block;}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+    Barra do topo.
+*/
 body > header {
+    display: flex;
     position: relative;
     z-index: 10;
 
     height: var(--struct-top-bar);
     background-color: var(--struct-top-bar-background-color);
 }
+body > header > * {
+    display: flex;
+}
+
+
+    .subMenu {
+        position: relative;
+    }
+    .subMenu > ul {
+        display: none;
+        flex-direction: column;
+
+        position: absolute;
+        top: var(--struct-top-bar);
+        left: 0;
+
+        border: 1px solid var(--struct-top-bar-background-color-contrast);
+        box-shadow: 5px 8px 10px 0px #000;
+    }
+    .subMenu:hover > ul {
+        display:flex;
+    }
+
+    .subMenu > ul > li {
+        list-style: none;
+    }
+    .subMenu > ul > li > button {
+        position: relative;
+        min-width: 260px;
+        padding: 12px 10px;
+        text-align: left;
+    }
+    .subMenu > ul > li > button:hover {
+        font-weight: normal;
+    }
+    .subMenu > ul > li > button > span {
+        position: absolute;
+        right: 10px;
+        bottom: 12px;
+        white-space: nowrap;
+        font-size: calc((var(--main-button-font-size) / 4) * 3);
+    }
+    .subMenu > ul > li.subMenu > button > span {
+        font-size: var(--main-button-font-size);
+    }
+
+
+    .subMenu .subMenu > ul {
+        top:0;
+        left: 100%;
+    }
+    .subMenu .subMenu > ul > li {
+        display: flex;
+    }
+    .subMenu .subMenu > ul > li > button {
+        min-width: auto;
+        width: 220px;
+        padding-right: 20px;
+        overflow: hidden;
+    }
+    .subMenu .subMenu > ul > li > button + button {
+        min-width: 0;
+        width: var(--main-button-min-width);
+        padding: 0;
+        text-align: center;
+    }
+
+
+
+
+    /*
+        Seletor de arquivos abertos no Editor.
+    */
+    .menuFileWindow {
+        flex: 1;
+        overflow: hidden;
+    }
+        .menuFileList {
+            display: flex;
+
+            font-style: var(--btn-file-select-font-style);
+            font-size: var(--btn-file-select-font-size);
+            line-height: var(--btn-file-select-font-line-height);
+            text-align: left;
+        }
+        .menuFileList > li {
+            display: flex;
+            cursor: pointer;
+            margin-right:2px;
+        }
+        .menuFileList > li > span {
+            padding: 0 20px;
+            line-height: var(--struct-top-bar);
+            white-space: nowrap;
+        }
+        .menuFileList > li:hover,
+        .menuFileList > li.active {
+            background-color:var(--struct-document-background-color-contrast);
+            border-bottom:2px solid var(--main-font-color);
+        }
+        .menuFileList li:hover button,
+        .menuFileList li.active button {
+            background-color:var(--struct-document-background-color-contrast);
+            font-weight: bold;
+        }
+
+
+
+
+
+
 body > main {
     height: calc(100% - var(--struct-top-bar));
 }
@@ -68,6 +264,8 @@ body > main > section {
     counter-reset: lines;
 
     font-family: var(--struct-document-font-family);
+    font-style: var(--struct-document-font-style);
+    font-weight: var(--struct-document-font-weight);
     font-size: var(--struct-document-font-size);
     line-height: var(--struct-document-font-line-height);
     color: var(--struct-document-font-color);

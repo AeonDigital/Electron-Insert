@@ -10,7 +10,188 @@
 
     <body class="showMetaDataBar showLineCounter showVerticalLineAtRight showBreakLineAt">
         <header>
-            topo do documento
+            <div class="subMenu">
+                <button type="button"
+                        data-btn-action="cmdMenu"
+                        data-label-locale-button="cmdMenu"
+                        data-label-type="title"
+                        title="Menu">
+                    ...
+                </button>
+                <ul>
+                    <li>
+                        <button type="button"
+                                data-btn-action="cmdNew"
+                                data-btn-shortcut="Ctrl + N"
+                                data-label-locale-button="cmdNew">
+                            New File
+                            <span>Ctrl + N</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                                data-btn-action="cmdOpen"
+                                data-btn-shortcut="Ctrl + O"
+                                data-label-locale-button="cmdOpen">
+                            Open
+                            <span>Ctrl + O</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                                data-btn-action="cmdSave"
+                                data-btn-shortcut="Ctrl + S"
+                                data-label-locale-button="cmdSave">
+                            Save
+                            <span>Ctrl + S</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                                data-btn-action="cmdSaveAs"
+                                data-btn-shortcut="Ctrl + Shift + S"
+                                data-label-locale-button="cmdSaveAs">
+                            Save as
+                            <span>Ctrl + Shift + S</span>
+                        </button>
+                    </li>
+                    <li class="subMenu">
+                        <button type="button"
+                                data-btn-action="cmdRecents"
+                                data-label-locale-button="cmdRecents"
+                                data-btn-shortcut="›">
+                            Recents
+                            <span>›</span>
+                        </button>
+                        <ul id="recentList">
+                            <li data-btn-action-arg="fullNameFromSecondFile">
+                                <button type="button"
+                                        data-btn-action="cmdOpenFile"
+                                        title="fullNameFromSecondFile">
+                                    fullNameFromSecondFile
+                                </button>
+                                <button type="button"
+                                        data-btn-action="cmdToggleFavorite"
+                                        data-label-locale-button="cmdAddFavorite"
+                                        data-label-type="title"
+                                        class="ico-min"
+                                        title="Add to favorites">
+                                    <img src="../../resources/icons/star.png"
+                                        class="no-hover" alt="" />
+                                    <img src="../../resources/icons/star-bg.png"
+                                        class="on-hover" alt="" />
+                                </button>
+                            </li>
+                            <li data-btn-action-arg="fullNameFromThirdFile">
+                                <button type="button"
+                                        data-btn-action="cmdOpenFile"
+                                        title="fullNameFromThirdFile">
+                                    fullNameFromThirdFile
+                                </button>
+                                <button type="button"
+                                        data-btn-action="cmdToggleFavorite"
+                                        data-label-locale-button="cmdAddFavorite"
+                                        data-label-type="title"
+                                        class="ico-min"
+                                        title="Add to favorites">
+                                    <img src="../../resources/icons/star.png"
+                                        class="no-hover" alt="" />
+                                    <img src="../../resources/icons/star-bg.png"
+                                        class="on-hover" alt="" />
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="subMenu">
+                        <button type="button"
+                                data-btn-action="cmdFavorites"
+                                data-label-locale-button="cmdFavorites"
+                                data-btn-shortcut="›">
+                            Favorites
+                            <span>›</span>
+                        </button>
+                        <ul id="favoriteList">
+                            <li data-btn-action-arg="fullNameFromFirstFile">
+                                <button type="button"
+                                        data-btn-action="cmdOpenFile"
+                                        title="fullNameFromFirstFile">
+                                    fullNameFromFirstFile
+                                </button>
+                                <button type="button"
+                                    data-btn-action="cmdToggleFavorite"
+                                    data-label-locale-button="cmdRemoveFavorites"
+                                    data-label-type="title"
+                                    class="ico-min active"
+                                    title="Remove from favorites">
+                                    <img src="../../resources/icons/star.png"
+                                        class="no-hover" alt="" />
+                                    <img src="../../resources/icons/star-bg.png"
+                                        class="on-hover" alt="" />
+                                </button>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <button type="button"
+                                data-btn-action="cmdCanClose"
+                                data-label-locale-button="cmdCanClose">
+                            Close
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <button type="button"
+                        data-btn-action="cmdNew"
+                        data-label-locale-button="cmdNew"
+                        data-label-type="title"
+                        title="New File">
+                    +
+                </button>
+                <button type="button"
+                        data-btn-action="cmdSelectPrev"
+                        data-label-locale-button="cmdSelectPrev"
+                        data-label-type="title">
+                    <span>‹</span>
+                </button>
+            </div>
+            <div class="menuFileWindow">
+                <ul class="menuFileList">
+                    <li data-file-id="1" class="active">
+                        <span data-file-fullname="full/path/to/virtual/file/selectedFile.txt">
+                            selectedFile.txt *
+                        </span>
+                        <button type="button"
+                                data-btn-action="closeFile">
+                            X
+                        </button>
+                    </li>
+                    <li data-file-id="2">
+                        <span data-file-fullname="full/path/to/virtual/file/noSelectedFile.txt">
+                            noselectedFile.txt *
+                        </span>
+                        <button type="button" data-btn-action="closeFile">
+                            X
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <button type="button"
+                        data-btn-action="cmdSelectNext"
+                        data-label-locale-button="cmdSelectNext"
+                        data-label-type="title">
+                    <span>›</span>
+                </button>
+                <button type="button"
+                        data-btn-action="cmdOpenSettings"
+                        data-label-locale-button="cmdOpenSettings"
+                        data-label-type="title"
+                        class="ico"
+                        title="Settings">
+                    <img src="../../resources/icons/gear.png" alt="" />
+                </button>
+            </div>
         </header>
         <main>
             <section>
