@@ -1,13 +1,25 @@
 :root {
     --struct-top-bar: 50px;
-    --struct-meta-data-bar: 30px;
+    --struct-top-bar-background-color: #444;
 
+    --struct-document-background-color: #555;
     --struct-document-horizontal-padding: 4ch;
     --struct-document-top-margin: 1ch;
     --struct-document-line-counter-paragraph-space: .5ch;
+    --struct-document-font-family: monospace;
+    --struct-document-font-size: 22px;
+    --struct-document-font-line-height: 26px;
+    --struct-document-font-color: #EEE;
+    --struct-document-vertical-line-at-right: 120ch;
+    --struct-document-break-line-at: 120ch;
+
+    --struct-meta-data-bar-height: 25px;
+    --struct-meta-data-bar-background-color: #222;
+
+    --struct-aside-config-background-color: #444;
 }
 
-
+/* https://css-tricks.com/updating-a-css-variable-with-javascript/ */
 
 
 
@@ -19,6 +31,7 @@ html, body {
     position: relative;
     overflow: hidden;
     height:100%;
+    background-color: var(--struct-document-background-color);
 
     font-size: 0;
 }
@@ -35,15 +48,10 @@ body > header {
     z-index: 10;
 
     height: var(--struct-top-bar);
-
-
-    background-color: #666;
+    background-color: var(--struct-top-bar-background-color);
 }
 body > main {
     height: calc(100% - var(--struct-top-bar));
-
-
-    background-color:bisque;
 }
 body > main > section {
     position:relative;
@@ -59,37 +67,35 @@ body > main > section {
 
     counter-reset: lines;
 
-
-    background-color:cadetblue;
-    font-family: monospace;
-    font-size: 22px;
+    font-family: var(--struct-document-font-family);
+    font-size: var(--struct-document-font-size);
+    line-height: var(--struct-document-font-line-height);
+    color: var(--struct-document-font-color);
 }
 body > main > section p {
     position: relative;
 }
 body > main > section p:empty {
-    height: 22px;
+    height: var(--struct-document-font-line-height);
 }
 body > main > footer {
-    position: relative;
-    z-index: 1;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 8;
     display: none;
-    height: var(--struct-meta-data-bar);
-
-
-    background-color: coral;
+    height: var(--struct-meta-data-bar-height);
+    background-color: var(--struct-meta-data-bar-background-color);
 }
 body > aside {
     position: absolute;
-    z-index: 1;
+    z-index: 9;
     right: -50%;
     top: var(--struct-top-bar);
 
     width: 50%;
     height: calc(100% - var(--struct-top-bar));
-
-
-    background-color: crimson;
+    background-color: var(--struct-aside-config-background-color);
 }
 
 
@@ -103,7 +109,7 @@ body.showMetaDataBar > main > footer {
     display: block;
 }
 body.showMetaDataBar > main > section {
-    height: calc(100% - var(--struct-meta-data-bar));
+    height: calc(100% - calc(var(--struct-meta-data-bar-height) + var(--struct-document-top-margin)));
 }
 
 
@@ -130,7 +136,7 @@ body.showLineCounter main > section > p::before {
     padding-right: var(--struct-document-line-counter-paragraph-space);
 
 
-    color:#FFF;
+    color:#CCC;
     text-align: right;
     background-color: #000;
 }
@@ -145,11 +151,11 @@ body.showLineCounter main > section > p::before {
 body.showVerticalLineAtRight main > section::after {
     position: fixed;
     top: 0;
-    left: calc(var(--struct-document-horizontal-padding) + var(--struct-document-line-counter-paragraph-space) + 0ch);
+    left: calc(var(--struct-document-horizontal-padding) + var(--struct-document-line-counter-paragraph-space) + var(--struct-document-vertical-line-at-right));
     bottom: 0;
     z-index: 1;
 
-    border-left: 1px solid #000;
+    border-left: 1px solid #444;
     content:"";
 }
 
@@ -161,7 +167,7 @@ body.showVerticalLineAtRight main > section::after {
     Forçar quebra de linha (visualmente apenas)
 */
 body.showBreakLineAt main > section > p {
-    max-width: 100ch;
+    max-width: var(--struct-document-break-line-at);
 }
 
 
