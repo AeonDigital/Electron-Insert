@@ -1,29 +1,33 @@
 :root {
     --struct-top-bar: 50px;
     --struct-top-bar-background-color: #444;
-    --struct-top-bar-background-color-contrast: #EEE;
+    --struct-top-bar-background-color-hover: #666;
+    --struct-top-bar-background-font-color-contrast: #EEE;
+    --struct-top-bar-button-font-size: 16px;
+    --struct-top-bar-button-font-style: normal;
+    --struct-top-bar-button-font-weight: normal;
+    --struct-top-bar-button-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
-    --main-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --main-font-color: #EEE;
+    --main-font-family: var(--struct-top-bar-button-font-family);
+    --main-font-color: var(--struct-top-bar-background-font-color-contrast);
 
-    --main-button-background-color: #444;
-    --main-button-min-width: 50px;
-    --main-button-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    --main-button-font-style: normal;
-    --main-button-font-weight: normal;
-    --main-button-font-size: 15px;
-    --main-button-font-color: 15px;
+    --main-button-background-color: var(--struct-top-bar-background-color);
+    --main-button-min-width: var(--struct-top-bar);
+    --main-button-font-family: var(--struct-top-bar-button-font-family);
+    --main-button-font-style: var(--struct-top-bar-button-font-style);
+    --main-button-font-weight: var(struct-top-bar-button-font-weight);
+    --main-button-font-size: var(--struct-top-bar-button-font-size);
+    --main-button-font-color: var(--struct-top-bar-background-font-color-contrast);
     --main-button-icon-filter: invert(100%) sepia(0%) saturate(7480%) hue-rotate(69deg) brightness(120%) contrast(73%);
 
-    --btn-file-select-font-style: normal;
-    --btn-file-select-font-size: 16px;
-    --btn-file-select-font-line-height: 16px;
+    --btn-file-select-font-style: var(--main-button-font-style);
+    --btn-file-select-font-size: var(--struct-top-bar-button-font-size);
+    --btn-file-select-font-line-height: var(--struct-top-bar-button-font-size);
 
 
 
     --struct-document-background-color: #555;
-    --struct-document-background-color-contrast: #666;
-    --struct-document-horizontal-padding: 4ch;
+    --struct-document-horizontal-padding: 4ch; /* Varia conforme a contagem de linhas */
     --struct-document-top-margin: 1ch;
     --struct-document-line-counter-paragraph-space: .5ch;
     --struct-document-font-family: monospace;
@@ -38,9 +42,16 @@
 
     --struct-meta-data-bar-height: 25px;
     --struct-meta-data-bar-background-color: #222;
+    --struct-meta-data-bar-font-family: var(--struct-top-bar-button-font-family);
+    --struct-meta-data-bar-font-style: normal;
+    --struct-meta-data-bar-font-weight: normal;
+    --struct-meta-data-bar-font-size: 15px;
+    --struct-meta-data-bar-font-line-height: var(--struct-meta-data-bar-height);
+    --struct-meta-data-bar-font-color: #EEE;
 
 
-    --struct-aside-config-background-color: #444;
+
+    --struct-aside-config-background-color: var(--struct-top-bar-background-color);
 }
 
 /* https://css-tricks.com/updating-a-css-variable-with-javascript/ */
@@ -87,7 +98,7 @@ button[data-btn-action] {
     cursor:pointer;
 }
 button[data-btn-action]:hover {
-    background-color:var(--struct-document-background-color-contrast);
+    background-color:var(--struct-top-bar-background-color-hover);
     font-weight: bold;
 }
 button[data-btn-action].ico,
@@ -151,7 +162,7 @@ body > header > * {
         top: var(--struct-top-bar);
         left: 0;
 
-        border: 1px solid var(--struct-top-bar-background-color-contrast);
+        border: 1px solid var(--struct-top-bar-background-font-color-contrast);
         box-shadow: 5px 8px 10px 0px #000;
     }
     .subMenu:hover > ul {
@@ -232,12 +243,12 @@ body > header > * {
         }
         .menuFileList > li:hover,
         .menuFileList > li.active {
-            background-color:var(--struct-document-background-color-contrast);
+            background-color:var(--struct-top-bar-background-color-hover);
             border-bottom:2px solid var(--main-font-color);
         }
         .menuFileList li:hover button,
         .menuFileList li.active button {
-            background-color:var(--struct-document-background-color-contrast);
+            background-color:var(--struct-top-bar-background-color-hover);
             font-weight: bold;
         }
 
@@ -277,13 +288,39 @@ body > main > section p:empty {
     height: var(--struct-document-font-line-height);
 }
 body > main > footer {
+    display: none;
+    height: var(--struct-meta-data-bar-height);
+    background-color: var(--struct-meta-data-bar-background-color);
+
     position: absolute;
     left: 0;
     bottom: 0;
     z-index: 8;
-    display: none;
-    height: var(--struct-meta-data-bar-height);
-    background-color: var(--struct-meta-data-bar-background-color);
+
+    text-align: right;
+    white-space: nowrap;
+    font-family: var(--struct-meta-data-bar-font-family);
+    font-style: var(--struct-meta-data-bar-font-style);
+    font-weight: var(--struct-meta-data-bar-font-weight);
+    font-size: var(--struct-meta-data-bar-font-size);
+    line-height: var(--struct-meta-data-bar-font-line-height);
+    color: var(--struct-meta-data-bar-font-color);
+}
+body > main > footer > span#meta-data-line::before {
+    content: "Ln: ";
+}
+body > main > footer > span#meta-data-column::before {
+    content: "Col: ";
+}
+body > main > footer > span#meta-data-tab::before {
+    content: "Tab: ";
+}
+body > main > footer > span#meta-data-tab {
+    margin-right: 4ch;
+}
+body > main > footer > span#meta-data-line::after,
+body > main > footer > span#meta-data-column::after {
+    content: ", ";
 }
 body > aside {
     position: absolute;
